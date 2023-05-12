@@ -99,7 +99,6 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    git
     helix
     gcc
     rustc
@@ -108,7 +107,23 @@
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
   ];
-
+  
+  programs.git = {
+    enable = true;
+      config = {
+      user.name = "David Wolff";
+      user.email = "david@dav.dev";
+      init.defaultBranch = "master";
+      alias = {
+        c = "commit -m";
+        co = "checkout";
+        s = "status";
+        a = "add";
+        l = "log --oneline";
+      };
+    };
+  };
+  
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
