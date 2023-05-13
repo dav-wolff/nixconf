@@ -134,6 +134,12 @@
 
   # List services that you want to enable:
 
+  # local dns resolution
+  services.avahi = {
+    enable = true;
+    nssmdns = true;
+  };
+  
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
