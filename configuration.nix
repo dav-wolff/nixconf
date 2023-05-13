@@ -89,6 +89,7 @@
       kate
       discord
       spotify
+      keepass
     #  thunderbird
     ];
   };
