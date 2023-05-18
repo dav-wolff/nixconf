@@ -95,6 +95,7 @@
       discord
       spotify
       keepass
+      bat
     #  thunderbird
     ];
   };
