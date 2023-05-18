@@ -96,7 +96,7 @@
       spotify
       keepass
       bat
-    #  thunderbird
+      thunderbird
     ];
   };
 
