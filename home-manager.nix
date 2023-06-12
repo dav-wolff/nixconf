@@ -11,7 +11,7 @@ in
 	home-manager.users.dav = {
 		home.stateVersion = "23.11";
 		
-	 programs.helix = {
+		programs.helix = {
 			enable = true;
 			
 			settings = {
@@ -19,5 +19,11 @@ in
 				editor.cursor-shape.insert = "bar";
 			};
 		};
+		
+		programs.zellij = {
+			enable = true;
+		};
+
+		home.file.".config/zellij/config.kdl".source = ./appconf/zellij.kdl;
 	};
 }

@@ -109,7 +109,6 @@
   environment.systemPackages = with pkgs; [
     helix
     gcc
-    tmux
     rustc
     cargo
     clippy
