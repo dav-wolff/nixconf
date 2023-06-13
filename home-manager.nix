@@ -15,15 +15,34 @@ in
 			enable = true;
 			
 			settings = {
-				editor.line-number = "relative";
-				editor.cursor-shape.insert = "bar";
+				editor = {
+					mouse = false;
+					line-number = "relative";
+					cursor-shape.insert = "bar";
+					scrolloff = 8;
+					cursorline = true;
+					idle-timeout = 0;
+					bufferline = "multiple";
+					color-modes = true;
+					whitespace = {
+						render.space = "all";
+						render.tab = "all";
+						render.newline = "none";
+						characters = {
+							space = "·";
+							nbsp = "⍽"; /* ▻--- ├╌╌╌ */
+							tab = "├"; /* → */
+							tabpad = "╌";
+						};
+					};
+				};
 			};
 		};
 		
 		programs.zellij = {
 			enable = true;
 		};
-
+		
 		home.file.".config/zellij/config.kdl".source = ./appconf/zellij.kdl;
 	};
 }
