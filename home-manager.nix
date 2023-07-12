@@ -44,5 +44,9 @@ in
 		};
 		
 		home.file.".config/zellij/config.kdl".source = ./appconf/zellij.kdl;
+		
+		programs.gitui = {
+			enable = true;
+		};
 	};
 }
