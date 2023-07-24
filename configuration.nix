@@ -94,6 +94,7 @@
       firefox
       kate
       discord
+      telegram-desktop
       spotify
       keepass
       bat
