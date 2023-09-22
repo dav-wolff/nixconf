@@ -154,6 +154,10 @@
     nssmdns = true;
   };
   
+  environment.sessionVariables = {
+    EDITOR = "hx";
+  };
+  
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
