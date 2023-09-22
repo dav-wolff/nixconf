@@ -30,8 +30,8 @@ in
 						render.newline = "none";
 						characters = {
 							space = "·";
-							nbsp = "⍽"; /* ▻--- ├╌╌╌ */
-							tab = "├"; /* → */
+							nbsp = "⍽";
+							tab = "├"; /* ├╌╌╌ */
 							tabpad = "╌";
 						};
 					};
