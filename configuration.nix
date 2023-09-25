@@ -111,6 +111,7 @@
   environment.systemPackages = with pkgs; [
     xsel
     helix
+    nil
     gcc
     rustc
     cargo
