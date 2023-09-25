@@ -11,11 +11,25 @@
 			system = "x86_64-linux";
 			modules = [
 				./configuration.nix
-				./nvidia.nix
-				./max-hardware.nix
+				./modules/boot-loader.nix
+				./modules/networking.nix
+				./modules/desktop.nix
+				./modules/nvidia.nix
+				./modules/max-hardware.nix
 			];
 			specialArgs = args // {
 				name = "max";
+			};
+		};
+		
+		nixosConfigurations.sub = nixpkgs.lib.nixosSystem {
+			system = "x86_64-linux";
+			modules = [
+				./configuration.nix
+				./modules/wsl.nix
+			];
+			specialArgs = args // {
+				name = "sub";
 			};
 		};
 	};
