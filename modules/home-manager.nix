@@ -21,6 +21,7 @@
 					idle-timeout = 0;
 					bufferline = "multiple";
 					color-modes = true;
+					true-color = true;
 					whitespace = {
 						render.space = "all";
 						render.tab = "all";
@@ -40,7 +41,7 @@
 			enable = true;
 		};
 		
-		home.file.".config/zellij/config.kdl".source = ./appconf/zellij.kdl;
+		home.file.".config/zellij/config.kdl".source = ../appconf/zellij.kdl;
 		
 		programs.gitui = {
 			enable = true;
