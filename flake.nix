@@ -22,6 +22,20 @@
 			};
 		};
 		
+		nixosConfigurations.top = nixpkgs.lib.nixosSystem {
+			system = "x86_64-linux";
+			modules = [
+				./configuration.nix
+				./modules/boot-loader.nix
+				./modules/networking.nix
+				./modules/desktop.nix
+				./modules/top-hardware.nix
+			];
+			specialArgs = args // {
+				name = "top";
+			};
+		};
+		
 		nixosConfigurations.sub = nixpkgs.lib.nixosSystem {
 			system = "x86_64-linux";
 			modules = [
