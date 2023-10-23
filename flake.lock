@@ -20,6 +20,26 @@
         "type": "github"
       }
     },
+    "ndent": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1698077861,
+        "narHash": "sha256-7y/TqaQQgOKvOlb9pH3EVbntb1d+Cbfn3HhjTlzVjG8=",
+        "owner": "dav-wolff",
+        "repo": "ndent",
+        "rev": "d65237d8c86d972b0f42f2dd7e45983645877cf0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dav-wolff",
+        "repo": "ndent",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1696193975,
@@ -39,6 +59,7 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "ndent": "ndent",
         "nixpkgs": "nixpkgs"
       }
     }
