@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ pkgs, name, ndent, ... }:
+{ pkgs, name, ndent, journal, ... }:
 
 {
 	imports = [
@@ -56,6 +56,7 @@
 		nil
 		gcc
 		ndent.packages.x86_64-linux.ndent
+		journal.packages.x86_64-linux.journal
 	];
 	
 	programs.git = {
