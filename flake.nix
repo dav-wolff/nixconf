@@ -6,7 +6,17 @@
 		inputs.nixpkgs.follows = "nixpkgs";
 	};
 	
-	outputs = { self, nixpkgs, home-manager } @ args: {
+	inputs.ndent = {
+		url = "github:dav-wolff/ndent";
+		inputs.nixpkgs.follows = "nixpkgs";
+	};
+	
+	inputs.journal = {
+		url = "github:dav-wolff/journal";
+		inputs.nixpkgs.follows = "nixpkgs";
+	};
+	
+	outputs = { self, nixpkgs, ... } @ args: {
 		nixosConfigurations.max = nixpkgs.lib.nixosSystem {
 			system = "x86_64-linux";
 			modules = [
