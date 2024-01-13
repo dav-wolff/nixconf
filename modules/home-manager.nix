@@ -35,6 +35,11 @@
 						};
 					};
 				};
+				keys = {
+					normal.space = {
+						i = ":toggle-option lsp.display-inlay-hints";
+					};
+				};
 			};
 		};
 		
