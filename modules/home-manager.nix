@@ -22,6 +22,7 @@
 					bufferline = "multiple";
 					color-modes = true;
 					true-color = true;
+					auto-format = false;
 					whitespace = {
 						render.space = "all";
 						render.tab = "all";
