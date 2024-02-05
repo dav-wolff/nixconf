@@ -55,6 +55,8 @@
 		helix
 		nil
 		gcc
+		xplr
+		nix-tree
 		ndent.packages.x86_64-linux.ndent
 		journal.packages.x86_64-linux.journal
 	];
