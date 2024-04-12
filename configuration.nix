@@ -2,24 +2,20 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ pkgs, name, ndent, journal, ... }:
+{ self, pkgs, name, ndent, journal, ... }:
 
 {
-	imports = [
-		./modules/home-manager.nix
-	];
-	
 	nix.settings.experimental-features = [
 		"nix-command"
 		"flakes"
 	];
 	
-	networking.hostName = name; # Define your hostname.
+	nixpkgs.config.allowUnfree = true;
 	
-	# Set your time zone.
+	networking.hostName = name;
+	
 	time.timeZone = "Europe/Berlin";
 	
-	# Select internationalisation properties.
 	i18n.defaultLocale = "en_US.UTF-8";
 	
 	i18n.extraLocaleSettings = {
@@ -34,29 +30,23 @@
 		LC_TIME = "en_US.UTF-8";
 	};
 	
-	# Enable CUPS to print documents.
 	services.printing.enable = true;
 	
-	# Define a user account. Don't forget to set a password with ‘passwd’.
 	users.users.dav = {
 		isNormalUser = true;
 		description = "David";
 		extraGroups = [ "networkmanager" "wheel" ];
 	};
 	
-	# Allow unfree packages
-	nixpkgs.config.allowUnfree = true;
-	
-	# List packages installed in system profile. To search, run:
-	# $ nix search wget
 	environment.systemPackages = with pkgs; [
 		xsel
 		bat
-		helix
 		nil
 		gcc
 		xplr
 		nix-tree
+		self.packages.x86_64-linux.helix
+		self.packages.x86_64-linux.zellij
 		ndent.packages.x86_64-linux.ndent
 		journal.packages.x86_64-linux.journal
 	];
@@ -81,16 +71,6 @@
 		startAgent = true;
 	};
 	
-	# Some programs need SUID wrappers, can be configured further or are
-	# started in user sessions.
-	# programs.mtr.enable = true;
-	# programs.gnupg.agent = {
-	#   enable = true;
-	#   enableSSHSupport = true;
-	# };
-	
-	# List services that you want to enable:
-	
 	# local dns resolution
 	services.avahi = {
 		enable = true;
@@ -100,15 +80,6 @@
 	environment.sessionVariables = {
 		EDITOR = "hx";
 	};
-	
-	# Enable the OpenSSH daemon.
-	# services.openssh.enable = true;
-	
-	# Open ports in the firewall.
-	# networking.firewall.allowedTCPPorts = [ ... ];
-	# networking.firewall.allowedUDPPorts = [ ... ];
-	# Or disable the firewall altogether.
-	# networking.firewall.enable = false;
 	
 	# This value determines the NixOS release from which the default
 	# settings for stateful data, like file locations and database versions
