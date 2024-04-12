@@ -6,7 +6,7 @@
 			url = "github:numtide/flake-utils";
 		};
 		
-		helix = {
+		helixFlake = {
 			url = "github:helix-editor/helix";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
@@ -22,7 +22,7 @@
 		};
 	};
 	
-	outputs = { self, nixpkgs, flake-utils, helix, ... } @ args: {
+	outputs = { self, nixpkgs, flake-utils, helixFlake, ... } @ args: {
 		nixosConfigurations = {
 			max = nixpkgs.lib.nixosSystem {
 				system = "x86_64-linux";
@@ -72,12 +72,23 @@
 		packages = {
 			helix = import ./packages/helix.nix {
 				inherit pkgs;
-				helix = helix.packages.${system}.helix;
+				helix = helixFlake.packages.${system}.helix;
 			};
 			
 			zellij = import ./packages/zellij.nix {
 				inherit pkgs;
 			};
+		};
+		
+		devShells.default = pkgs.mkShell {
+			packages = with self.packages.${system}; [
+				helix
+				zellij
+			];
+			
+			shellHook = ''
+				zellij
+			'';
 		};
 	});
 }

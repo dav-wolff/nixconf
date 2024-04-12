@@ -3,7 +3,7 @@
     "crane": {
       "inputs": {
         "nixpkgs": [
-          "helix",
+          "helixFlake",
           "nixpkgs"
         ]
       },
@@ -57,7 +57,7 @@
         "type": "github"
       }
     },
-    "helix": {
+    "helixFlake": {
       "inputs": {
         "crane": "crane",
         "flake-utils": "flake-utils_2",
@@ -67,11 +67,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1712851140,
-        "narHash": "sha256-d2Nn7Bu05/Gr/68ywevMtKwKbHXcKDXVqPjb9WEDrTc=",
+        "lastModified": 1712886556,
+        "narHash": "sha256-L8VNDGnf12YPCeEbAzqoHdVkr/hf4N+sBaBoHg3lkww=",
         "owner": "helix-editor",
         "repo": "helix",
-        "rev": "c9ae694aff21a4be47adc69c5465241c551e11b5",
+        "rev": "6d363a978d3f4c1973674305f16305f9b8f90707",
         "type": "github"
       },
       "original": {
@@ -139,7 +139,7 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "helix": "helix",
+        "helixFlake": "helixFlake",
         "journal": "journal",
         "ndent": "ndent",
         "nixpkgs": "nixpkgs"
@@ -148,11 +148,11 @@
     "rust-overlay": {
       "inputs": {
         "flake-utils": [
-          "helix",
+          "helixFlake",
           "flake-utils"
         ],
         "nixpkgs": [
-          "helix",
+          "helixFlake",
           "nixpkgs"
         ]
       },
