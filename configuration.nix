@@ -45,6 +45,7 @@
 		gcc
 		xplr
 		nix-tree
+		lazygit
 		self.packages.x86_64-linux.helix
 		self.packages.x86_64-linux.zellij
 		ndent.packages.x86_64-linux.ndent
