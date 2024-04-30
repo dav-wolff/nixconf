@@ -78,6 +78,11 @@
 			zellij = import ./packages/zellij.nix {
 				inherit pkgs;
 			};
+			
+			alacritty = import ./packages/alacritty.nix {
+				inherit pkgs;
+				shell = "${self.packages.${system}.zellij}/bin/zellij";
+			};
 		};
 		
 		devShells.default = pkgs.mkShell {
