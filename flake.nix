@@ -75,6 +75,10 @@
 				helix = helixFlake.packages.${system}.helix;
 			};
 			
+			zsh = import ./packages/zsh.nix {
+				inherit pkgs;
+			};
+			
 			zellij = import ./packages/zellij.nix {
 				inherit pkgs;
 			};
@@ -88,11 +92,13 @@
 		devShells.default = pkgs.mkShell {
 			packages = with self.packages.${system}; [
 				helix
+				zsh
 				zellij
 			];
 			
 			shellHook = ''
 				zellij
+				exit
 			'';
 		};
 	});
