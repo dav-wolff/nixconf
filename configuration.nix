@@ -47,6 +47,7 @@
 		nix-tree
 		lazygit
 		self.packages.x86_64-linux.helix
+		self.packages.x86_64-linux.zsh
 		self.packages.x86_64-linux.zellij
 		ndent.packages.x86_64-linux.ndent
 		journal.packages.x86_64-linux.journal
