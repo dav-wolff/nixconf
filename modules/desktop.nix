@@ -1,6 +1,10 @@
 { self, pkgs, ... }:
 
 {
+	imports = [
+		./fonts.nix
+	];
+	
 	services.xserver.enable = true;
 	
 	services.displayManager.sddm.enable = true;
@@ -32,13 +36,5 @@
 		keepass
 		thunderbird
 		self.packages.x86_64-linux.alacritty
-	];
-	
-	fonts.packages = let
-		nerdfonts = pkgs.nerdfonts.override {
-			fonts = ["JetBrainsMono"];
-		};
-	in [
-		nerdfonts
 	];
 }
