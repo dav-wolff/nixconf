@@ -15,6 +15,10 @@ source @DEFER@/zsh-defer.plugin.zsh
 # [--aliases--]
 alias ls='ls --color'
 alias la='ls -la'
+alias nd='nix develop --command zsh'
+function ns() {
+	nix shell $1 --command zsh
+}
 
 # [--completion--]
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
