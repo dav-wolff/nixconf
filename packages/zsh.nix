@@ -15,6 +15,7 @@ let
 		sed -i "s\@SYNTAX_HIGHLIGHTING@\${zsh-syntax-highlighting}/share/zsh-syntax-highlighting\g" $out/.zshrc
 		sed -i "s\@COMPLETIONS@\${zsh-completions}/share/zsh/site-functions\g" $out/.zshrc
 		sed -i "s\@AUTOSUGGESTIONS@\${zsh-autosuggestions}/share/zsh-autosuggestions\g" $out/.zshrc
+		sed -i "s\@FZF@\${fzf}/bin\g" $out/.zshrc
 		zsh -c "zcompile $out/.zshrc"
 		zsh -c "zcompile $out/p10k.zsh"
 	'');

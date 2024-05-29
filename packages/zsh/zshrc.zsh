@@ -49,3 +49,9 @@ zsh-defer -c "autoload -U compinit && compinit"
 
 # [--zsh-autosuggestions--]
 source @AUTOSUGGESTIONS@/zsh-autosuggestions.zsh
+
+# [--fzf--]
+PATH=@FZF@:$PATH
+source <(fzf --zsh)
+bindkey '^w' fzf-history-widget
+bindkey '^x' fzf-file-widget

@@ -39,10 +39,10 @@
 	};
 	
 	environment.systemPackages = with pkgs; [
+		fzf
 		xsel
 		bat
 		nil
-		gcc
 		xplr
 		nix-tree
 		lazygit
