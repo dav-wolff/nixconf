@@ -53,6 +53,15 @@
 		journal.packages.x86_64-linux.journal
 	];
 	
+	environment.shells = [self.packages.x86_64-linux.zsh];
+	users.defaultUserShell = self.packages.x86_64-linux.zsh;
+	
+	console = {
+		earlySetup = true;
+		font = "ter-u16n";
+		packages = [pkgs.terminus_font];
+	};
+	
 	programs.git = {
 		enable = true;
 			config = {

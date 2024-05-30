@@ -18,6 +18,7 @@ let
 			italic = font;
 			bold_italic = font;
 		};
+		env.NERD_FONT = "1";
 	};
 	
 	toml = pkgs.formats.toml {};

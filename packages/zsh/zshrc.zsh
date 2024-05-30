@@ -7,7 +7,12 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 source @P10K@/powerlevel10k.zsh-theme
-source $ZDOTDIR/p10k.zsh
+
+if [[ -v NERD_FONT ]]; then
+	source $ZDOTDIR/p10k_nerd_font.zsh
+else
+	source $ZDOTDIR/p10k_tty.zsh
+fi
 
 # [--aliases--]
 alias ls='ls --color'
