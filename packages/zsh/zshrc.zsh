@@ -1,5 +1,4 @@
 # [--powerlevel10k--]
-source @P10K@/powerlevel10k.zsh-theme
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/temp_home/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -7,10 +6,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 	source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+source @P10K@/powerlevel10k.zsh-theme
 source $ZDOTDIR/p10k.zsh
-
-# [--zsh-defer--]
-source @DEFER@/zsh-defer.plugin.zsh
 
 # [--aliases--]
 alias ls='ls --color'
@@ -43,15 +40,20 @@ bindkey '^n' history-search-forward
 # [--zsh-syntax-highlighting--]
 source @SYNTAX_HIGHLIGHTING@/zsh-syntax-highlighting.zsh
 
-# [--zsh-completions--]
-fpath=(@COMPLETIONS@ $fpath)
-zsh-defer -c "autoload -U compinit && compinit"
-
 # [--zsh-autosuggestions--]
 source @AUTOSUGGESTIONS@/zsh-autosuggestions.zsh
 
 # [--fzf--]
-PATH=@FZF@:$PATH
+path=(@FZF@ $path)
 source <(fzf --zsh)
 bindkey '^w' fzf-history-widget
 bindkey '^x' fzf-file-widget
+
+# [--zsh-completions--]
+fpath=(@COMPLETIONS@ $fpath)
+# compinit should occur after all completions have been added
+autoload -U compinit && compinit
+
+# [--zoxide--]
+path=(@ZOXIDE@ $path)
+eval "$(zoxide init --cmd cd zsh)"
