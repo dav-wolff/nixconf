@@ -16,6 +16,7 @@ let
 		sed -i "s\@COMPLETIONS@\${zsh-completions}/share/zsh/site-functions\g" $out/.zshrc
 		sed -i "s\@AUTOSUGGESTIONS@\${zsh-autosuggestions}/share/zsh-autosuggestions\g" $out/.zshrc
 		sed -i "s\@FZF@\${fzf}/bin\g" $out/.zshrc
+		sed -i "s\@ZOXIDE@\${zoxide}/bin\g" $out/.zshrc
 		zsh -c "zcompile $out/.zshrc"
 		zsh -c "zcompile $out/p10k.zsh"
 	'');
