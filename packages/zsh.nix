@@ -1,9 +1,18 @@
-{ pkgs }:
+{ lib
+, runCommand
+, makeWrapper
+, zsh
+, zsh-powerlevel10k
+, zsh-defer
+, zsh-syntax-highlighting
+, zsh-completions
+, zsh-autosuggestions
+, fzf
+, zoxide
+}:
 
 let
-	zsh = pkgs.zsh;
-	
-	templateReplacements = with pkgs; {
+	templateReplacements = {
 		P10K = "${zsh-powerlevel10k}/share/zsh-powerlevel10k";
 		DEFER = "${zsh-defer}/share/zsh-defer";
 		SYNTAX_HIGHLIGHTING = "${zsh-syntax-highlighting}/share/zsh-syntax-highlighting";
@@ -13,13 +22,13 @@ let
 		ZOXIDE = "${zoxide}/bin";
 	};
 	
-	templateReplace = pkgs.lib.concatMapStrings (name:
+	templateReplace = lib.concatMapStrings (name:
 		let
 			value = builtins.getAttr name templateReplacements;
 		in ''s\@${name}@\${value}\g;''
 	) (builtins.attrNames templateReplacements);
 	
-	compiledConfig = pkgs.runCommand "${zsh.name}-config" {
+	compiledConfig = runCommand "${zsh.name}-config" {
 		pname = "${zsh.name}-config";
 		nativeBuildInputs = [zsh];
 	} ''
@@ -33,10 +42,10 @@ let
 		zsh -c "zcompile $out/p10k_tty.zsh"
 	'';
 in
-	pkgs.runCommand zsh.name {
+	runCommand zsh.name {
 		inherit (zsh) pname version meta;
 		outputs = ["out" "man"];
-		nativeBuildInputs = [pkgs.makeWrapper];
+		nativeBuildInputs = [makeWrapper];
 		passthru.shellPath = "/bin/zsh";
 	} ''
 		cp -rs --no-preserve=mode,ownership ${zsh.man} $man

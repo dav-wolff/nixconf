@@ -1,4 +1,6 @@
-{ pkgs, helix }:
+{ helix
+, formats
+}:
 
 let
 	config = {
@@ -32,7 +34,7 @@ let
 		};
 	};
 	
-	toml = pkgs.formats.toml {};
+	toml = formats.toml {};
 	
 	configFile = toml.generate "helix-config" config;
 in

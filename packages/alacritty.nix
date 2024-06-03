@@ -1,4 +1,9 @@
-{ pkgs, shell }:
+{ runCommand
+, makeWrapper
+, alacritty
+, formats
+, shell
+}:
 
 let
 	config = {
@@ -21,15 +26,13 @@ let
 		env.NERD_FONT = "1";
 	};
 	
-	toml = pkgs.formats.toml {};
+	toml = formats.toml {};
 	
 	configFile = toml.generate "alacritty-config" config;
-	
-	alacritty = pkgs.alacritty;
 in
-	pkgs.runCommand alacritty.name {
+	runCommand alacritty.name {
 		inherit (alacritty) pname version meta;
-		nativeBuildInputs = [pkgs.makeWrapper];
+		nativeBuildInputs = [makeWrapper];
 	} ''
 		cp -rs --no-preserve=mode,ownership ${alacritty} $out
 		wrapProgram "$out/bin/alacritty" --add-flags --config-file --add-flags "${configFile}"
