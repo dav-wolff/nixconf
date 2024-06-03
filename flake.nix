@@ -69,22 +69,18 @@
 			inherit system;
 		};
 	in {
-		packages = {
-			helix = import ./packages/helix.nix {
-				inherit pkgs;
-				helix = helixFlake.packages.${system}.helix;
+		packages = let
+			inherit (pkgs) callPackage;
+		in {
+			helix = callPackage ./packages/helix.nix {
+				inherit (helixFlake.packages.${system}) helix;
 			};
 			
-			zsh = import ./packages/zsh.nix {
-				inherit pkgs;
-			};
+			zsh = callPackage ./packages/zsh.nix { };
 			
-			zellij = import ./packages/zellij.nix {
-				inherit pkgs;
-			};
+			zellij = callPackage ./packages/zellij.nix { };
 			
-			alacritty = import ./packages/alacritty.nix {
-				inherit pkgs;
+			alacritty = callPackage ./packages/alacritty.nix {
 				shell = "${self.packages.${system}.zellij}/bin/zellij";
 			};
 		};
