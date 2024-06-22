@@ -32,7 +32,7 @@
 					./modules/networking.nix
 					./modules/desktop.nix
 					./modules/nvidia.nix
-					./modules/max-hardware.nix
+					./modules/hardware/max.nix
 				];
 				specialArgs = args // {
 					name = "max";
@@ -46,7 +46,7 @@
 					./modules/boot-loader.nix
 					./modules/networking.nix
 					./modules/desktop.nix
-					./modules/top-hardware.nix
+					./modules/hardware/top.nix
 				];
 				specialArgs = args // {
 					name = "top";
@@ -61,6 +61,20 @@
 				];
 				specialArgs = args // {
 					name = "sub";
+				};
+			};
+			
+			shuttle = nixpkgs.lib.nixosSystem {
+				system = "x86_64-linux";
+				modules = [
+					./configuration.nix
+					./modules/grub.nix
+					./modules/networking.nix
+					./modules/ssh-server.nix
+					./modules/hardware/shuttle.nix
+				];
+				specialArgs = args // {
+					name = "shuttle";
 				};
 			};
 		};
