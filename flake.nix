@@ -71,6 +71,7 @@
 					./modules/grub.nix
 					./modules/networking.nix
 					./modules/ssh-server.nix
+					./modules/hotspot.nix
 					./modules/hardware/shuttle.nix
 				];
 				specialArgs = args // {
