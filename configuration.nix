@@ -4,6 +4,9 @@
 
 { self, pkgs, name, ndent, journal, ... }:
 
+let
+	inherit (pkgs) system;
+in
 {
 	nix.settings = {
 		experimental-features = [
@@ -60,15 +63,15 @@
 		xplr
 		nix-tree
 		lazygit
-		self.packages.x86_64-linux.helix
-		self.packages.x86_64-linux.zsh
-		self.packages.x86_64-linux.zellij
-		ndent.packages.x86_64-linux.ndent
-		journal.packages.x86_64-linux.journal
+		self.packages.${system}.helix
+		self.packages.${system}.zsh
+		self.packages.${system}.zellij
+		ndent.packages.${system}.ndent
+		journal.packages.${system}.journal
 	];
 	
-	environment.shells = [self.packages.x86_64-linux.zsh];
-	users.defaultUserShell = self.packages.x86_64-linux.zsh;
+	environment.shells = [self.packages.${system}.zsh];
+	users.defaultUserShell = self.packages.${system}.zsh;
 	
 	console = {
 		earlySetup = true;
