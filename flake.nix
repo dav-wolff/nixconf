@@ -20,6 +20,11 @@
 			url = "github:dav-wolff/journal";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		
+		vault = {
+			url = "github:dav-wolff/vault";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 	
 	outputs = { self, nixpkgs, flake-utils, helixFlake, ... } @ args: {
@@ -71,6 +76,7 @@
 					./modules/grub.nix
 					./modules/networking.nix
 					./modules/ssh-server.nix
+					./modules/vault.nix
 					./modules/hotspot.nix
 					./modules/hardware/shuttle.nix
 				];

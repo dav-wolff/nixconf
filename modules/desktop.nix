@@ -1,5 +1,8 @@
 { self, pkgs, ... }:
 
+let
+	inherit (pkgs) system;
+in
 {
 	imports = [
 		./fonts.nix
@@ -34,6 +37,6 @@
 		spotify
 		keepass
 		thunderbird
-		self.packages.x86_64-linux.alacritty
+		self.packages.${system}.alacritty
 	];
 }

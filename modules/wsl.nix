@@ -1,5 +1,8 @@
-{ self, name, ... }:
+{ self, pkgs, name, ... }:
 
+let
+	inherit (pkgs) system;
+in
 {
 	imports = [
 		./wsl/wsl-distro.nix
@@ -17,6 +20,6 @@
 	};
 	
 	environment.systemPackages = [
-		self.packages.x86_64-linux.alacritty
+		self.packages.${system}.alacritty
 	];
 }
