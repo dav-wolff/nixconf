@@ -2,12 +2,14 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ self, pkgs, name, ndent, journal, ... }:
+{ self, pkgs, name, agenix, ndent, journal, ... }:
 
 let
 	inherit (pkgs) system;
 in
 {
+	imports = [agenix.nixosModules.default];
+	
 	nix.settings = {
 		experimental-features = [
 			"nix-command"
@@ -66,6 +68,7 @@ in
 		self.packages.${system}.helix
 		self.packages.${system}.zsh
 		self.packages.${system}.zellij
+		agenix.packages.${system}.default
 		ndent.packages.${system}.ndent
 		journal.packages.${system}.journal
 	];
