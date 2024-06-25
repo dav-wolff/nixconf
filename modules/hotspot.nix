@@ -1,11 +1,22 @@
+{ config, pkgs, ... }:
+
+let
+	name = "shuttle";
+	wifi = "wlp3s0";
+	internet = "enp2s0f5";
+in
 {
-	services.create_ap = {
-		enable = true;
-		settings = {
-			INTERNET_IFACE = "enp2s0f5";
-			WIFI_IFACE = "wlp3s0";
-			SSID = "shuttle";
-			PASSPHRASE = (import ../secrets.nix).wifiHotspotPassword;
+	age.secrets.hotspotPassword.file = ../secrets/hotspotPassword.age;
+	
+	systemd.services.create_ap = {
+		wantedBy = [ "multi-user.target" ];
+		description = "Create AP Service";
+		after = [ "network.target" ];
+		serviceConfig = {
+			EnvironmentFile = config.age.secrets.hotspotPassword.path;
+			ExecStart = "${pkgs.linux-wifi-hotspot}/bin/create_ap ${wifi} ${internet} ${name} $HOTSPOT_PASSWORD";
+			KillSignal = "SIGINT";
+			Restart = "on-failure";
 		};
 	};
 }

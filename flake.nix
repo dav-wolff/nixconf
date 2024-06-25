@@ -6,6 +6,10 @@
 			url = "github:numtide/flake-utils";
 		};
 		
+		agenix = {
+			url = "github:ryantm/agenix";
+		};
+		
 		helixFlake = {
 			url = "github:helix-editor/helix";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -27,7 +31,7 @@
 		};
 	};
 	
-	outputs = { self, nixpkgs, flake-utils, helixFlake, ... } @ args: {
+	outputs = { self, nixpkgs, flake-utils, agenix, helixFlake, ... } @ args: {
 		nixosConfigurations = {
 			max = nixpkgs.lib.nixosSystem {
 				system = "x86_64-linux";
