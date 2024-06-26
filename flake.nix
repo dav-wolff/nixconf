@@ -82,6 +82,7 @@
 					./modules/ssh-server.nix
 					./modules/web-server.nix
 					./modules/vault.nix
+					./modules/vaultwarden.nix
 					./modules/hotspot.nix
 					./modules/hardware/shuttle.nix
 				];

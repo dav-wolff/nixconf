@@ -4,7 +4,7 @@
 	security.acme.acceptTerms = true;
 	security.acme.defaults.email = "dav-wolff@outlook.com";
 	
-	security.acme.certs."dav.dev".extraDomainNames = ["www.dav.dev" "vault.dav.dev"];
+	security.acme.certs."dav.dev".extraDomainNames = ["www.dav.dev" "vault.dav.dev" "bitwarden.dav.dev"];
 	
 	services.nginx = let
 		locations."/" = {
@@ -15,6 +15,13 @@
 		};
 	in {
 		enable = true;
+		recommendedProxySettings = true;
+		recommendedTlsSettings = true;
+		recommendedOptimisation = true;
+		recommendedGzipSettings = true;
+		recommendedZstdSettings = true;
+		recommendedBrotliSettings = true;
+		
 		virtualHosts = {
 			"dav.dev" = {
 				forceSSL = true;
@@ -32,6 +39,15 @@
 				forceSSL = true;
 				useACMEHost = "dav.dev";
 				locations."/".proxyPass = "http://localhost:3103";
+			};
+			
+			"bitwarden.dav.dev" = {
+				forceSSL = true;
+				useACMEHost = "dav.dev";
+				locations."/" = {
+					proxyPass = "http://localhost:8222";
+					proxyWebsockets = true;
+				};
 			};
 		};
 	};
