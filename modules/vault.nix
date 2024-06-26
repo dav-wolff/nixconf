@@ -4,7 +4,7 @@ let
 	inherit (pkgs) system;
 	
 	vaultConfigured = vault.packages.${system}.default.withAttrs {
-		port = 80;
+		port = 3103;
 	};
 	
 	vault-wrapped = pkgs.writeShellScriptBin "vault-wrapped" ''
@@ -15,8 +15,6 @@ let
 	'';
 in
 {
-	networking.firewall.allowedTCPPorts = [80];
-	
 	users.users.vault = {
 		group = "vault";
 		isSystemUser = true;
