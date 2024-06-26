@@ -80,6 +80,7 @@
 					./modules/grub.nix
 					./modules/networking.nix
 					./modules/ssh-server.nix
+					./modules/web-server.nix
 					./modules/vault.nix
 					./modules/hotspot.nix
 					./modules/hardware/shuttle.nix
