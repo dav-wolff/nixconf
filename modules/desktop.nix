@@ -35,6 +35,7 @@ in
 		discord
 		telegram-desktop
 		spotify
+		bitwarden-desktop
 		keepass
 		thunderbird
 		self.packages.${system}.alacritty
