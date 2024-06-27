@@ -58,6 +58,8 @@ in
 	};
 	
 	environment.systemPackages = with pkgs; [
+		pinentry-tty
+		rbw
 		fzf
 		xsel
 		bat
