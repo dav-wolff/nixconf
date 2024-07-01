@@ -10,6 +10,10 @@
 			url = "github:ryantm/agenix";
 		};
 		
+		nixos-hardware = {
+			url = "github:NixOS/nixos-hardware";
+		};
+		
 		helixFlake = {
 			url = "github:helix-editor/helix";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -31,7 +35,7 @@
 		};
 	};
 	
-	outputs = { self, nixpkgs, flake-utils, agenix, helixFlake, ... } @ args: {
+	outputs = { self, nixpkgs, flake-utils, nixos-hardware, agenix, helixFlake, ... } @ args: {
 		nixosConfigurations = {
 			max = nixpkgs.lib.nixosSystem {
 				system = "x86_64-linux";
@@ -76,6 +80,7 @@
 			shuttle = nixpkgs.lib.nixosSystem {
 				system = "x86_64-linux";
 				modules = [
+					nixos-hardware.nixosModules.common-gpu-nvidia-disable
 					./configuration.nix
 					./modules/grub.nix
 					./modules/networking.nix
