@@ -1,22 +1,26 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
-	name = "shuttle";
+	cfg = config.modules.hotspot;
+	name = config.networking.hostName;
 	wifi = "wlp3s0";
 	internet = "enp2s0f5";
-in
-{
-	age.secrets.hotspotPassword.file = ../secrets/hotspotPassword.age;
+in {
+	options.modules.hotspot.enable = lib.mkEnableOption "hotspot";
 	
-	systemd.services.create_ap = {
-		wantedBy = [ "multi-user.target" ];
-		description = "Create AP Service";
-		after = [ "network.target" ];
-		serviceConfig = {
-			EnvironmentFile = config.age.secrets.hotspotPassword.path;
-			ExecStart = "${pkgs.linux-wifi-hotspot}/bin/create_ap ${wifi} ${internet} ${name} $HOTSPOT_PASSWORD";
-			KillSignal = "SIGINT";
-			Restart = "on-failure";
+	config = lib.mkIf cfg.enable {
+		age.secrets.hotspotPassword.file = ../secrets/hotspotPassword.age;
+		
+		systemd.services.create_ap = {
+			wantedBy = [ "multi-user.target" ];
+			description = "Create AP Service";
+			after = [ "network.target" ];
+			serviceConfig = {
+				EnvironmentFile = config.age.secrets.hotspotPassword.path;
+				ExecStart = "${pkgs.linux-wifi-hotspot}/bin/create_ap ${wifi} ${internet} ${name} $HOTSPOT_PASSWORD";
+				KillSignal = "SIGINT";
+				Restart = "on-failure";
+			};
 		};
 	};
 }

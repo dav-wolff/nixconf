@@ -47,6 +47,7 @@ in
 		outputs = ["out" "man"];
 		nativeBuildInputs = [makeWrapper];
 		passthru.shellPath = "/bin/zsh";
+		passthru.testMarker = 2;
 	} ''
 		cp -rs --no-preserve=mode,ownership ${zsh.man} $man
 		cp -rs --no-preserve=mode,ownership ${zsh} $out

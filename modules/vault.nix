@@ -1,10 +1,10 @@
-{ pkgs, vault, ... }:
+{ config, lib, pkgs, ... }:
 
 let
-	inherit (pkgs) system;
+	cfg = config.modules.vault;
 	
-	vaultConfigured = vault.packages.${system}.default.withAttrs {
-		port = 3103;
+	vaultConfigured = pkgs.web-vault.withAttrs {
+		port = cfg.port;
 	};
 	
 	vault-wrapped = pkgs.writeShellScriptBin "vault-wrapped" ''
@@ -13,26 +13,40 @@ let
 		export VAULT_FILES_LOCATION=$STATE_DIRECTORY/files
 		${vaultConfigured}/bin/vault
 	'';
-in
-{
-	users.users.vault = {
-		group = "vault";
-		isSystemUser = true;
+in {
+	options.modules.vault = {
+		enable = lib.mkEnableOption "vault";
+		port = lib.mkOption {
+			type = lib.types.port;
+		};
 	};
 	
-	users.groups.vault = {};
-	
-	systemd.services.vault = {
-		description = "Vault";
-		wantedBy = ["multi-user.target"];
+	config = lib.mkIf cfg.enable {
+		modules.webServer.vault = {
+			enable = true;
+			subdomain = "vault";
+			port = cfg.port;
+		};
 		
-		serviceConfig = {
-			ExecStart = "${vault-wrapped}/bin/vault-wrapped";
-			User="vault";
-			Group="vault";
-			StateDirectory = "vault";
-			StateDirectoryMode ="0700";
-			AmbientCapabilities="CAP_NET_BIND_SERVICE";
+		users.users.vault = {
+			group = "vault";
+			isSystemUser = true;
+		};
+		
+		users.groups.vault = {};
+		
+		systemd.services.vault = {
+			description = "Vault";
+			wantedBy = ["multi-user.target"];
+			
+			serviceConfig = {
+				ExecStart = "${vault-wrapped}/bin/vault-wrapped";
+				User="vault";
+				Group="vault";
+				StateDirectory = "vault";
+				StateDirectoryMode ="0700";
+				AmbientCapabilities="CAP_NET_BIND_SERVICE";
+			};
 		};
 	};
 }

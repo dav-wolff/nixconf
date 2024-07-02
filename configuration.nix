@@ -2,14 +2,12 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ self, pkgs, name, agenix, ndent, journal, ... }:
+{ pkgs, ... }:
 
 let
 	inherit (pkgs) system;
 in
 {
-	imports = [agenix.nixosModules.default];
-	
 	nix.settings = {
 		experimental-features = [
 			"nix-command"
@@ -30,8 +28,6 @@ in
 	};
 	
 	nixpkgs.config.allowUnfree = true;
-	
-	networking.hostName = name;
 	
 	time.timeZone = "Europe/Berlin";
 	
@@ -67,16 +63,19 @@ in
 		xplr
 		nix-tree
 		lazygit
-		self.packages.${system}.helix
-		self.packages.${system}.zsh
-		self.packages.${system}.zellij
-		agenix.packages.${system}.default
-		ndent.packages.${system}.ndent
-		journal.packages.${system}.journal
+		configured.helix
+		configured.zsh
+		configured.zellij
+		agenix
+		ndent
+		journal
 	];
 	
-	environment.shells = [self.packages.${system}.zsh];
-	users.defaultUserShell = self.packages.${system}.zsh;
+	environment.shells = [pkgs.configured.zsh];
+	users.defaultUserShell = pkgs.configured.zsh;
+	# TODO is it better to use programs.zsh.enable?
+	users.users.root.ignoreShellProgramCheck = true;
+	users.users.dav.ignoreShellProgramCheck = true;
 	
 	console = {
 		earlySetup = true;

@@ -14,7 +14,7 @@
 			url = "github:NixOS/nixos-hardware";
 		};
 		
-		helixFlake = {
+		helix = {
 			url = "github:helix-editor/helix";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
@@ -35,90 +35,128 @@
 		};
 	};
 	
-	outputs = { self, nixpkgs, flake-utils, nixos-hardware, agenix, helixFlake, ... } @ args: {
-		nixosConfigurations = {
-			max = nixpkgs.lib.nixosSystem {
-				system = "x86_64-linux";
+	outputs = { self, nixpkgs, flake-utils, ... } @ inputs: {
+		nixosConfigurations = let
+			nixosSystem = hostName: module: nixpkgs.lib.nixosSystem {
+				system = null;
 				modules = [
-					./configuration.nix
-					./modules/boot-loader.nix
-					./modules/networking.nix
-					./modules/desktop.nix
-					./modules/nvidia.nix
-					./modules/hardware/max.nix
+					self.nixosModules.default
+					{
+						networking.hostName = hostName;
+					}
+					./modules/hardware/${hostName}.nix
+					module
 				];
-				specialArgs = args // {
-					name = "max";
+			};
+		in {
+			max = nixosSystem "max" {
+				modules = {
+					bootLoader.enable = true;
+					networking.enable = true;
+					desktop.enable = true;
+					nvidia.enable = true;
 				};
 			};
 			
-			top = nixpkgs.lib.nixosSystem {
-				system = "x86_64-linux";
-				modules = [
-					./configuration.nix
-					./modules/boot-loader.nix
-					./modules/networking.nix
-					./modules/desktop.nix
-					./modules/hardware/top.nix
-				];
-				specialArgs = args // {
-					name = "top";
+			top = nixosSystem "max" {
+				modules = {
+					bootLoader.enable = true;
+					networking.enable = true;
+					desktop.enable = true;
 				};
 			};
 			
-			sub = nixpkgs.lib.nixosSystem {
-				system = "x86_64-linux";
-				modules = [
-					./configuration.nix
-					./modules/wsl.nix
-				];
-				specialArgs = args // {
-					name = "sub";
+			sub = nixosSystem "sub" {
+				modules = {
+					wsl.enable = true;
 				};
 			};
 			
-			shuttle = nixpkgs.lib.nixosSystem {
-				system = "x86_64-linux";
-				modules = [
-					nixos-hardware.nixosModules.common-gpu-nvidia-disable
-					./configuration.nix
-					./modules/grub.nix
-					./modules/networking.nix
-					./modules/ssh-server.nix
-					./modules/web-server.nix
-					./modules/vault.nix
-					./modules/vaultwarden.nix
-					./modules/hotspot.nix
-					./modules/hardware/shuttle.nix
+			shuttle = nixosSystem "shuttle" {
+				imports = [
+					inputs.nixos-hardware.nixosModules.common-gpu-nvidia-disable
 				];
-				specialArgs = args // {
-					name = "shuttle";
+				
+				modules = {
+					bootLoader = {
+						enable = true;
+						useGrub = true;
+					};
+					
+					networking.enable = true;
+					sshServer.enable = true;
+					hotspot.enable = true;
+					
+					webServer = {
+						enable = true;
+						domain = "dav.dev";
+					};
+					
+					vault = {
+						enable = true;
+						port = 3103;
+					};
+					
+					vaultwarden = {
+						enable = true;
+						port = 8222;
+					};
 				};
 			};
+		};
+		
+		overlays = {
+			extraPackages = final: prev: let
+				system = final.system;
+			in {
+				helix = inputs.helix.packages.${system}.helix;
+				# make sure not to override existing packages, which others might depend on
+				web-vault = assert !(prev ? web-vault); inputs.vault.packages.${system}.default;
+				ndent = assert !(prev ? ndent); inputs.ndent.packages.${system}.ndent;
+				journal = assert !(prev ? journal); inputs.journal.packages.${system}.journal;
+			};
+			
+			configuredPackages = final: prev: let
+				inherit (prev) callPackage;
+			in {
+				configured = assert !(prev ? configured); {
+					helix = callPackage ./packages/helix.nix {};
+					
+					zsh = callPackage ./packages/zsh.nix {};
+					
+					zellij = callPackage ./packages/zellij.nix {};
+					
+					alacritty = callPackage ./packages/alacritty.nix {
+						shell = final.zellij;
+					};
+				};
+			};
+			
+			default = final: prev: prev.lib.composeManyExtensions [
+				inputs.agenix.overlays.default
+				self.overlays.extraPackages
+				self.overlays.configuredPackages
+			] final prev;
+		};
+		
+		nixosModules.default = {
+			imports = [inputs.agenix.nixosModules.default] ++ import ./modules/all-modules.nix;
+			nixpkgs.overlays = [self.overlays.default];
 		};
 	} // flake-utils.lib.eachDefaultSystem (system: let
 		pkgs = import nixpkgs {
 			inherit system;
+			overlays = [
+				self.overlays.default
+			];
 		};
 	in {
-		packages = let
-			inherit (pkgs) callPackage;
-		in {
-			helix = callPackage ./packages/helix.nix {
-				inherit (helixFlake.packages.${system}) helix;
-			};
-			
-			zsh = callPackage ./packages/zsh.nix { };
-			
-			zellij = callPackage ./packages/zellij.nix { };
-			
-			alacritty = callPackage ./packages/alacritty.nix {
-				shell = "${self.packages.${system}.zellij}/bin/zellij";
-			};
+		packages = {
+			inherit (pkgs.configured) helix zsh zellij alacritty;
 		};
 		
 		devShells.default = pkgs.mkShell {
-			packages = with self.packages.${system}; [
+			packages = with pkgs; [
 				helix
 				zsh
 				zellij

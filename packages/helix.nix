@@ -37,7 +37,6 @@ let
 	toml = formats.toml {};
 	
 	configFile = toml.generate "helix-config" config;
-in
-helix.override {
+in helix.override {
 	makeWrapperArgs = ["--add-flags" "\"--config\"" "--add-flags" "\"${configFile}\""];
 }

@@ -1,4 +1,5 @@
-{ runCommand
+{ lib
+, runCommand
 , makeWrapper
 , alacritty
 , formats
@@ -8,7 +9,7 @@
 let
 	config = {
 		live_config_reload = false;
-		shell = "${shell}";
+		shell = lib.meta.getExe shell;
 		window.startup_mode = "Maximized";
 		mouse.hide_when_typing = true;
 		font = let
