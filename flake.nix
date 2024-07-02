@@ -72,10 +72,6 @@
 			};
 			
 			sub = nixosSystem "sub" {
-				imports = [
-					inputs.nixos-wsl.nixosModules.default
-				];
-				
 				modules = {
 					wsl.enable = true;
 				};
@@ -149,7 +145,10 @@
 		};
 		
 		nixosModules.default = {
-			imports = [inputs.agenix.nixosModules.default] ++ import ./modules/all-modules.nix;
+			imports = [
+				inputs.agenix.nixosModules.default
+				inputs.nixos-wsl.nixosModules.default
+			] ++ import ./modules/all-modules.nix;
 			nixpkgs.overlays = [self.overlays.default];
 		};
 	} // flake-utils.lib.eachDefaultSystem (system: let
