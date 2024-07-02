@@ -3,11 +3,6 @@
 let
 	cfg = config.modules.wsl;
 in {
-	imports = [
-		./wsl/wsl-distro.nix
-		./wsl/interop.nix
-	];
-	
 	options.modules.wsl.enable = lib.mkEnableOption "wsl";
 	
 	config = lib.mkIf cfg.enable {
@@ -15,11 +10,11 @@ in {
 		
 		wsl = {
 			enable = true;
-			automountPath = "/mnt";
 			defaultUser = "dav";
 			startMenuLaunchers = true;
 			
-			wslConf.network.hostname = config.networking.hostName;
+			wslConf.automount.root = "/mnt";
+			wslConf.interop.enabled = false;
 		};
 		
 		environment.systemPackages = with pkgs; [

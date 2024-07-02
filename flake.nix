@@ -14,6 +14,11 @@
 			url = "github:NixOS/nixos-hardware";
 		};
 		
+		nixos-wsl = {
+			url = "github:nix-community/NixOS-WSL";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
+		
 		helix = {
 			url = "github:helix-editor/helix";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -67,6 +72,10 @@
 			};
 			
 			sub = nixosSystem "sub" {
+				imports = [
+					inputs.nixos-wsl.nixosModules.default
+				];
+				
 				modules = {
 					wsl.enable = true;
 				};
