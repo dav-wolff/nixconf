@@ -1,25 +1,29 @@
-{ self, pkgs, name, ... }:
+{ config, lib, pkgs, ... }:
 
 let
-	inherit (pkgs) system;
-in
-{
+	cfg = config.modules.wsl;
+in {
 	imports = [
 		./wsl/wsl-distro.nix
 		./wsl/interop.nix
-		./fonts.nix
 	];
 	
-	wsl = {
-		enable = true;
-		automountPath = "/mnt";
-		defaultUser = "dav";
-		startMenuLaunchers = true;
+	options.modules.wsl.enable = lib.mkEnableOption "wsl";
+	
+	config = lib.mkIf cfg.enable {
+		modules.fonts.enable = true;
 		
-		wslConf.network.hostname = name;
+		wsl = {
+			enable = true;
+			automountPath = "/mnt";
+			defaultUser = "dav";
+			startMenuLaunchers = true;
+			
+			wslConf.network.hostname = config.networking.hostName;
+		};
+		
+		environment.systemPackages = with pkgs; [
+			configured.alacritty
+		];
 	};
-	
-	environment.systemPackages = [
-		self.packages.${system}.alacritty
-	];
 }
