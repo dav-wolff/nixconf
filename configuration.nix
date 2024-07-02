@@ -4,9 +4,6 @@
 
 { pkgs, ... }:
 
-let
-	inherit (pkgs) system;
-in
 {
 	nix.settings = {
 		experimental-features = [

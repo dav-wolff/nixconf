@@ -5,7 +5,7 @@ let
 in {
 	options.modules.nvidia.enable = lib.mkEnableOption "nvidia";
 	
-	config = {
+	config = lib.mkIf cfg.enable {
 		# Enable OpenGL
 		hardware.graphics.enable = true;
 		
