@@ -132,7 +132,7 @@
 					zellij = callPackage ./packages/zellij.nix {};
 					
 					alacritty = callPackage ./packages/alacritty.nix {
-						shell = final.zellij;
+						shell = final.configured.zellij;
 					};
 				};
 			};
