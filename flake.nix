@@ -63,7 +63,7 @@
 				};
 			};
 			
-			top = nixosSystem "max" {
+			top = nixosSystem "top" {
 				modules = {
 					bootLoader.enable = true;
 					networking.enable = true;
