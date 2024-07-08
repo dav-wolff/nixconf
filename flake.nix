@@ -137,10 +137,24 @@
 				};
 			};
 			
+			# temporary fix, firefox currently crashes when using wayland
+			# https://bugzilla.mozilla.org/show_bug.cgi?id=1898476
+			fixFirefox = final: prev: {
+				wrapFirefox = browser: { applicationName ? browser.binaryName or (prev.lib.getName browser), ... } @ attrs: let
+					wrapped-browser = prev.wrapFirefox browser attrs;
+				in wrapped-browser.overrideAttrs (old: {
+					buildCommand = ''
+						${old.buildCommand}
+						substituteInPlace $out/bin/${applicationName} --replace "exec -a" "MOZ_ENABLE_WAYLAND=0 exec -a"
+					'';
+				});
+			};
+			
 			default = final: prev: prev.lib.composeManyExtensions [
 				inputs.agenix.overlays.default
 				self.overlays.extraPackages
 				self.overlays.configuredPackages
+				self.overlays.fixFirefox
 			] final prev;
 		};
 		
