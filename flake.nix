@@ -150,6 +150,8 @@
 				inputs.nixos-wsl.nixosModules.default
 			] ++ import ./modules/all-modules.nix;
 			nixpkgs.overlays = [self.overlays.default];
+			modules.nix.pkgs = self;
+			modules.nix.nixpkgs = nixpkgs;
 		};
 	} // flake-utils.lib.eachDefaultSystem (system: let
 		pkgs = import nixpkgs {
@@ -162,6 +164,9 @@
 		packages = {
 			inherit (pkgs.configured) helix zsh zellij alacritty;
 		};
+		
+		# Packages for use from flake registry
+		legacyPackages = pkgs;
 		
 		devShells.default = pkgs.mkShell {
 			packages = with pkgs; [
