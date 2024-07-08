@@ -3,7 +3,7 @@
 let
 	cfg = config.modules.vault;
 	
-	vaultConfigured = pkgs.web-vault.withAttrs {
+	vaultConfigured = pkgs.vault-rs.override {
 		port = cfg.port;
 	};
 	

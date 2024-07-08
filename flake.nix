@@ -116,7 +116,6 @@
 			in {
 				helix = inputs.helix.packages.${system}.helix;
 				# make sure not to override existing packages, which others might depend on
-				web-vault = assert !(prev ? web-vault); inputs.vault.packages.${system}.default;
 				ndent = assert !(prev ? ndent); inputs.ndent.packages.${system}.ndent;
 				journal = assert !(prev ? journal); inputs.journal.packages.${system}.journal;
 			};
@@ -152,6 +151,7 @@
 			
 			default = final: prev: prev.lib.composeManyExtensions [
 				inputs.agenix.overlays.default
+				inputs.vault.overlays.default
 				self.overlays.extraPackages
 				self.overlays.configuredPackages
 				self.overlays.fixFirefox
