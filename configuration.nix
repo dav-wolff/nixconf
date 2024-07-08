@@ -60,22 +60,6 @@
 		packages = [pkgs.terminus_font];
 	};
 	
-	programs.git = {
-		enable = true;
-			config = {
-			user.name = "David Wolff";
-			user.email = "david@dav.dev";
-			init.defaultBranch = "master";
-			alias = {
-				c = "commit -m";
-				co = "checkout";
-				s = "status";
-				a = "add";
-				l = "log --oneline";
-			};
-		};
-	};
-	
 	programs.ssh = {
 		startAgent = true;
 	};
