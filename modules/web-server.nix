@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
 	cfg = config.modules.webServer;
@@ -37,6 +37,17 @@ in {
 				type = lib.types.port;
 			};
 		};
+		
+		solitaire = {
+			enable = lib.mkEnableOption "webServer.solitaire";
+			subdomain = lib.mkOption {
+				type = lib.types.str;
+			};
+			domain = lib.mkOption {
+				type = lib.types.str;
+				default = "${cfg.solitaire.subdomain}.${cfg.domain}";
+			};
+		};
 	};
 	
 	config = lib.mkIf cfg.enable {
@@ -47,7 +58,8 @@ in {
 		
 		security.acme.certs.${cfg.domain}.extraDomainNames = ["www.${cfg.domain}"]
 			++ lib.optional cfg.vault.enable cfg.vault.domain
-			++ lib.optional cfg.bitwarden.enable cfg.bitwarden.domain;
+			++ lib.optional cfg.bitwarden.enable cfg.bitwarden.domain
+			++ lib.optional cfg.solitaire.enable cfg.solitaire.domain;
 		
 		services.nginx = let
 			locations."/" = {
@@ -90,6 +102,14 @@ in {
 					locations."/" = {
 						proxyPass = "http://localhost:${toString cfg.bitwarden.port}";
 						proxyWebsockets = true;
+					};
+				};
+			} // lib.optionalAttrs cfg.solitaire.enable {
+				${cfg.solitaire.domain} = {
+					forceSSL = true;
+					useACMEHost = cfg.domain;
+					locations."/" = {
+						root = pkgs.solitaire.web;
 					};
 				};
 			};
