@@ -38,6 +38,11 @@
 			url = "github:dav-wolff/vault";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		
+		solitaire = {
+			url = "github:dav-wolff/solitaire";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 	
 	outputs = { self, nixpkgs, flake-utils, ... } @ inputs: {
@@ -95,6 +100,10 @@
 					webServer = {
 						enable = true;
 						domain = "dav.dev";
+						solitaire = {
+							enable = true;
+							subdomain = "solitaire";
+						};
 					};
 					
 					vault = {
@@ -152,6 +161,7 @@
 			default = final: prev: prev.lib.composeManyExtensions [
 				inputs.agenix.overlays.default
 				inputs.vault.overlays.default
+				inputs.solitaire.overlays.default
 				self.overlays.extraPackages
 				self.overlays.configuredPackages
 				self.overlays.fixFirefox
