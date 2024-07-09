@@ -32,6 +32,8 @@ in {
 					"helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
 				];
 				
+				trusted-users = ["root" "dav"];
+				
 				# https://github.com/NixOS/nix/issues/9574
 				nix-path = "nixpkgs=flake:nixpkgs";
 			};
