@@ -43,7 +43,6 @@
 		configured.helix
 		configured.zsh
 		configured.zellij
-		agenix
 		ndent
 		journal
 	];

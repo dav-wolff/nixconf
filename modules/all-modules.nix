@@ -2,6 +2,7 @@
 	# TODO remove this
 	../configuration.nix
 	./nix.nix
+	./age.nix
 	./git.nix
 	./boot-loader.nix
 	./networking.nix
