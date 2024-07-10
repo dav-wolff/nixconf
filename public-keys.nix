@@ -9,6 +9,7 @@ let
 	hostKeys = {
 		max = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIbFDtbeU7fZREtiNRBaL0T8Ro599HO6t3h5NmzWNJ6Q root@max";
 		top = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ/mtD2gnkt0pvRXKh7AUn7mPQ2TMqdaHLQfsPCDPhB6 root@top";
+		sub = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICvLiK2OfWukN/GqwmWaCQVDHfyhn/LsE+OQXqaheFOE root@sub";
 		shuttle = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAdIp/YIm2ncVFMmEqtg7y4cbnzP1tjX2Jx/YXRJsT15 root@shuttle";
 	};
 in {
