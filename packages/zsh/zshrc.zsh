@@ -62,3 +62,6 @@ autoload -U compinit && compinit
 # [--zoxide--]
 path=(@ZOXIDE@ $path)
 eval "$(zoxide init --cmd cd zsh)"
+
+# [--gpg--]
+export GPG_TTY=$TTY

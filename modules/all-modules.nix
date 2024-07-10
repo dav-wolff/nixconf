@@ -4,6 +4,7 @@
 	./nix.nix
 	./age.nix
 	./git.nix
+	./gpg.nix
 	./boot-loader.nix
 	./networking.nix
 	./fonts.nix

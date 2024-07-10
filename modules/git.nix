@@ -5,6 +5,7 @@
 			user.name = "David Wolff";
 			user.email = "david@dav.dev";
 			init.defaultBranch = "master";
+			commit.gpgsign = true;
 			pull.ff = "only";
 			alias = {
 				c = "commit -m";
