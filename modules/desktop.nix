@@ -38,6 +38,7 @@ in {
 			bitwarden-desktop
 			keepass
 			thunderbird
+			protonmail-desktop
 			configured.alacritty
 		];
 	};
