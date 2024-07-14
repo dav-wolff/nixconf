@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 
 let
-	gpg = config.programs.gnupg.package;
 	gnupgHome = "/var/lib/gnupg-home";
 in {
 	age.secrets = {
@@ -22,27 +21,25 @@ in {
 		};
 	};
 	
-	system.activationScripts.importGpgKeys = let
-		setupGpg = pkgs.writeShellApplication {
-			name = "setupGpg";
-			runtimeInputs = [gpg];
-			text = ''
-				echo "setting up gpg keys..."
-				gpg --batch --import ${config.age.secrets.gpgKeys.path}
-				gpg --with-colons --fingerprint \
-					| sed -r -n 's/^fpr:+([0-9A-F]+):$/\1:6:/p' \
-					| gpg --import-ownertrust
-			'';
-		};
-	in {
-		deps = ["agenix"];
+	system.activationScripts.setupGnupgHome = {
 		text = ''
+			rm -rf ${gnupgHome}
+			mkdir -p ${gnupgHome}
+			chown dav ${gnupgHome}
+			chmod 700 ${gnupgHome}
+		'';
+	};
+	
+	system.userActivationScripts.importGpgKeys = {
+		text = let
+			gpg = "${config.programs.gnupg.package}/bin/gpg";
+		in ''
+			echo "setting up gpg keys..."
 			export GNUPGHOME=${gnupgHome}
-			rm -r $GNUPGHOME
-			mkdir -p $GNUPGHOME
-			chown dav $GNUPGHOME
-			chmod 700 $GNUPGHOME
-			${pkgs.su}/bin/su dav -c ${setupGpg}/bin/setupGpg
+				${gpg} --batch --import ${config.age.secrets.gpgKeys.path}
+				${gpg} --with-colons --fingerprint \
+					| sed -r -n 's/^fpr:+([0-9A-F]+):$/\1:6:/p' \
+					| ${gpg} --import-ownertrust
 		'';
 	};
 }
