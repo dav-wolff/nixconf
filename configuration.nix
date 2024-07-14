@@ -38,6 +38,7 @@
 		bat
 		nil
 		xplr
+		tree
 		nix-tree
 		lazygit
 		configured.helix
