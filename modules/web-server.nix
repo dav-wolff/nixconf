@@ -108,8 +108,17 @@ in {
 				${cfg.solitaire.domain} = {
 					forceSSL = true;
 					useACMEHost = cfg.domain;
+					locations."= /index.html" = {
+						root = pkgs.solitaire.web;
+						extraConfig = ''
+							add_header Cache-Control "public, no-cache";
+						'';
+					};
 					locations."/" = {
 						root = pkgs.solitaire.web;
+						extraConfig = ''
+							add_header Cache-Control "public, max-age=604800, immutable";
+						'';
 					};
 				};
 			};
