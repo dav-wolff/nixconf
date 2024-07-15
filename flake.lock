@@ -23,12 +23,39 @@
     },
     "cache_bust": {
       "inputs": {
-        "crane": "crane_3",
+        "crane": "crane_2",
+        "fenix": [
+          "solitaire",
+          "fenix"
+        ],
+        "flake-utils": "flake-utils_4",
+        "nixpkgs": [
+          "solitaire",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1717155082,
+        "narHash": "sha256-krbDERLHJkbXTRtRso9qZ+TxhcizNJ8DgJmo8L28VO4=",
+        "owner": "dav-wolff",
+        "repo": "cache_bust",
+        "rev": "9dfc21f588f7beef516e0d74dd4f9e89b755f695",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dav-wolff",
+        "repo": "cache_bust",
+        "type": "github"
+      }
+    },
+    "cache_bust_2": {
+      "inputs": {
+        "crane": "crane_4",
         "fenix": [
           "vault",
           "fenix"
         ],
-        "flake-utils": "flake-utils_5",
+        "flake-utils": "flake-utils_6",
         "nixpkgs": [
           "vault",
           "nixpkgs"
@@ -73,6 +100,28 @@
       "inputs": {
         "nixpkgs": [
           "solitaire",
+          "cache_bust",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1716745752,
+        "narHash": "sha256-8K1R9Yg4r08rYk86Yq+lu3E9L3uRUb4xMqYHgl0VGS0=",
+        "owner": "ipetkov",
+        "repo": "crane",
+        "rev": "19ca94ec2d288de334ae932107816b4a97736cd8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ipetkov",
+        "repo": "crane",
+        "type": "github"
+      }
+    },
+    "crane_3": {
+      "inputs": {
+        "nixpkgs": [
+          "solitaire",
           "nixpkgs"
         ]
       },
@@ -90,7 +139,7 @@
         "type": "github"
       }
     },
-    "crane_3": {
+    "crane_4": {
       "inputs": {
         "nixpkgs": [
           "vault",
@@ -112,7 +161,7 @@
         "type": "github"
       }
     },
-    "crane_4": {
+    "crane_5": {
       "inputs": {
         "nixpkgs": [
           "vault",
@@ -308,6 +357,24 @@
     "flake-utils_6": {
       "inputs": {
         "systems": "systems_7"
+      },
+      "locked": {
+        "lastModified": 1710146030,
+        "narHash": "sha256-SZ5L6eA7HJ/nmkzGG7/ISclqe6oZdOZTNoesiInkXPQ=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "b1d9ab70662946ef0850d488da1c9019f3a9752a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_7": {
+      "inputs": {
+        "systems": "systems_8"
       },
       "locked": {
         "lastModified": 1710146030,
@@ -551,19 +618,20 @@
     },
     "solitaire": {
       "inputs": {
-        "crane": "crane_2",
+        "cache_bust": "cache_bust",
+        "crane": "crane_3",
         "fenix": "fenix",
-        "flake-utils": "flake-utils_4",
+        "flake-utils": "flake-utils_5",
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1720796941,
-        "narHash": "sha256-zqTbDbiwCgKXURxiIl/YUyb0mVehK+8gjT9oUZdWjuw=",
+        "lastModified": 1721018637,
+        "narHash": "sha256-DO4jQBN0HmCkdkftaKLFPMIXHo8Hqdl1Ygv42EOK0mk=",
         "owner": "dav-wolff",
         "repo": "solitaire",
-        "rev": "c24c0ab7373300eaae82441e06bdc057dd734ba4",
+        "rev": "b5cd2d7844b44a3805f75bda54119e72e865fd08",
         "type": "github"
       },
       "original": {
@@ -677,12 +745,27 @@
         "type": "github"
       }
     },
+    "systems_8": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
     "vault": {
       "inputs": {
-        "cache_bust": "cache_bust",
-        "crane": "crane_4",
+        "cache_bust": "cache_bust_2",
+        "crane": "crane_5",
         "fenix": "fenix_2",
-        "flake-utils": "flake-utils_6",
+        "flake-utils": "flake-utils_7",
         "nixpkgs": [
           "nixpkgs"
         ]
