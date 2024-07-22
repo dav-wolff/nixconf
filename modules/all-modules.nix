@@ -16,4 +16,5 @@
 	./web-server.nix
 	./vault.nix
 	./vaultwarden.nix
+	./nextcloud.nix
 ]
