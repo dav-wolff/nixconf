@@ -115,6 +115,11 @@
 						enable = true;
 						port = 8222;
 					};
+					
+					nextcloud = {
+						enable = true;
+						adminPassword = ./secrets/nextcloudAdminPassword.age;
+					};
 				};
 			};
 		};
