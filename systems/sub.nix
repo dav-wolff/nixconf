@@ -1,0 +1,5 @@
+{
+	modules = {
+		wsl.enable = true;
+	};
+}

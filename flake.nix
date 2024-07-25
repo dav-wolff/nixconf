@@ -47,82 +47,37 @@
 	
 	outputs = { self, nixpkgs, flake-utils, ... } @ inputs: {
 		nixosConfigurations = let
-			nixosSystem = hostName: module: nixpkgs.lib.nixosSystem {
+			lib = nixpkgs.lib;
+			
+			pathToName = path: let
+				baseName = builtins.baseNameOf path;
+				length = builtins.stringLength baseName;
+			in builtins.substring 0 (length - 4) baseName;
+			
+			pathToSystem = path: let
+				hostName = pathToName path;
+				config = import path;
+				module = if builtins.isFunction config then
+					config inputs
+				else
+					config;
+			in lib.nixosSystem {
 				system = null;
 				modules = [
 					self.nixosModules.default
 					{
 						networking.hostName = hostName;
 					}
-					./modules/hardware/${hostName}.nix
+					./hardware-modules/${hostName}.nix
 					module
 				];
 			};
-		in {
-			max = nixosSystem "max" {
-				modules = {
-					bootLoader.enable = true;
-					networking.enable = true;
-					desktop.enable = true;
-					nvidia.enable = true;
-				};
-			};
 			
-			top = nixosSystem "top" {
-				modules = {
-					bootLoader.enable = true;
-					networking.enable = true;
-					desktop.enable = true;
-				};
-			};
-			
-			sub = nixosSystem "sub" {
-				modules = {
-					wsl.enable = true;
-				};
-			};
-			
-			shuttle = nixosSystem "shuttle" {
-				imports = [
-					inputs.nixos-hardware.nixosModules.common-gpu-nvidia-disable
-				];
-				
-				modules = {
-					bootLoader = {
-						enable = true;
-						useGrub = true;
-					};
-					
-					networking.enable = true;
-					sshServer.enable = true;
-					hotspot.enable = true;
-					
-					webServer = {
-						enable = true;
-						domain = "dav.dev";
-						solitaire = {
-							enable = true;
-							subdomain = "solitaire";
-						};
-					};
-					
-					vault = {
-						enable = true;
-						port = 3103;
-					};
-					
-					vaultwarden = {
-						enable = true;
-						port = 8222;
-					};
-					
-					nextcloud = {
-						enable = true;
-						adminPassword = ./secrets/nextcloudAdminPassword.age;
-					};
-				};
-			};
-		};
+			systems = builtins.listToAttrs (map (path: {
+				name = pathToName path;
+				value = pathToSystem path;
+			}) (lib.filesystem.listFilesRecursive ./systems));
+		in systems;
 		
 		overlays = {
 			extraPackages = final: prev: let
@@ -150,6 +105,11 @@
 				};
 			};
 			
+			owntracks = final: prev: {
+				owntracks-recorder = prev.callPackage ./packages/owntracks-recorder.nix {};
+				owntracks-frontend = prev.callPackage ./packages/owntracks-frontend.nix {};
+			};
+			
 			# temporary fix, firefox currently crashes when using wayland
 			# https://bugzilla.mozilla.org/show_bug.cgi?id=1898476
 			fixFirefox = final: prev: {
@@ -169,15 +129,18 @@
 				inputs.solitaire.overlays.default
 				self.overlays.extraPackages
 				self.overlays.configuredPackages
+				self.overlays.owntracks
 				self.overlays.fixFirefox
 			] final prev;
 		};
 		
-		nixosModules.default = {
+		nixosModules.default = { lib, ... }: {
 			imports = [
 				inputs.agenix.nixosModules.default
 				inputs.nixos-wsl.nixosModules.default
-			] ++ import ./modules/all-modules.nix;
+				# TODO remove
+				./configuration.nix
+			] ++ lib.filesystem.listFilesRecursive ./modules;
 			nixpkgs.overlays = [self.overlays.default];
 			modules.nix.pkgs = self;
 			modules.nix.nixpkgs = nixpkgs;
