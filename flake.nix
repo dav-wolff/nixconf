@@ -1,4 +1,6 @@
 {
+	description = "dav's NixOS configurations";
+	
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 		
@@ -159,6 +161,13 @@
 		
 		# Packages for use from flake registry
 		legacyPackages = pkgs;
+		
+		apps = {
+			update = {
+				type = "app";
+				program = "${import ./update.nix pkgs}/bin/update";
+			};
+		};
 		
 		devShells.default = pkgs.mkShell {
 			packages = with pkgs; [
