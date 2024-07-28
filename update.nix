@@ -17,7 +17,7 @@ pkgs.writeShellApplication {
 		prev_pkgs=$(mktemp)
 		pkgs > "$prev_pkgs"
 		nix flake update
-		sudo nixos-rebuild test
+		sudo nixos-rebuild switch
 		new_pkgs=$(mktemp)
 		pkgs > "$new_pkgs"
 		
