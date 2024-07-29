@@ -4,6 +4,8 @@
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 		
+		nixpkgs-immich.url = "github:dav-wolff/nixpkgs/immich";
+		
 		flake-utils = {
 			url = "github:numtide/flake-utils";
 		};
@@ -112,6 +114,22 @@
 				owntracks-frontend = prev.callPackage ./packages/owntracks-frontend.nix {};
 			};
 			
+			# TODO remove once immich gets merged
+			immich = final: prev: {
+				immich = inputs.nixpkgs-immich.legacyPackages.${final.system}.immich;
+			};
+			
+			fixImmich = final: prev: {
+				immich = prev.immich.overrideAttrs (finalAttrs: prevAttrs: let
+					vips = prev.lib.findFirst (pkg: pkg.pname == "vips") final.vips finalAttrs.buildInputs;
+				in {
+					postConfigure = ''
+						rm node_modules/@img/sharp-libvips-linux-x64/lib/libvips-cpp.so.42
+						cp ${vips.out}/lib/libvips-cpp.so.42 node_modules/@img/sharp-libvips-linux-x64/lib/libvips-cpp.so.42
+					'';
+				});
+			};
+			
 			# temporary fix, firefox currently crashes when using wayland
 			# https://bugzilla.mozilla.org/show_bug.cgi?id=1898476
 			fixFirefox = final: prev: {
@@ -132,6 +150,8 @@
 				self.overlays.extraPackages
 				self.overlays.configuredPackages
 				self.overlays.owntracks
+				self.overlays.immich
+				self.overlays.fixImmich
 				self.overlays.fixFirefox
 			] final prev;
 		};
@@ -140,6 +160,8 @@
 			imports = [
 				inputs.agenix.nixosModules.default
 				inputs.nixos-wsl.nixosModules.default
+				# TODO remove once immich gets merged
+				"${inputs.nixpkgs-immich}/nixos/modules/services/web-apps/immich.nix"
 				# TODO remove
 				./configuration.nix
 			] ++ lib.filesystem.listFilesRecursive ./modules;

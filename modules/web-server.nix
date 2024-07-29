@@ -38,6 +38,20 @@ in {
 			};
 		};
 		
+		immich = {
+			enable = lib.mkEnableOption "webServer.immich";
+			subdomain = lib.mkOption {
+				type = lib.types.str;
+			};
+			domain = lib.mkOption {
+				type = lib.types.str;
+				default = "${cfg.immich.subdomain}.${cfg.domain}";
+			};
+			port = lib.mkOption {
+				type = lib.types.port;
+			};
+		};
+		
 		owntracks = {
 			enable = lib.mkEnableOption "webServer.owntracks";
 			subdomain = lib.mkOption {
@@ -87,6 +101,7 @@ in {
 		security.acme.certs.${cfg.domain}.extraDomainNames = ["www.${cfg.domain}"]
 			++ lib.optional cfg.vault.enable cfg.vault.domain
 			++ lib.optional cfg.bitwarden.enable cfg.bitwarden.domain
+			++ lib.optional cfg.immich.enable cfg.immich.domain
 			++ lib.optional cfg.owntracks.enable cfg.owntracks.domain
 			++ lib.optional cfg.solitaire.enable cfg.solitaire.domain
 			++ lib.optional cfg.nextcloud.enable cfg.nextcloud.domain;
@@ -141,6 +156,24 @@ in {
 					};
 				};
 				
+				immichHosts = lib.mkIf cfg.immich.enable {
+					${cfg.immich.domain} = {
+						forceSSL = true;
+						useACMEHost = cfg.domain;
+						locations."/" = {
+							proxyPass = "http://localhost:${toString cfg.immich.port}";
+							proxyWebsockets = true;
+						};
+						extraConfig = ''
+							# https://immich.app/docs/administration/reverse-proxy/
+							client_max_body_size 10000M;
+							proxy_read_timeout 600s;
+							proxy_send_timeout 600s;
+							send_timeout 600s;
+						'';
+					};
+				};
+				
 				owntracksHosts = lib.mkIf cfg.owntracks.enable {
 					${cfg.owntracks.domain} = {
 						forceSSL = true;
@@ -184,7 +217,7 @@ in {
 						# All other options are managed by services.nextcloud
 					};
 				};
-			in lib.mkMerge [baseHosts vaultHosts bitwardenHosts owntracksHosts solitaireHosts nextcloudHosts];
+			in lib.mkMerge [baseHosts vaultHosts bitwardenHosts immichHosts owntracksHosts solitaireHosts nextcloudHosts];
 		};
 		
 		services.nextcloud.hostName = lib.mkIf (cfg.enable && cfg.nextcloud.enable) cfg.nextcloud.domain;
