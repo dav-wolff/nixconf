@@ -13,17 +13,6 @@
 		fsType = "ext4";
 	};
 	
-	fileSystems."/vol/nextcloud" = {
-		device = "/dev/disk/by-uuid/0af2ff96-3bc7-43c3-896c-b8031460e563";
-		fsType = "btrfs";
-		options = [
-			"subvol=nextcloud"
-			"compress=zstd"
-		];
-	};
-	
-	modules.nextcloud.volume = "/vol/nextcloud";
-	
 	fileSystems."/vol/immich" = {
 		device = "/dev/disk/by-uuid/0af2ff96-3bc7-43c3-896c-b8031460e563";
 		fsType = "btrfs";

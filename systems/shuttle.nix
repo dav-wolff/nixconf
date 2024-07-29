@@ -44,10 +44,5 @@
 			port = 8083;
 			passwordFile = ../secrets/owntracksPassword.age;
 		};
-		
-		nextcloud = {
-			enable = true;
-			adminPassword = ../secrets/nextcloudAdminPassword.age;
-		};
 	};
 }
