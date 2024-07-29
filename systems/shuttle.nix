@@ -34,6 +34,11 @@
 			port = 8222;
 		};
 		
+		immich = {
+			enable = true;
+			port = 8333;
+		};
+		
 		owntracks = {
 			enable = true;
 			port = 8083;
