@@ -79,17 +79,6 @@ in {
 				default = "${cfg.solitaire.subdomain}.${cfg.domain}";
 			};
 		};
-		
-		nextcloud = {
-			enable = lib.mkEnableOption "webServer.nextcloud";
-			subdomain = lib.mkOption {
-				type = lib.types.str;
-			};
-			domain = lib.mkOption {
-				type = lib.types.str;
-				default = "${cfg.nextcloud.subdomain}.${cfg.domain}";
-			};
-		};
 	};
 	
 	config = lib.mkIf cfg.enable {
@@ -103,8 +92,7 @@ in {
 			++ lib.optional cfg.bitwarden.enable cfg.bitwarden.domain
 			++ lib.optional cfg.immich.enable cfg.immich.domain
 			++ lib.optional cfg.owntracks.enable cfg.owntracks.domain
-			++ lib.optional cfg.solitaire.enable cfg.solitaire.domain
-			++ lib.optional cfg.nextcloud.enable cfg.nextcloud.domain;
+			++ lib.optional cfg.solitaire.enable cfg.solitaire.domain;
 		
 		services.nginx = {
 			enable = true;
@@ -209,18 +197,7 @@ in {
 						};
 					};
 				};
-				
-				nextcloudHosts = lib.mkIf cfg.nextcloud.enable {
-					${cfg.nextcloud.domain} = {
-						forceSSL = true;
-						useACMEHost = cfg.domain;
-						# All other options are managed by services.nextcloud
-					};
-				};
-			in lib.mkMerge [baseHosts vaultHosts bitwardenHosts immichHosts owntracksHosts solitaireHosts nextcloudHosts];
+			in lib.mkMerge [baseHosts vaultHosts bitwardenHosts immichHosts owntracksHosts solitaireHosts];
 		};
-		
-		services.nextcloud.hostName = lib.mkIf (cfg.enable && cfg.nextcloud.enable) cfg.nextcloud.domain;
-		# All other options are managed my modules.nextcloud
-	} ;
+	};
 }
