@@ -28,6 +28,8 @@ in {
 			#jack.enable = true;
 		};
 		
+		programs.kdeconnect.enable = true;
+		
 		users.users.dav.packages = with pkgs; [
 			firefox
 			kate
