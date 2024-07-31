@@ -205,6 +205,22 @@ in {
 					};
 				};
 			in lib.mkMerge [baseHosts vaultHosts bitwardenHosts immichHosts owntracksHosts solitaireHosts];
+			
+			# Reject connections on unknown hosts
+			appendHttpConfig = let
+				cert = config.security.acme.certs.${cfg.domain}.directory;
+			in ''
+				server {
+					listen 80 default_server;
+					listen 443 ssl default_server;
+					
+					ssl_certificate ${cert}/fullchain.pem;
+					ssl_certificate_key ${cert}/key.pem;
+					ssl_trusted_certificate ${cert}/chain.pem;
+					
+					return 444;
+				}
+			'';
 		};
 	};
 }
