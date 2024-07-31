@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ config, lib, pkgs, ... }:
 
 let
 	cfg = config.modules.immich;
@@ -13,17 +13,22 @@ in {
 		};
 	};
 	
-	config = lib.mkIf cfg.enable {
-		modules.webServer.immich = {
-			enable = true;
-			subdomain = "immich";
-			port = cfg.port;
-		};
-		
-		services.immich = {
-			enable = true;
-			mediaLocation = cfg.volume;
-			port = cfg.port;
-		};
-	};
+	config = lib.mkMerge [
+		{
+			environment.systemPackages = [pkgs.immich-cli];
+		}
+		(lib.mkIf cfg.enable {
+			modules.webServer.immich = {
+				enable = true;
+				subdomain = "immich";
+				port = cfg.port;
+			};
+			
+			services.immich = {
+				enable = true;
+				mediaLocation = cfg.volume;
+				port = cfg.port;
+			};
+		})
+	];
 }
