@@ -148,10 +148,6 @@ in {
 					${cfg.immich.domain} = {
 						forceSSL = true;
 						useACMEHost = cfg.domain;
-						locations."/" = {
-							proxyPass = "http://localhost:${toString cfg.immich.port}";
-							proxyWebsockets = true;
-						};
 						extraConfig = ''
 							# https://immich.app/docs/administration/reverse-proxy/
 							client_max_body_size 10000M;
@@ -159,6 +155,17 @@ in {
 							proxy_send_timeout 600s;
 							send_timeout 600s;
 						'';
+						locations."/" = {
+							proxyPass = "http://localhost:${toString cfg.immich.port}";
+							proxyWebsockets = true;
+						};
+						locations."^~ /_app/immutable" = {
+							root = pkgs.immich.web;
+							tryFiles = "$uri $uri/ =404";
+							extraConfig = ''
+								add_header Cache-Control "public, max-age=604800, immutable";
+							'';
+						};
 					};
 				};
 				
