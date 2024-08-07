@@ -28,6 +28,11 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		
+		backy = {
+			url = "github:dav-wolff/backy";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
+		
 		ndent = {
 			url = "github:dav-wolff/ndent";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -147,6 +152,7 @@
 				inputs.agenix.overlays.default
 				inputs.vault.overlays.default
 				inputs.solitaire.overlays.default
+				inputs.backy.overlays.default
 				self.overlays.extraPackages
 				self.overlays.configuredPackages
 				self.overlays.owntracks
