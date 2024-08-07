@@ -41,6 +41,7 @@
 		tree
 		nix-tree
 		lazygit
+		backy
 		configured.helix
 		configured.zsh
 		configured.zellij
