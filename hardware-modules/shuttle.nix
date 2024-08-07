@@ -21,6 +21,7 @@
 			"compress=zstd"
 		];
 	};
+	
 	modules.immich.volume = "/vol/immich";
 	
 	swapDevices = [{
