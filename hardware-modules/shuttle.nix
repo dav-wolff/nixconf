@@ -9,12 +9,12 @@
 	boot.extraModulePackages = [ ];
 	
 	fileSystems."/" = {
-		device = "/dev/disk/by-uuid/396b6015-2840-4d13-9017-cb8a1776eb19";
+		device = "/dev/disk/by-label/nixos";
 		fsType = "ext4";
 	};
 	
 	fileSystems."/vol/immich" = {
-		device = "/dev/disk/by-uuid/0af2ff96-3bc7-43c3-896c-b8031460e563";
+		device = "/dev/disk/by-label/T7";
 		fsType = "btrfs";
 		options = [
 			"subvol=immich"
@@ -25,7 +25,7 @@
 	modules.immich.volume = "/vol/immich";
 	
 	swapDevices = [{
-		device = "/dev/disk/by-uuid/9729f4ae-45a1-4641-ae3e-cc94cbf069c7";
+		device = "/dev/disk/by-label/swap";
 	}];
 	
 	# Enables DHCP on each ethernet and wireless interface. In case of scripted networking
