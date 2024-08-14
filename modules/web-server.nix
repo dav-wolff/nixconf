@@ -104,107 +104,99 @@ in {
 			recommendedBrotliSettings = true;
 			
 			virtualHosts = let
-				baseHosts = let
-					locations."/" = {
-						return = "200 'Hello world'";
-						extraConfig = ''
-							add_header Content-Type text/plain;
-						'';
+				mkHost = name: hostConfig: lib.mkIf cfg.${name}.enable {
+					${cfg.${name}.domain} = hostConfig // {
+						forceSSL = true;
+						useACMEHost = cfg.domain;
+						
+						locations = hostConfig.locations // {
+							"= /robots.txt" = {
+								return = "200 'User-agent: *\\nDisallow: /'";
+							};
+						};
 					};
-				in {
+				};
+			in lib.mkMerge [
+				{
 					${cfg.domain} = {
 						forceSSL = true;
 						enableACME = true;
-						inherit locations;
+						
+						locations."/" = {
+							return = "200 'Hello world'";
+							extraConfig = ''
+								add_header Content-Type text/plain;
+							'';
+						};
 					};
 					
 					"www.${cfg.domain}" = {
-						forceSSL = true;
+						addSSL = true;
 						useACMEHost = cfg.domain;
-						inherit locations;
+						locations."/".return = "301 https://${cfg.domain}$request_uri";
 					};
-				};
+				}
 				
-				vaultHosts = lib.mkIf cfg.vault.enable {
-					${cfg.vault.domain} = {
-						forceSSL = true;
-						useACMEHost = cfg.domain;
-						locations."/".proxyPass = "http://localhost:${toString cfg.vault.port}";
+				(mkHost "vault" {
+					locations."/".proxyPass = "http://localhost:${toString cfg.vault.port}";
+				})
+				
+				(mkHost "bitwarden" {
+					locations."/" = {
+						proxyPass = "http://localhost:${toString cfg.bitwarden.port}";
+						proxyWebsockets = true;
 					};
-				};
+				})
 				
-				bitwardenHosts = lib.mkIf cfg.bitwarden.enable {
-					${cfg.bitwarden.domain} = {
-						forceSSL = true;
-						useACMEHost = cfg.domain;
-						locations."/" = {
-							proxyPass = "http://localhost:${toString cfg.bitwarden.port}";
-							proxyWebsockets = true;
-						};
+				(mkHost "immich" {
+					extraConfig = ''
+						# https://immich.app/docs/administration/reverse-proxy/
+						client_max_body_size 10000M;
+						proxy_read_timeout 600s;
+						proxy_send_timeout 600s;
+						send_timeout 600s;
+					'';
+					locations."/" = {
+						proxyPass = "http://localhost:${toString cfg.immich.port}";
+						proxyWebsockets = true;
 					};
-				};
-				
-				immichHosts = lib.mkIf cfg.immich.enable {
-					${cfg.immich.domain} = {
-						forceSSL = true;
-						useACMEHost = cfg.domain;
+					locations."^~ /_app/immutable" = {
+						root = pkgs.immich.web;
+						tryFiles = "$uri $uri/ =404";
 						extraConfig = ''
-							# https://immich.app/docs/administration/reverse-proxy/
-							client_max_body_size 10000M;
-							proxy_read_timeout 600s;
-							proxy_send_timeout 600s;
-							send_timeout 600s;
+							add_header Cache-Control "public, max-age=604800, immutable";
 						'';
-						locations."/" = {
-							proxyPass = "http://localhost:${toString cfg.immich.port}";
-							proxyWebsockets = true;
-						};
-						locations."^~ /_app/immutable" = {
-							root = pkgs.immich.web;
-							tryFiles = "$uri $uri/ =404";
-							extraConfig = ''
-								add_header Cache-Control "public, max-age=604800, immutable";
-							'';
-						};
 					};
-				};
+				})
 				
-				owntracksHosts = lib.mkIf cfg.owntracks.enable {
-					${cfg.owntracks.domain} = {
-						forceSSL = true;
-						useACMEHost = cfg.domain;
-						basicAuthFile = cfg.owntracks.passwordFile;
-						locations."/" = {
-							root = pkgs.owntracks-frontend;
-						};
-						locations."/pub" = {
-							proxyPass = "http://localhost:${toString cfg.owntracks.port}";
-						};
-						locations."/api" = {
-							proxyPass = "http://localhost:${toString cfg.owntracks.port}";
-						};
+				(mkHost "owntracks" {
+					basicAuthFile = cfg.owntracks.passwordFile;
+					locations."/" = {
+						root = pkgs.owntracks-frontend;
 					};
-				};
+					locations."/pub" = {
+						proxyPass = "http://localhost:${toString cfg.owntracks.port}";
+					};
+					locations."/api" = {
+						proxyPass = "http://localhost:${toString cfg.owntracks.port}";
+					};
+				})
 				
-				solitaireHosts = lib.mkIf cfg.solitaire.enable {
-					${cfg.solitaire.domain} = {
-						forceSSL = true;
-						useACMEHost = cfg.domain;
-						locations."= /index.html" = {
-							root = pkgs.solitaire.web;
-							extraConfig = ''
-								add_header Cache-Control "public, no-cache";
-							'';
-						};
-						locations."/" = {
-							root = pkgs.solitaire.web;
-							extraConfig = ''
-								add_header Cache-Control "public, max-age=604800, immutable";
-							'';
-						};
+				(mkHost "solitaire" {
+					locations."= /index.html" = {
+						root = pkgs.solitaire.web;
+						extraConfig = ''
+							add_header Cache-Control "public, no-cache";
+						'';
 					};
-				};
-			in lib.mkMerge [baseHosts vaultHosts bitwardenHosts immichHosts owntracksHosts solitaireHosts];
+					locations."/" = {
+						root = pkgs.solitaire.web;
+						extraConfig = ''
+							add_header Cache-Control "public, max-age=604800, immutable";
+						'';
+					};
+				})
+			];
 			
 			# Reject connections on unknown hosts
 			appendHttpConfig = let
