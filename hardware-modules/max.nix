@@ -9,17 +9,17 @@
 	boot.extraModulePackages = [ ];
 	
 	fileSystems."/" = {
-		device = "/dev/disk/by-uuid/2a1c966f-98eb-4910-9bfa-73f354188a4c";
+		device = "/dev/disk/by-label/NixOS";
 		fsType = "ext4";
 	};
 	
 	fileSystems."/boot/efi" = {
-		device = "/dev/disk/by-uuid/B7B7-1D57";
+		device = "/dev/disk/by-label/NIXOS\\x20EFI";
 		fsType = "vfat";
 	};
 	
 	fileSystems."/vol/backup" = {
-		device = "/dev/disk/by-uuid/691b1732-235d-418f-b757-ba9ae53ce234";
+		device = "/dev/disk/by-label/HDD";
 		fsType = "btrfs";
 		options = [
 			"subvol=backup"
