@@ -24,6 +24,17 @@
 	
 	modules.immich.volume = "/vol/immich";
 	
+	fileSystems."/vol/navidrome" = {
+		device = "/dev/disk/by-label/T7";
+		fsType = "btrfs";
+		options = [
+			"subvol=navidrome"
+			"compress=zstd"
+		];
+	};
+	
+	modules.navidrome.volume = "/vol/navidrome";
+	
 	swapDevices = [{
 		device = "/dev/disk/by-label/swap";
 	}];

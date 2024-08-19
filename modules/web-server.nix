@@ -3,82 +3,49 @@
 let
 	cfg = config.modules.webServer;
 in {
-	options.modules.webServer = {
+	options.modules.webServer = let
+		hostOptions = name: {
+			enable = lib.mkEnableOption "webServer.${name}";
+			subdomain = lib.mkOption {
+				type = lib.types.str;
+			};
+			domain = lib.mkOption {
+				type = lib.types.str;
+				default = "${cfg.${name}.subdomain}.${cfg.domain}";
+			};
+		};
+		
+		hostOptionsWithPort = name: hostOptions name // {
+			port = lib.mkOption {
+				type = lib.types.port;
+			};
+		};
+	in {
 		enable = lib.mkEnableOption "webServer";
 		
 		domain = lib.mkOption {
 			type = lib.types.str;
 		};
 		
-		vault = {
-			enable = lib.mkEnableOption "webServer.vault";
-			subdomain = lib.mkOption {
-				type = lib.types.str;
-			};
-			domain = lib.mkOption {
-				type = lib.types.str;
-				default = "${cfg.vault.subdomain}.${cfg.domain}";
-			};
-			port = lib.mkOption {
-				type = lib.types.port;
-			};
-		};
+		vault = hostOptionsWithPort "vault";
 		
-		bitwarden = {
-			enable = lib.mkEnableOption "webServer.bitwarden";
-			subdomain = lib.mkOption {
-				type = lib.types.str;
-			};
-			domain = lib.mkOption {
-				type = lib.types.str;
-				default = "${cfg.bitwarden.subdomain}.${cfg.domain}";
-			};
-			port = lib.mkOption {
-				type = lib.types.port;
-			};
-		};
+		bitwarden = hostOptionsWithPort "bitwarden";
 		
-		immich = {
-			enable = lib.mkEnableOption "webServer.immich";
-			subdomain = lib.mkOption {
-				type = lib.types.str;
-			};
-			domain = lib.mkOption {
-				type = lib.types.str;
-				default = "${cfg.immich.subdomain}.${cfg.domain}";
-			};
-			port = lib.mkOption {
-				type = lib.types.port;
-			};
-		};
+		immich = hostOptionsWithPort "immich";
 		
-		owntracks = {
-			enable = lib.mkEnableOption "webServer.owntracks";
-			subdomain = lib.mkOption {
-				type = lib.types.str;
-			};
-			domain = lib.mkOption {
-				type = lib.types.str;
-				default = "${cfg.owntracks.subdomain}.${cfg.domain}";
-			};
-			port = lib.mkOption {
-				type = lib.types.port;
-			};
+		navidrome = hostOptionsWithPort "navidrome" // {
 			passwordFile = lib.mkOption {
 				type = lib.types.str;
 			};
 		};
 		
-		solitaire = {
-			enable = lib.mkEnableOption "webServer.solitaire";
-			subdomain = lib.mkOption {
+		owntracks = hostOptionsWithPort "owntracks" // {
+			passwordFile = lib.mkOption {
 				type = lib.types.str;
-			};
-			domain = lib.mkOption {
-				type = lib.types.str;
-				default = "${cfg.solitaire.subdomain}.${cfg.domain}";
 			};
 		};
+		
+		solitaire = hostOptions "solitaire";
 	};
 	
 	config = lib.mkIf cfg.enable {
@@ -91,6 +58,7 @@ in {
 			++ lib.optional cfg.vault.enable cfg.vault.domain
 			++ lib.optional cfg.bitwarden.enable cfg.bitwarden.domain
 			++ lib.optional cfg.immich.enable cfg.immich.domain
+			++ lib.optional cfg.navidrome.enable cfg.navidrome.domain
 			++ lib.optional cfg.owntracks.enable cfg.owntracks.domain
 			++ lib.optional cfg.solitaire.enable cfg.solitaire.domain;
 		
@@ -166,6 +134,13 @@ in {
 						extraConfig = ''
 							add_header Cache-Control "public, max-age=604800, immutable";
 						'';
+					};
+				})
+				
+				(mkHost "navidrome" {
+					basicAuthFile = cfg.navidrome.passwordFile;
+					locations."/" = {
+						proxyPass = "http://localhost:${toString cfg.navidrome.port}";
 					};
 				})
 				

@@ -39,6 +39,12 @@
 			port = 8333;
 		};
 		
+		navidrome = {
+			enable = true;
+			port = 8444;
+			passwordFile = ../secrets/navidromePassword.age;
+		};
+		
 		owntracks = {
 			enable = true;
 			port = 8083;
