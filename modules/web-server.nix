@@ -45,6 +45,12 @@ in {
 			};
 		};
 		
+		changedetection = hostOptionsWithPort "changedetection" // {
+			passwordFile = lib.mkOption {
+				type = lib.types.str;
+			};
+		};
+		
 		solitaire = hostOptions "solitaire";
 	};
 	
@@ -55,12 +61,9 @@ in {
 		security.acme.defaults.email = "david@dav.dev";
 		
 		security.acme.certs.${cfg.domain}.extraDomainNames = ["www.${cfg.domain}"]
-			++ lib.optional cfg.vault.enable cfg.vault.domain
-			++ lib.optional cfg.bitwarden.enable cfg.bitwarden.domain
-			++ lib.optional cfg.immich.enable cfg.immich.domain
-			++ lib.optional cfg.navidrome.enable cfg.navidrome.domain
-			++ lib.optional cfg.owntracks.enable cfg.owntracks.domain
-			++ lib.optional cfg.solitaire.enable cfg.solitaire.domain;
+			++ builtins.concatMap
+				(option: lib.optional option.enable option.domain)
+				(with cfg; [vault bitwarden immich navidrome owntracks changedetection solitaire]);
 		
 		services.nginx = {
 			enable = true;
@@ -154,6 +157,13 @@ in {
 					};
 					locations."/api" = {
 						proxyPass = "http://localhost:${toString cfg.owntracks.port}";
+					};
+				})
+				
+				(mkHost "changedetection" {
+					basicAuthFile = cfg.changedetection.passwordFile;
+					locations."/" = {
+						proxyPass = "http://localhost:${toString cfg.changedetection.port}";
 					};
 				})
 				

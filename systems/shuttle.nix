@@ -47,8 +47,14 @@
 		
 		owntracks = {
 			enable = true;
-			port = 8083;
+			port = 8555;
 			passwordFile = ../secrets/owntracksPassword.age;
+		};
+		
+		changedetection = {
+			enable = true;
+			port = 8666;
+			passwordFile = ../secrets/changedetectionPassword.age;
 		};
 	};
 }
