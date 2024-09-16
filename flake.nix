@@ -45,12 +45,10 @@
 		
 		vault = {
 			url = "github:dav-wolff/vault";
-			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		
 		solitaire = {
 			url = "github:dav-wolff/solitaire";
-			inputs.nixpkgs.follows = "nixpkgs";
 		};
 	};
 	
