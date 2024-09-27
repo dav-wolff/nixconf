@@ -15,7 +15,8 @@ in {
 	
 	config = lib.mkMerge [
 		{
-			environment.systemPackages = [pkgs.immich-cli];
+			# TODO: add it back
+			# environment.systemPackages = [pkgs.immich-cli];
 		}
 		(lib.mkIf cfg.enable {
 			modules.webServer.immich = {
