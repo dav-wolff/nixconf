@@ -22,8 +22,6 @@
 		LC_TIME = "en_US.UTF-8";
 	};
 	
-	services.printing.enable = true;
-	
 	users.users.dav = {
 		isNormalUser = true;
 		description = "David";
