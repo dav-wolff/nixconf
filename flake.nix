@@ -4,8 +4,6 @@
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 		
-		nixpkgs-immich.url = "github:dav-wolff/nixpkgs/immich";
-		
 		flake-utils = {
 			url = "github:numtide/flake-utils";
 		};
@@ -92,8 +90,6 @@
 			imports = [
 				inputs.agenix.nixosModules.default
 				inputs.nixos-wsl.nixosModules.default
-				# TODO remove once immich gets merged
-				"${inputs.nixpkgs-immich}/nixos/modules/services/web-apps/immich.nix"
 				# TODO remove
 				./configuration.nix
 			] ++ lib.filesystem.listFilesRecursive ./modules;
