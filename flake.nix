@@ -4,6 +4,9 @@
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 		
+		# TODO: remove once bitwarden builds on unstable again
+		nixpkgs-bitwarden.url = "github:NixOS/nixpkgs/a2cad4db0b6d352c0bc484f82e48c445f8092778";
+		
 		flake-utils = {
 			url = "github:numtide/flake-utils";
 		};
