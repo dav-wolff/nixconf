@@ -31,7 +31,12 @@
 		owntracks-frontend = prev.callPackage ./packages/owntracks-frontend.nix {};
 	};
 	
-	default = final: prev: prev.lib.composeManyExtensions [
+	# TODO: remove once bitwarden builds on unstable again
+	fixBitwarden = final: prev: {
+		bitwarden-desktop = inputs.nixpkgs-bitwarden.legacyPackages.${final.system}.bitwarden-desktop;
+	};
+	
+	default = inputs.nixpkgs.lib.composeManyExtensions [
 		inputs.agenix.overlays.default
 		inputs.vault.overlays.default
 		inputs.solitaire.overlays.default
@@ -39,5 +44,7 @@
 		self.overlays.extraPackages
 		self.overlays.configuredPackages
 		self.overlays.owntracks
-	] final prev;
+		# TODO: remove once bitwarden builds on unstable again
+		self.overlays.fixBitwarden
+	];
 }
