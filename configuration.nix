@@ -34,7 +34,6 @@
 		fzf
 		xsel
 		bat
-		nil
 		xplr
 		tree
 		nix-tree
