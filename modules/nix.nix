@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
 	cfg = config.modules.nix;
@@ -65,5 +65,9 @@ in {
 		
 		nixpkgs.flake.setNixPath = false;
 		nixpkgs.config.allowUnfree = true;
+		
+		environment.systemPackages = with pkgs; [
+			nixd
+		];
 	};
 }
