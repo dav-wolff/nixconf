@@ -29,6 +29,10 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		
+		nix-minecraft = {
+			url = "github:Infinidoge/nix-minecraft";
+		};
+		
 		backy = {
 			url = "github:dav-wolff/backy";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -93,6 +97,7 @@
 			imports = [
 				inputs.agenix.nixosModules.default
 				inputs.nixos-wsl.nixosModules.default
+				inputs.nix-minecraft.nixosModules.minecraft-servers
 				# TODO remove
 				./configuration.nix
 			] ++ lib.filesystem.listFilesRecursive ./modules;

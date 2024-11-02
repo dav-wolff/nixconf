@@ -26,7 +26,7 @@
 		};
 	};
 	
-	owntracks = final: prev: {
+	packages = final: prev: {
 		owntracks-recorder = prev.callPackage ./packages/owntracks-recorder.nix {};
 		owntracks-frontend = prev.callPackage ./packages/owntracks-frontend.nix {};
 	};
@@ -38,12 +38,13 @@
 	
 	default = inputs.nixpkgs.lib.composeManyExtensions [
 		inputs.agenix.overlays.default
+		inputs.nix-minecraft.overlays.default
 		inputs.vault.overlays.default
 		inputs.solitaire.overlays.default
 		inputs.backy.overlays.default
 		self.overlays.extraPackages
 		self.overlays.configuredPackages
-		self.overlays.owntracks
+		self.overlays.packages
 		# TODO: remove once bitwarden builds on unstable again
 		self.overlays.fixBitwarden
 	];
