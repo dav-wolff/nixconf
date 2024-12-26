@@ -8,8 +8,8 @@
 
 let
 	config = {
-		live_config_reload = false;
-		shell = lib.meta.getExe shell;
+		general.live_config_reload = false;
+		terminal.shell = lib.meta.getExe shell;
 		window.startup_mode = "Maximized";
 		mouse.hide_when_typing = true;
 		font = let
