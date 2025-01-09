@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
 	gnupgHome = "/var/lib/gnupg-home";
@@ -32,13 +32,14 @@ in {
 	
 	system.userActivationScripts.importGpgKeys = {
 		text = let
-			gpg = "${config.programs.gnupg.package}/bin/gpg";
+			gpg = lib.getExe config.programs.gnupg.package;
+			sed = lib.getExe pkgs.gnused;
 		in ''
 			echo "setting up gpg keys..."
 			export GNUPGHOME=${gnupgHome}
 				${gpg} --batch --import ${config.age.secrets.gpgKeys.path}
 				${gpg} --with-colons --fingerprint \
-					| sed -r -n 's/^fpr:+([0-9A-F]+):$/\1:6:/p' \
+					| ${sed} -r -n 's/^fpr:+([0-9A-F]+):$/\1:6:/p' \
 					| ${gpg} --import-ownertrust
 		'';
 	};
