@@ -1,6 +1,5 @@
 { lib
-, runCommand
-, makeWrapper
+, wrapPackage
 , alacritty
 , formats
 , shell
@@ -30,11 +29,6 @@ let
 	toml = formats.toml {};
 	
 	configFile = toml.generate "alacritty-config" config;
-in
-	runCommand alacritty.name {
-		inherit (alacritty) pname version meta;
-		nativeBuildInputs = [makeWrapper];
-	} ''
-		cp -rs --no-preserve=mode,ownership ${alacritty} $out
-		wrapProgram "$out/bin/alacritty" --add-flags --config-file --add-flags "${configFile}"
-	''
+in wrapPackage alacritty {
+	args = ["--config-file" configFile];
+}

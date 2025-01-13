@@ -1,6 +1,6 @@
 { lib
+, wrapPackage
 , runCommand
-, makeWrapper
 , zsh
 , zsh-powerlevel10k
 , zsh-defer
@@ -41,15 +41,15 @@ let
 		zsh -c "zcompile $out/p10k_nerd_font.zsh"
 		zsh -c "zcompile $out/p10k_tty.zsh"
 	'';
-in
-	runCommand zsh.name {
-		inherit (zsh) pname version meta;
-		outputs = ["out" "man"];
-		nativeBuildInputs = [makeWrapper];
-		passthru.shellPath = "/bin/zsh";
-		passthru.testMarker = 2;
-	} ''
-		cp -rs --no-preserve=mode,ownership ${zsh.man} $man
-		cp -rs --no-preserve=mode,ownership ${zsh} $out
-		wrapProgram "$out/bin/zsh" --set ZDOTDIR ${compiledConfig}
-	''
+in wrapPackage zsh {
+	env = {
+		ZDOTDIR = compiledConfig;
+	};
+	
+	passthru = {
+		shellPath = "/bin/zsh";
+		testMarker = 2;
+	};
+	
+	extraOutputs = ["man"];
+}
