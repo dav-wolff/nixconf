@@ -1,6 +1,13 @@
 { self, ... } @ inputs:
 
 {
+	utils = final: prev: let
+		inherit (prev) callPackage;
+	in {
+		unindent = assert !(prev ? unindent); callPackage ./utils/unindent.nix {};
+		wrapPackage = callPackage ./utils/wrap-package.nix {};
+	};
+	
 	extraPackages = final: prev: let
 		system = final.system;
 	in {
@@ -42,6 +49,7 @@
 		inputs.vault.overlays.default
 		inputs.solitaire.overlays.default
 		inputs.backy.overlays.default
+		self.overlays.utils
 		self.overlays.extraPackages
 		self.overlays.configuredPackages
 		self.overlays.packages
