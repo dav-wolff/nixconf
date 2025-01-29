@@ -16,6 +16,7 @@
 	fileSystems."/boot/efi" = {
 		device = "/dev/disk/by-label/NIXOS\\x20EFI";
 		fsType = "vfat";
+		options = ["fmask=0077" "dmask=0077" "defaults"];
 	};
 	
 	fileSystems."/vol/backup" = {
