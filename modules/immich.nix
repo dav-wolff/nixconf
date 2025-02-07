@@ -37,6 +37,24 @@ in {
 				enable = true;
 				mediaLocation = cfg.volume;
 				port = cfg.port;
+				settings = {
+					server = {
+						externalDomain = "https://${config.modules.webServer.immich.domain}";
+					};
+					machineLearning.urls = [
+						"http://max.local:8333" # TODO: https
+						"http://localhost:3003"
+					];
+					user.deleteDelay = 30;
+					notifications.smtp = {
+						enabled = true;
+						from = "Immich <immich@${config.modules.email.domain}>";
+						transport = {
+							host = "localhost";
+							port = 4323;
+						};
+					};
+				};
 			};
 			
 			modules.immich.remoteMachineLearning = false;
