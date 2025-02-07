@@ -28,6 +28,11 @@ in {
 				port = cfg.port;
 			};
 			
+			modules.email = {
+				enable = true;
+				senders = ["immich"];
+			};
+			
 			services.immich = {
 				enable = true;
 				mediaLocation = cfg.volume;

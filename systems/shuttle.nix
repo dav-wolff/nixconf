@@ -15,6 +15,8 @@
 		sshServer.enable = true;
 		hotspot.enable = true;
 		
+		email.domain = "dav.dev";
+		
 		webServer = {
 			enable = true;
 			domain = "dav.dev";
