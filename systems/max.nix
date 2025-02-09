@@ -10,9 +10,6 @@
 			minecraftServer.enable = true;
 		};
 		
-		immich = {
-			remoteMachineLearning = true;
-			port = 8333;
-		};
+		immich.remoteMachineLearning = true;
 	};
 }

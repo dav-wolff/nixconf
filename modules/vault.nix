@@ -2,9 +2,10 @@
 
 let
 	cfg = config.modules.vault;
+	inherit (config) ports;
 	
 	vaultConfigured = pkgs.vault-rs.override {
-		port = cfg.port;
+		port = ports.vault;
 	};
 	
 	vault-wrapped = pkgs.writeShellScriptBin "vault-wrapped" ''
@@ -16,16 +17,13 @@ let
 in {
 	options.modules.vault = {
 		enable = lib.mkEnableOption "vault";
-		port = lib.mkOption {
-			type = lib.types.port;
-		};
 	};
 	
 	config = lib.mkIf cfg.enable {
 		modules.webServer.vault = {
 			enable = true;
 			subdomain = "vault";
-			port = cfg.port;
+			port = ports.vault;
 		};
 		
 		users.users.vault = {

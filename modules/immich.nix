@@ -2,18 +2,19 @@
 
 let
 	cfg = config.modules.immich;
+	inherit (config) ports;
 in {
 	options.modules.immich = {
 		enable = lib.mkEnableOption "immich";
+		remoteMachineLearningHost = lib.mkOption {
+			type = lib.types.str;
+		};
 		remoteMachineLearning = lib.mkOption {
 			type = lib.types.bool;
 			default = false;
 		};
 		volume = lib.mkOption {
 			type = lib.types.str;
-		};
-		port = lib.mkOption {
-			type = lib.types.port;
 		};
 	};
 	
@@ -26,8 +27,8 @@ in {
 				newVersionCheck.enabled = false;
 				server.externalDomain = "https://${config.modules.webServer.immich.domain}";
 				machineLearning.urls = [
-					"http://max.local:8333" # TODO: https
-					"http://localhost:3003"
+					"http://${cfg.remoteMachineLearningHost}.local:${toString ports.immichMachineLearning}" # TODO: https
+					"http://localhost:${toString ports.immichMachineLearning}"
 				];
 				user.deleteDelay = 30;
 				notifications.smtp = {
@@ -35,7 +36,7 @@ in {
 					from = "Immich <immich@${config.modules.email.domain}>";
 					transport = {
 						host = "localhost";
-						port = 4323;
+						port = ports.email;
 						ignoreCert = true; # cert has public hostname, not localhost
 						username = "mailuser";
 						password = "@PASSWORD@";
@@ -49,7 +50,7 @@ in {
 			modules.webServer.immich = {
 				enable = true;
 				subdomain = "immich";
-				port = cfg.port;
+				port = ports.immich;
 			};
 			
 			modules.email = {
@@ -68,16 +69,19 @@ in {
 			services.immich = {
 				enable = true;
 				mediaLocation = cfg.volume;
-				port = cfg.port;
+				port = ports.immich;
 				environment = {
 					IMMICH_CONFIG_FILE = config.age.derivedSecrets."immich.json".path;
+				};
+				machine-learning.environment = {
+					IMMICH_PORT = lib.mkForce (toString ports.immichMachineLearning);
 				};
 			};
 			
 			modules.immich.remoteMachineLearning = false;
 		}))
 		(lib.mkIf cfg.remoteMachineLearning {
-			modules.firewall.localAllowedTCPPorts = [cfg.port];
+			modules.firewall.localAllowedTCPPorts = [ports.immichMachineLearning];
 			
 			services.immich = {
 				enable = true;
@@ -85,7 +89,7 @@ in {
 				redis.enable = false;
 				machine-learning.environment = {
 					IMMICH_HOST = lib.mkForce "0.0.0.0";
-					IMMICH_PORT = lib.mkForce (toString cfg.port);
+					IMMICH_PORT = lib.mkForce (toString ports.immichMachineLearning);
 				};
 			};
 			

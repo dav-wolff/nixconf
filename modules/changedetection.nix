@@ -2,12 +2,10 @@
 
 let
 	cfg = config.modules.changedetection;
+	inherit (config) ports;
 in {
 	options.modules.changedetection = {
 		enable = lib.mkEnableOption "changedetection";
-		port = lib.mkOption {
-			type = lib.types.port;
-		};
 		passwordFile = lib.mkOption {
 			type = lib.types.pathInStore;
 		};
@@ -22,14 +20,14 @@ in {
 		modules.webServer.changedetection = {
 			enable = true;
 			subdomain = "changedetection";
-			port = cfg.port;
+			port = ports.changedetection;
 			passwordFile = config.age.secrets.changedetectionPassword.path;
 		};
 		
 		services.changedetection-io = {
 			enable = true;
 			behindProxy = true;
-			port = cfg.port;
+			port = ports.changedetection;
 			baseURL = config.modules.webServer.changedetection.domain;
 			environmentFile = pkgs.writeText "changedetection-io.env" ''
 				HIDE_REFERER=false
