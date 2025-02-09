@@ -57,13 +57,15 @@ in {
 	config = lib.mkIf cfg.enable {
 		networking.firewall.allowedTCPPorts = [80 443];
 		
-		security.acme.acceptTerms = true;
-		security.acme.defaults.email = "david@dav.dev";
-		
-		security.acme.certs.${cfg.domain}.extraDomainNames = ["www.${cfg.domain}"]
-			++ builtins.concatMap
-				(option: lib.optional option.enable option.domain)
-				(with cfg; [vault bitwarden immich navidrome owntracks changedetection solitaire]);
+		modules.acme = {
+			enable = true;
+			domain = cfg.domain;
+			extraDomains = ["www.${cfg.domain}"]
+				++ builtins.concatMap
+					(option: lib.optional option.enable option.domain)
+					(with cfg; [vault bitwarden immich navidrome owntracks changedetection solitaire]);
+			users = [config.services.nginx.user];
+		};
 		
 		services.nginx = {
 			enable = true;
