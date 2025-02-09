@@ -26,36 +26,27 @@
 			};
 		};
 		
-		vault = {
-			enable = true;
-			port = 3103;
-		};
+		vault.enable = true;
 		
-		vaultwarden = {
-			enable = true;
-			port = 8222;
-		};
+		vaultwarden.enable = true;
 		
 		immich = {
 			enable = true;
-			port = 8333;
+			remoteMachineLearningHost = "max";
 		};
 		
 		navidrome = {
 			enable = true;
-			port = 8444;
 			passwordFile = ../secrets/navidromePassword.age;
 		};
 		
 		owntracks = {
 			enable = true;
-			port = 8555;
 			passwordFile = ../secrets/owntracksPassword.age;
 		};
 		
 		changedetection = {
 			enable = true;
-			port = 8666;
 			passwordFile = ../secrets/changedetectionPassword.age;
 		};
 	};

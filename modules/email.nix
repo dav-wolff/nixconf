@@ -2,14 +2,11 @@
 
 let
 	cfg = config.modules.email;
+	inherit (config) ports;
 	inherit (pkgs) unindent;
 in {
 	options.modules.email = {
 		enable = lib.mkEnableOption "email";
-		port = lib.mkOption {
-			type = lib.types.port;
-			default = 4323;
-		};
 		domain = lib.mkOption {
 			type = lib.types.str;
 		};
@@ -81,7 +78,7 @@ in {
 				action "send" relay helo "${cfg.domain}"
 				match mail-from <"senders"> for any action "send"
 				
-				listen on lo port ${toString cfg.port} filter "dkim-sign-rsa" tls pki "cert" auth <"creds">
+				listen on lo port ${toString ports.email} filter "dkim-sign-rsa" tls pki "cert" auth <"creds">
 			'';
 		};
 	};

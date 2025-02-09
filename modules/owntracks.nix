@@ -2,12 +2,10 @@
 
 let
 	cfg = config.modules.owntracks;
+	inherit (config) ports;
 in {
 	options.modules.owntracks = {
 		enable = lib.mkEnableOption "owntracks";
-		port = lib.mkOption {
-			type = lib.types.port;
-		};
 		passwordFile = lib.mkOption {
 			type = lib.types.pathInStore;
 		};
@@ -22,7 +20,7 @@ in {
 		modules.webServer.owntracks = {
 			enable = true;
 			subdomain = "owntracks";
-			port = cfg.port;
+			port = ports.owntracks;
 			passwordFile = config.age.secrets.owntracksPassword.path;
 		};
 		
@@ -40,7 +38,7 @@ in {
 					--storage $STATE_DIRECTORY \
 					--doc-root usr/share/ot-recorder \
 					--port 0 \ # disable MQTT
-					--http-port ${toString cfg.port}
+					--http-port ${toString ports.owntracks}
 			'';
 		in {
 			description = "Owntracks";

@@ -2,14 +2,12 @@
 
 let
 	cfg = config.modules.navidrome;
+	inherit (config) ports;
 in {
 	options.modules.navidrome = {
 		enable = lib.mkEnableOption "navidrome";
 		volume = lib.mkOption {
 			type = lib.types.str;
-		};
-		port = lib.mkOption {
-			type = lib.types.port;
 		};
 		passwordFile = lib.mkOption {
 			type = lib.types.pathInStore;
@@ -25,14 +23,14 @@ in {
 		modules.webServer.navidrome = {
 			enable = true;
 			subdomain = "music";
-			port = cfg.port;
+			port = ports.navidrome;
 			passwordFile = config.age.secrets.navidromePassword.path;
 		};
 		
 		services.navidrome = {
 			enable = true;
 			settings = {
-				Port = cfg.port;
+				Port = ports.navidrome;
 				MusicFolder = "${cfg.volume}/music";
 				DataFolder = "${cfg.volume}/data";
 				CacheFolder = "${cfg.volume}/cache";
