@@ -2,204 +2,302 @@
 
 let
 	cfg = config.modules.webServer;
+	inherit (config) ports;
+	inherit (pkgs) unindent;
 in {
-	options.modules.webServer = let
-		hostOptions = name: {
-			enable = lib.mkEnableOption "webServer.${name}";
-			subdomain = lib.mkOption {
-				type = lib.types.str;
-			};
-			domain = lib.mkOption {
-				type = lib.types.str;
-				default = "${cfg.${name}.subdomain}.${cfg.domain}";
-			};
-		};
-		
-		hostOptionsWithPort = name: hostOptions name // {
-			port = lib.mkOption {
-				type = lib.types.port;
-			};
-		};
-	in {
+	options.modules.webServer = with lib; {
 		enable = lib.mkEnableOption "webServer";
 		
 		domain = lib.mkOption {
 			type = lib.types.str;
 		};
 		
-		vault = hostOptionsWithPort "vault";
-		
-		bitwarden = hostOptionsWithPort "bitwarden";
-		
-		immich = hostOptionsWithPort "immich";
-		
-		navidrome = hostOptionsWithPort "navidrome" // {
-			passwordFile = lib.mkOption {
+		auth = {
+			subdomain = lib.mkOption {
 				type = lib.types.str;
+				default = "auth";
+			};
+			domain = lib.mkOption {
+				type = lib.types.str;
+				default = "${cfg.auth.subdomain}.${cfg.domain}";
 			};
 		};
 		
-		owntracks = hostOptionsWithPort "owntracks" // {
-			passwordFile = lib.mkOption {
-				type = lib.types.str;
-			};
-		};
-		
-		changedetection = hostOptionsWithPort "changedetection" // {
-			passwordFile = lib.mkOption {
-				type = lib.types.str;
-			};
-		};
-		
-		solitaire = hostOptions "solitaire";
-	};
-	
-	config = lib.mkIf cfg.enable {
-		networking.firewall.allowedTCPPorts = [80 443];
-		
-		modules.acme = {
-			enable = true;
-			domain = cfg.domain;
-			extraDomains = ["www.${cfg.domain}"]
-				++ builtins.concatMap
-					(option: lib.optional option.enable option.domain)
-					(with cfg; [vault bitwarden immich navidrome owntracks changedetection solitaire]);
-			users = [config.services.nginx.user];
-		};
-		
-		services.nginx = {
-			enable = true;
-			recommendedProxySettings = true;
-			recommendedTlsSettings = true;
-			recommendedOptimisation = true;
-			recommendedGzipSettings = true;
-			recommendedZstdSettings = true;
-			recommendedBrotliSettings = true;
-			
-			virtualHosts = let
-				mkHost = name: hostConfig: lib.mkIf cfg.${name}.enable {
-					${cfg.${name}.domain} = hostConfig // {
-						forceSSL = true;
-						useACMEHost = cfg.domain;
-						
-						locations = hostConfig.locations // {
-							"= /robots.txt" = {
-								return = "200 'User-agent: *\\nDisallow: /'";
-							};
-						};
+		hosts = let
+			hostOptions = {config, ...}: {
+				options = {
+					subdomain = mkOption {
+						type = types.str;
+						default = config._module.args.name;
+					};
+					domain = mkOption {
+						type = types.str;
+						default = "${config.subdomain}.${cfg.domain}";
+					};
+					auth = mkOption {
+						type = types.bool;
+						default = true;
+					};
+					proxyPort = mkOption {
+						type = types.nullOr types.port;
+						default = null;
+					};
+					locations = mkOption {
+						type = types.attrsOf (types.submodule locationOptions);
+						default = {};
+					};
+					extraConfig = mkOption {
+						type = types.nullOr types.str;
+						default = null;
 					};
 				};
-			in lib.mkMerge [
-				{
-					${cfg.domain} = {
+				
+				config = {
+					locations."/" = mkIf (config.proxyPort != null) {
+						inherit (config) proxyPort;
+					};
+				};
+			};
+			
+			locationOptions = {config, ...}: {
+				options = {
+					immutable = mkOption {
+						type = types.bool;
+						default = config.files != null;
+					};
+					files = mkOption {
+						type = types.nullOr types.path;
+						default = null;
+					};
+					proxyPort = mkOption {
+						type = types.nullOr types.port;
+						default = null;
+					};
+				};
+			};
+		in mkOption {
+			type = types.attrsOf (types.submodule hostOptions);
+			default = {};
+		};
+	};
+	
+	config = lib.mkIf cfg.enable (let
+		enableAuth = lib.any (hostConfig: hostConfig.auth) (lib.attrValues cfg.hosts);
+	in lib.mkMerge [
+		{
+			assertions = let
+				checkLocation = _: locationConfig: {
+					assertion = locationConfig.files == null || locationConfig.proxyPort == null;
+					message = "can't simultaneously proxy requests and serve static files";
+				};
+				checkHost = _: hostConfig: lib.mapAttrsToList checkLocation hostConfig.locations;
+			in lib.flatten (lib.mapAttrsToList checkHost cfg.hosts);
+			
+			networking.firewall.allowedTCPPorts = [80 443];
+			
+			modules.acme = {
+				enable = true;
+				domain = cfg.domain;
+				extraDomains = ["www.${cfg.domain}"];
+				users = [config.services.nginx.user];
+			};
+			
+			services.nginx = {
+				enable = true;
+				recommendedProxySettings = true;
+				recommendedTlsSettings = true;
+				recommendedOptimisation = true;
+				recommendedGzipSettings = true;
+				recommendedZstdSettings = true;
+				recommendedBrotliSettings = true;
+				
+				virtualHosts = let
+					robotsLocation = {
+						"= /robots.txt" = {
+							return = "200 'User-agent: *\\nDisallow: /'";
+						};
+					};
+					
+					authRequest = pkgs.writeText "authelia-authrequest.conf" ''
+						auth_request /internal/authelia/authz;
+						
+						auth_request_set $user $upstream_http_remote_user;
+						auth_request_set $groups $upstream_http_remote_groups;
+						auth_request_set $name $upstream_http_remote_name;
+						auth_request_set $email $upstream_http_remote_email;
+						
+						proxy_set_header Remote-User $user;
+						proxy_set_header Remote-Groups $groups;
+						proxy_set_header Remote-Email $email;
+						proxy_set_header Remote-Name $name;
+						
+						auth_request_set $redirection_url $upstream_http_location;
+						error_page 401 =302 $redirection_url;
+					'';
+					
+					authLocation = pkgs.writeText "authelia-location.conf" ''
+						internal;
+						proxy_pass http://localhost:${toString ports.authelia}/api/authz/auth-request;
+						
+						proxy_set_header X-Original-Method $request_method;
+						proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
+						proxy_set_header X-Forwarded-For $remote_addr;
+						proxy_set_header Content-Length "";
+						proxy_set_header Connection "";
+						
+						proxy_pass_request_body off;
+						proxy_redirect http:// $scheme://;
+						proxy_http_version 1.1;
+						proxy_cache_bypass $cookie_session;
+						proxy_no_cache $cookie_session;
+						proxy_buffers 4 32k;
+						client_body_buffer_size 128k;
+						
+						send_timeout 5m;
+						proxy_read_timeout 240;
+						proxy_send_timeout 240;
+						proxy_connect_timeout 240;
+					'';
+					
+					hosts = lib.mapAttrs (name: hostConfig: {
+						serverName = hostConfig.domain;
 						forceSSL = true;
 						enableACME = true;
 						
-						locations."/" = {
-							return = "200 'Hello world'";
-							extraConfig = ''
-								add_header Content-Type text/plain;
-							'';
+						locations = lib.mkMerge [
+							(lib.mapAttrs (_: locationConfig: {
+								root = locationConfig.files;
+								tryFiles = lib.mkIf (locationConfig.files != null) "$uri $uri/ =404";
+								proxyPass = lib.mkIf (locationConfig.proxyPort != null) "http://localhost:${toString locationConfig.proxyPort}";
+								proxyWebsockets = locationConfig.proxyPort != null;
+								extraConfig = lib.mkMerge [
+									(lib.mkIf hostConfig.auth ''
+										include ${authRequest};
+									'')
+									(lib.mkIf locationConfig.immutable ''
+										add_header Cache-Control "public, max-age=604800, immutable";
+									'')
+								];
+							}) hostConfig.locations)
+							{
+								"= /robots.txt".return = "200 'User-agent: *\\nDisallow: /'";
+							}
+							(lib.mkIf hostConfig.auth {
+								"/internal/authelia/authz".extraConfig = ''
+									include ${authLocation};
+								'';
+							})
+						];
+						
+						extraConfig = lib.mkIf (hostConfig.extraConfig != null) hostConfig.extraConfig;
+					}) cfg.hosts;
+				in lib.mkMerge [
+					hosts
+					{
+						${cfg.domain} = {
+							forceSSL = true;
+							enableACME = true;
+							
+							locations."/" = {
+								return = "200 'Hello world'";
+								extraConfig = ''
+									add_header Content-Type text/plain;
+								'';
+							};
 						};
-					};
+						
+						"www.${cfg.domain}" = {
+							addSSL = true;
+							useACMEHost = cfg.domain;
+							locations."/".return = "301 https://${cfg.domain}$request_uri";
+						};
+					}
 					
-					"www.${cfg.domain}" = {
-						addSSL = true;
-						useACMEHost = cfg.domain;
-						locations."/".return = "301 https://${cfg.domain}$request_uri";
-					};
-				}
+					(lib.mkIf enableAuth (let
+						location = {
+							proxyPass = "http://localhost:${toString ports.authelia}";
+						};
+					in {
+						${cfg.auth.domain} = {
+							forceSSL = true;
+							enableACME = true;
+							
+							locations = robotsLocation // {
+								"/" = location;
+								"= /api/verify" = location;
+								"/api/authz/" = location;
+							};
+						};
+					}))
+				];
 				
-				(mkHost "vault" {
-					locations."/".proxyPass = "http://localhost:${toString cfg.vault.port}";
-				})
-				
-				(mkHost "bitwarden" {
-					locations."/" = {
-						proxyPass = "http://localhost:${toString cfg.bitwarden.port}";
-						proxyWebsockets = true;
-					};
-				})
-				
-				(mkHost "immich" {
-					extraConfig = ''
-						# https://immich.app/docs/administration/reverse-proxy/
-						client_max_body_size 10000M;
-						proxy_read_timeout 600s;
-						proxy_send_timeout 600s;
-						send_timeout 600s;
-					'';
-					locations."/" = {
-						proxyPass = "http://localhost:${toString cfg.immich.port}";
-						proxyWebsockets = true;
-					};
-					locations."^~ /_app/immutable" = {
-						root = pkgs.immich.web;
-						tryFiles = "$uri $uri/ =404";
-						extraConfig = ''
-							add_header Cache-Control "public, max-age=604800, immutable";
-						'';
-					};
-				})
-				
-				(mkHost "navidrome" {
-					basicAuthFile = cfg.navidrome.passwordFile;
-					locations."/" = {
-						proxyPass = "http://localhost:${toString cfg.navidrome.port}";
-					};
-				})
-				
-				(mkHost "owntracks" {
-					basicAuthFile = cfg.owntracks.passwordFile;
-					locations."/" = {
-						root = pkgs.owntracks-frontend;
-					};
-					locations."/pub" = {
-						proxyPass = "http://localhost:${toString cfg.owntracks.port}";
-					};
-					locations."/api" = {
-						proxyPass = "http://localhost:${toString cfg.owntracks.port}";
-					};
-				})
-				
-				(mkHost "changedetection" {
-					basicAuthFile = cfg.changedetection.passwordFile;
-					locations."/" = {
-						proxyPass = "http://localhost:${toString cfg.changedetection.port}";
-					};
-				})
-				
-				(mkHost "solitaire" {
-					locations."= /index.html" = {
-						root = pkgs.solitaire.web;
-						extraConfig = ''
-							add_header Cache-Control "public, no-cache";
-						'';
-					};
-					locations."/" = {
-						root = pkgs.solitaire.web;
-						extraConfig = ''
-							add_header Cache-Control "public, max-age=604800, immutable";
-						'';
-					};
-				})
-			];
+				# Reject connections on unknown hosts
+				appendHttpConfig = let
+					cert = config.security.acme.certs.${cfg.domain}.directory;
+				in ''
+					server {
+						listen 80 default_server;
+						listen 443 ssl default_server;
+						
+						ssl_certificate ${cert}/fullchain.pem;
+						ssl_certificate_key ${cert}/key.pem;
+						ssl_trusted_certificate ${cert}/chain.pem;
+						
+						return 444;
+					}
+				'';
+			};
+		}
+		
+		## Authelia
+		
+		(lib.mkIf enableAuth {
+			age.secrets = {
+				autheliaJwtSecret = {
+					file = ../secrets/autheliaJwtSecret.age;
+					owner = config.services.authelia.instances.main.user;
+				};
+				autheliaStorageEncryptionKey = {
+					file = ../secrets/autheliaStorageEncryptionKey.age;
+					owner = config.services.authelia.instances.main.user;
+				};
+			};
 			
-			# Reject connections on unknown hosts
-			appendHttpConfig = let
-				cert = config.security.acme.certs.${cfg.domain}.directory;
-			in ''
-				server {
-					listen 80 default_server;
-					listen 443 ssl default_server;
-					
-					ssl_certificate ${cert}/fullchain.pem;
-					ssl_certificate_key ${cert}/key.pem;
-					ssl_trusted_certificate ${cert}/chain.pem;
-					
-					return 444;
-				}
-			'';
-		};
-	};
+			services.authelia.instances.main = let
+				usersFile = pkgs.writeText "authelia-users.yml" (unindent ''
+					users:
+					  dav:
+					    disabled: false
+					    displayname: dav
+					    email: david@dav.dev
+					    password: $argon2id$v=19$m=65536,t=3,p=4$tJilRMOcf7kfNiM8DbagUw$I3Lf5HlaHM69hw7FI6E4qWsWxGQMijhyff8OIpbjz3k
+				'');
+			in {
+				enable = true;
+				secrets = {
+					jwtSecretFile = config.age.secrets.autheliaJwtSecret.path;
+					storageEncryptionKeyFile = config.age.secrets.autheliaStorageEncryptionKey.path;
+				};
+				settings = {
+					theme = "dark";
+					server = {
+						address = "tcp://:${toString ports.authelia}/";
+						endpoints.authz.auth-request.implementation = "AuthRequest";
+					};
+					authentication_backend.file.path = usersFile;
+					session.cookies = [
+						{
+							domain = cfg.domain;
+							authelia_url = "https://${cfg.auth.domain}";
+							default_redirection_url = "https://${cfg.domain}";
+						}
+					];
+					storage.local.path = "/var/lib/authelia-main/db.sqlite3";
+					access_control.default_policy = "one_factor";
+					notifier.filesystem.filename = "/var/lib/authelia-main/notifications.txt";
+					log.format = "text";
+				};
+			};
+		})
+	]);
 }

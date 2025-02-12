@@ -25,7 +25,7 @@ in {
 		(lib.mkIf cfg.enable (let
 			settings = {
 				newVersionCheck.enabled = false;
-				server.externalDomain = "https://${config.modules.webServer.immich.domain}";
+				server.externalDomain = "https://${config.modules.webServer.hosts.immich.domain}";
 				machineLearning.urls = [
 					"http://${cfg.remoteMachineLearningHost}.local:${toString ports.immichMachineLearning}" # TODO: https
 					"http://localhost:${toString ports.immichMachineLearning}"
@@ -47,10 +47,17 @@ in {
 			jsonFormat = pkgs.formats.json {};
 			settingsFile = jsonFormat.generate "immich.json" settings;
 		in {
-			modules.webServer.immich = {
-				enable = true;
-				subdomain = "immich";
-				port = ports.immich;
+			modules.webServer.hosts.immich = {
+				auth = false;
+				proxyPort = ports.immich;
+				extraConfig = ''
+					# https://immich.app/docs/administration/reverse-proxy/
+					client_max_body_size 10000M;
+					proxy_read_timeout 600s;
+					proxy_send_timeout 600s;
+					send_timeout 600s;
+				'';
+				locations."^~ /_app/immutable".files = pkgs.immich.web;
 			};
 			
 			modules.email = {

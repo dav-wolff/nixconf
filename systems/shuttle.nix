@@ -20,34 +20,18 @@
 		webServer = {
 			enable = true;
 			domain = "dav.dev";
-			solitaire = {
-				enable = true;
-				subdomain = "solitaire";
-			};
 		};
-		
-		vault.enable = true;
-		
-		vaultwarden.enable = true;
 		
 		immich = {
 			enable = true;
 			remoteMachineLearningHost = "max";
 		};
 		
-		navidrome = {
-			enable = true;
-			passwordFile = ../secrets/navidromePassword.age;
-		};
-		
-		owntracks = {
-			enable = true;
-			passwordFile = ../secrets/owntracksPassword.age;
-		};
-		
-		changedetection = {
-			enable = true;
-			passwordFile = ../secrets/changedetectionPassword.age;
-		};
+		solitaire.web = true;
+		vault.enable = true;
+		vaultwarden.enable = true;
+		navidrome.enable = true;
+		owntracks.enable = true;
+		changedetection.enable = true;
 	};
 }

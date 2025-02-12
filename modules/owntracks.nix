@@ -4,24 +4,18 @@ let
 	cfg = config.modules.owntracks;
 	inherit (config) ports;
 in {
-	options.modules.owntracks = {
-		enable = lib.mkEnableOption "owntracks";
-		passwordFile = lib.mkOption {
-			type = lib.types.pathInStore;
-		};
-	};
+	options.modules.owntracks.enable = lib.mkEnableOption "owntracks";
 	
 	config = lib.mkIf cfg.enable {
-		age.secrets.owntracksPassword = {
-			file = cfg.passwordFile;
-			owner = "nginx";
-		};
-		
-		modules.webServer.owntracks = {
-			enable = true;
-			subdomain = "owntracks";
-			port = ports.owntracks;
-			passwordFile = config.age.secrets.owntracksPassword.path;
+		modules.webServer.hosts.owntracks = {
+			locations = {
+				"/" = {
+					files = pkgs.owntracks-frontend;
+					immutable = false;
+				};
+				"/pub".proxyPort = ports.owntracks;
+				"/api".proxyPort = ports.owntracks;
+			};
 		};
 		
 		users.users.owntracks = {

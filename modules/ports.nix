@@ -10,6 +10,7 @@ let
 		navidrome = 9040;
 		owntracks = 9050;
 		changedetection = 9060;
+		authelia = 9070;
 	};
 in {
 	options.ports = with lib; mkOption {

@@ -9,22 +9,12 @@ in {
 		volume = lib.mkOption {
 			type = lib.types.str;
 		};
-		passwordFile = lib.mkOption {
-			type = lib.types.pathInStore;
-		};
 	};
 	
 	config = lib.mkIf cfg.enable {
-		age.secrets.navidromePassword = {
-			file = cfg.passwordFile;
-			owner = "nginx";
-		};
-		
-		modules.webServer.navidrome = {
-			enable = true;
+		modules.webServer.hosts.navidrome = {
 			subdomain = "music";
-			port = ports.navidrome;
-			passwordFile = config.age.secrets.navidromePassword.path;
+			proxyPort = ports.navidrome;
 		};
 		
 		services.navidrome = {
