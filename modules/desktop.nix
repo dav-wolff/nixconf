@@ -40,7 +40,6 @@ in {
 			keepass
 			thunderbird
 			protonmail-desktop
-			solitaire.native
 			configured.alacritty
 		];
 	};

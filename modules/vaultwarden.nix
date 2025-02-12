@@ -9,10 +9,9 @@ in {
 	};
 	
 	config = lib.mkIf cfg.enable {
-		modules.webServer.bitwarden = {
-			enable = true;
-			subdomain = "bitwarden";
-			port = ports.vaultwarden;
+		modules.webServer.hosts.bitwarden = {
+			auth = false;
+			proxyPort = ports.vaultwarden;
 		};
 		
 		age.secrets.vaultwardenKey.file = ../secrets/vaultwardenKey.age;
@@ -22,7 +21,7 @@ in {
 			backupDir = "/var/backup/vaultwarden";
 			config = {
 				ROCKET_PORT = ports.vaultwarden;
-				DOMAIN = "https://${config.modules.webServer.bitwarden.domain}";
+				DOMAIN = "https://${config.modules.webServer.hosts.bitwarden.domain}";
 				PUSH_ENABLED = true;
 				PUSH_RELAY_URI = "https://api.bitwarden.eu";
 				PUSH_IDENTITY_URI = "https://identity.bitwarden.eu";

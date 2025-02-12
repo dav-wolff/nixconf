@@ -20,10 +20,9 @@ in {
 	};
 	
 	config = lib.mkIf cfg.enable {
-		modules.webServer.vault = {
-			enable = true;
-			subdomain = "vault";
-			port = ports.vault;
+		modules.webServer.hosts.vault = {
+			auth = false;
+			proxyPort = ports.vault;
 		};
 		
 		users.users.vault = {
