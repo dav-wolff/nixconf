@@ -67,6 +67,7 @@ in {
 			
 			age.derivedSecrets."immich.json" = {
 				secret = config.age.secrets.opensmtpdPassword.path;
+				owner = config.services.immich.user;
 				inputs = with pkgs; [gnused];
 				script = ''
 					sed "s/@PASSWORD@/$(cat $secret)/g" ${settingsFile}

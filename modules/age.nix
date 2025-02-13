@@ -16,6 +16,10 @@ in {
 					secret = mkOption {
 						type = types.str;
 					};
+					owner = mkOption {
+						type = types.nullOr types.str;
+						default = null;
+					};
 					script = mkOption {
 						type = types.str;
 					};
@@ -49,7 +53,10 @@ in {
 					};
 				in ''
 					echo "deriving secret '${options.name}' from '${options.secret}' to '${options.path}'"
+					touch ${options.path}
+					chmod 400 ${options.path}
 					${lib.getExe script} > ${options.path}
+					${lib.optionalString (options.owner != null) "chown ${options.owner} ${options.path}"}
 				'';
 			in {
 				text = builtins.concatStringsSep "\n" (
