@@ -28,6 +28,7 @@ in {
 		
 		age.derivedSecrets.opensmtpdCreds = {
 			secret = config.age.secrets.opensmtpdPassword.path;
+			owner = "smtpd";
 			inputs = with pkgs; [opensmtpd];
 			script = ''
 				# smtpctl requires setgid which is provided by the wrapper
