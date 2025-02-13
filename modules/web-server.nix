@@ -261,6 +261,14 @@ in {
 					file = ../secrets/autheliaStorageEncryptionKey.age;
 					owner = config.services.authelia.instances.main.user;
 				};
+				autheliaOidcHmac = {
+					file = ../secrets/autheliaOidcHmac.age;
+					owner = config.services.authelia.instances.main.user;
+				};
+				autheliaOidcPrivateKey = {
+					file = ../secrets/autheliaOidcPrivateKey.age;
+					owner = config.services.authelia.instances.main.user;
+				};
 			};
 			
 			services.authelia.instances.main = let
@@ -277,6 +285,8 @@ in {
 				secrets = {
 					jwtSecretFile = config.age.secrets.autheliaJwtSecret.path;
 					storageEncryptionKeyFile = config.age.secrets.autheliaStorageEncryptionKey.path;
+					oidcHmacSecretFile = config.age.secrets.autheliaOidcHmac.path;
+					oidcIssuerPrivateKeyFile = config.age.secrets.autheliaOidcPrivateKey.path;
 				};
 				settings = {
 					theme = "dark";
