@@ -11,4 +11,7 @@ in {
 	# nix run pkgs#openssl -- rand -base64 32 > /path/to/key.age
 	"autheliaJwtSecret.age".publicKeys = [keys.hostKeys.shuttle];
 	"autheliaStorageEncryptionKey.age".publicKeys = [keys.hostKeys.shuttle];
+	"autheliaOidcHmac.age".publicKeys = [keys.hostKeys.shuttle];
+	"autheliaOidcPrivateKey.age".publicKeys = [keys.hostKeys.shuttle];
+	"mealieOidcSecret.age".publicKeys = [keys.hostKeys.shuttle];
 }

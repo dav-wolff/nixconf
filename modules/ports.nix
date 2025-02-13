@@ -11,6 +11,7 @@ let
 		owntracks = 9050;
 		changedetection = 9060;
 		authelia = 9070;
+		mealie = 9080;
 	};
 in {
 	options.ports = with lib; mkOption {
