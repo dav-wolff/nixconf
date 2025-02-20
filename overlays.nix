@@ -38,9 +38,9 @@
 		owntracks-frontend = prev.callPackage ./packages/owntracks-frontend.nix {};
 	};
 	
-	# TODO: remove once bitwarden builds on unstable again
-	fixBitwarden = final: prev: {
-		bitwarden-desktop = inputs.nixpkgs-bitwarden.legacyPackages.${final.system}.bitwarden-desktop;
+	# TODO: remove once mealie builds on unstable again
+	fixMealie = final: prev: {
+		mealie = inputs.nixpkgs-mealie.legacyPackages.${final.system}.mealie;
 	};
 	
 	default = inputs.nixpkgs.lib.composeManyExtensions [
@@ -53,7 +53,7 @@
 		self.overlays.extraPackages
 		self.overlays.configuredPackages
 		self.overlays.packages
-		# TODO: remove once bitwarden builds on unstable again
-		self.overlays.fixBitwarden
+		# TODO: remove once mealie builds on unstable again
+		self.overlays.fixMealie
 	];
 }
