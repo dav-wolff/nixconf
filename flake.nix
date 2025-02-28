@@ -103,7 +103,6 @@
 			] ++ lib.filesystem.listFilesRecursive ./modules;
 			nixpkgs.overlays = [self.overlays.default];
 			modules.nix.pkgs = self;
-			modules.nix.nixpkgs = nixpkgs;
 		};
 	} // flake-utils.lib.eachDefaultSystem (system: let
 		pkgs = import nixpkgs {
