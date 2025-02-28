@@ -7,9 +7,6 @@ in {
 		pkgs = lib.mkOption {
 			type = lib.types.pathInStore;
 		};
-		nixpkgs = lib.mkOption {
-			type = lib.types.pathInStore;
-		};
 	};
 	
 	config = {
@@ -39,15 +36,6 @@ in {
 			};
 			
 			registry = {
-				# nixpkgs from flake inputs
-				nixpkgs = {
-					from = {
-						id = "nixpkgs";
-						type = "indirect";
-					};
-					flake = cfg.nixpkgs;
-				};
-				
 				# nixpkgs with local overlays
 				pkgs = {
 					from = {
@@ -55,6 +43,18 @@ in {
 						type = "indirect";
 					};
 					flake = cfg.pkgs;
+				};
+				# unpin nixpkgs flake, not sure why it's pinned without this
+				nixpkgs = {
+					from = {
+						id = "nixpkgs";
+						type = "indirect";
+					};
+					to = {
+						owner = "NixOS";
+						repo = "nixpkgs";
+						type = "github";
+					};
 				};
 			};
 			
