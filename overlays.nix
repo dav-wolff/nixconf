@@ -11,7 +11,6 @@
 	extraPackages = final: prev: let
 		system = final.system;
 	in {
-		helix = inputs.helix.packages.${system}.helix;
 		# make sure not to override existing packages, which others might depend on
 		ndent = assert !(prev ? ndent); inputs.ndent.packages.${system}.ndent;
 		journal = assert !(prev ? journal); inputs.journal.packages.${system}.journal;
