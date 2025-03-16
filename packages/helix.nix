@@ -27,10 +27,16 @@ let
 					tabpad = "╌";
 				};
 			};
+			end-of-line-diagnostics = "hint";
+			inline-diagnostics = {
+				cursor-line = "warning";
+				other-lines = "disable";
+			};
 		};
 		keys = {
 			normal.space = {
 				i = ":toggle-option lsp.display-inlay-hints";
+				e = ":toggle-option inline-diagnostics.other-lines disable error";
 			};
 		};
 	};
