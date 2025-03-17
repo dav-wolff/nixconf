@@ -32,7 +32,7 @@ in {
 		
 		users.users.dav.packages = with pkgs; [
 			firefox
-			kate
+			kdePackages.kate
 			discord
 			telegram-desktop
 			spotify
