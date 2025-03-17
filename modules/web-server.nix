@@ -189,7 +189,12 @@ in {
 							})
 						];
 						
-						extraConfig = lib.mkIf (hostConfig.extraConfig != null) hostConfig.extraConfig;
+						extraConfig = lib.mkMerge [
+							(lib.mkIf (hostConfig.extraConfig != null) hostConfig.extraConfig)
+							''
+								access_log /var/log/nginx/${hostConfig.domain}.access.log log;
+							''
+						];
 					}) cfg.hosts;
 				in lib.mkMerge [
 					hosts
@@ -204,12 +209,20 @@ in {
 									add_header Content-Type text/plain;
 								'';
 							};
+							
+							extraConfig = ''
+								access_log /var/log/nginx/${cfg.domain}.access.log log;
+							'';
 						};
 						
 						"www.${cfg.domain}" = {
 							addSSL = true;
 							useACMEHost = cfg.domain;
 							locations."/".return = "301 https://${cfg.domain}$request_uri";
+							
+							extraConfig = ''
+								access_log /var/log/nginx/www.${cfg.domain}.access.log log;
+							'';
 						};
 					}
 					
@@ -231,13 +244,27 @@ in {
 					}))
 				];
 				
+				commonHttpConfig = ''
+					map $remote_addr $ip_truncated {
+						~^(?P<ip>\d+.\d+.\d+). $ip.0;
+						~^(?P<ip>[^:]+[^:]+): $ip::;
+						default 0.0.0.0;
+					}
+					
+					log_format log '[$time_local] $ip_truncated "$request" $status Sent:$body_bytes_sent Ref:"$http_referrer" "$http_user_agent"';
+					log_format host_log '[$time_local] $http_host $ip_truncated "$request" $status Sent:$body_bytes_sent Ref:"$http_referrer" "$http_user_agent"';
+				'';
+				
 				# Reject connections on unknown hosts
 				appendHttpConfig = let
 					cert = config.security.acme.certs.${cfg.domain}.directory;
 				in ''
+					
 					server {
 						listen 80 default_server;
 						listen 443 ssl default_server;
+						
+						access_log /var/log/nginx/access.log host_log;
 						
 						ssl_certificate ${cert}/fullchain.pem;
 						ssl_certificate_key ${cert}/key.pem;
