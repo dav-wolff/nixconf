@@ -8,7 +8,7 @@ in {
 	options.modules.webServer = with lib; {
 		enable = lib.mkEnableOption "webServer";
 		
-		domain = lib.mkOption {
+		baseDomain = lib.mkOption {
 			type = lib.types.str;
 		};
 		
@@ -19,7 +19,7 @@ in {
 			};
 			domain = lib.mkOption {
 				type = lib.types.str;
-				default = "${cfg.auth.subdomain}.${cfg.domain}";
+				default = "${cfg.auth.subdomain}.${cfg.baseDomain}";
 			};
 		};
 		
@@ -32,7 +32,7 @@ in {
 					};
 					domain = mkOption {
 						type = types.str;
-						default = "${config.subdomain}.${cfg.domain}";
+						default = "${config.subdomain}.${cfg.baseDomain}";
 					};
 					auth = mkOption {
 						type = types.bool;
@@ -97,8 +97,8 @@ in {
 			
 			modules.acme = {
 				enable = true;
-				domain = cfg.domain;
-				extraDomains = ["www.${cfg.domain}"];
+				domain = cfg.baseDomain;
+				extraDomains = ["www.${cfg.baseDomain}"];
 				users = [config.services.nginx.user];
 			};
 			
@@ -199,7 +199,7 @@ in {
 				in lib.mkMerge [
 					hosts
 					{
-						${cfg.domain} = {
+						${cfg.baseDomain} = {
 							forceSSL = true;
 							enableACME = true;
 							
@@ -211,17 +211,17 @@ in {
 							};
 							
 							extraConfig = ''
-								access_log /var/log/nginx/${cfg.domain}.access.log log;
+								access_log /var/log/nginx/${cfg.baseDomain}.access.log log;
 							'';
 						};
 						
-						"www.${cfg.domain}" = {
+						"www.${cfg.baseDomain}" = {
 							addSSL = true;
-							useACMEHost = cfg.domain;
-							locations."/".return = "301 https://${cfg.domain}$request_uri";
+							useACMEHost = cfg.baseDomain;
+							locations."/".return = "301 https://${cfg.baseDomain}$request_uri";
 							
 							extraConfig = ''
-								access_log /var/log/nginx/www.${cfg.domain}.access.log log;
+								access_log /var/log/nginx/www.${cfg.baseDomain}.access.log log;
 							'';
 						};
 					}
@@ -257,7 +257,7 @@ in {
 				
 				# Reject connections on unknown hosts
 				appendHttpConfig = let
-					cert = config.security.acme.certs.${cfg.domain}.directory;
+					cert = config.security.acme.certs.${cfg.baseDomain}.directory;
 				in ''
 					
 					server {
@@ -324,9 +324,9 @@ in {
 					authentication_backend.file.path = usersFile;
 					session.cookies = [
 						{
-							domain = cfg.domain;
+							domain = cfg.baseDomain;
 							authelia_url = "https://${cfg.auth.domain}";
-							default_redirection_url = "https://${cfg.domain}";
+							default_redirection_url = "https://${cfg.baseDomain}";
 						}
 					];
 					storage.local.path = "/var/lib/authelia-main/db.sqlite3";
