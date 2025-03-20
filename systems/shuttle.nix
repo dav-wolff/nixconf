@@ -19,7 +19,7 @@
 		
 		webServer = {
 			enable = true;
-			domain = "dav.dev";
+			baseDomain = "dav.dev";
 		};
 		
 		immich = {
