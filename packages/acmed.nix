@@ -7,6 +7,8 @@
 	cargo,
 	pkg-config,
 	openssl,
+	gnused,
+	acceptLetsencryptTerms ? false,
 }:
 
 let
@@ -31,11 +33,17 @@ in stdenv.mkDerivation {
 		rustc
 		cargo
 		pkg-config
+	] ++ lib.optionals acceptLetsencryptTerms [
+		gnused
+	];
+	
+	buildInputs = [
 		openssl
 	];
 	
 	installPhase = ''
 		make BINDIR=$out/bin DATAROOTDIR=$man/share SYSCONFDIR=$out/etc VARLIBDIR=./var/lib install
+		${lib.optionalString acceptLetsencryptTerms ''sed -i "s/tos_agreed = false/tos_agreed = true/" $out/etc/acmed/letsencrypt.toml''}
 	'';
 	
 	meta = {
