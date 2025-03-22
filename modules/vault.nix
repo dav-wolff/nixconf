@@ -23,9 +23,7 @@ in {
 		modules.webServer.hosts.vault = {
 			auth = false;
 			proxyPort = ports.vault;
-			extraConfig = ''
-				client_max_body_size 10000M;
-			'';
+			maxBodySize = "10000M";
 		};
 		
 		users.users.vault = {

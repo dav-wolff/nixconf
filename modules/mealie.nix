@@ -24,7 +24,7 @@ in {
 				OIDC_SIGNUP_ENABLE = true;
 				OIDC_AUTO_REDIRECT = true;
 				OIDC_CLIENT_ID = "mealie";
-				OIDC_CONFIGURATION_URL = "https://${config.modules.webServer.auth.domain}/.well-known/openid-configuration";
+				OIDC_CONFIGURATION_URL = "https://${config.modules.webServer.hosts.auth.domain}/.well-known/openid-configuration";
 			};
 			credentialsFile = config.age.secrets.mealieOidcSecret.path;
 		};

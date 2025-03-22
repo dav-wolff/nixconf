@@ -50,9 +50,9 @@ in {
 			modules.webServer.hosts.immich = {
 				auth = false;
 				proxyPort = ports.immich;
+				maxBodySize = "10000M";
 				extraConfig = ''
 					# https://immich.app/docs/administration/reverse-proxy/
-					client_max_body_size 10000M;
 					proxy_read_timeout 600s;
 					proxy_send_timeout 600s;
 					send_timeout 600s;
