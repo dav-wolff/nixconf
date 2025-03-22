@@ -73,6 +73,7 @@ in {
 		# TODO: enable if it works again
 		# inputs.solitaire.overlays.default
 		inputs.backy.overlays.default
+		inputs.linky.overlays.default
 		self.overlays.utils
 		self.overlays.extraPackages
 		self.overlays.configuredPackages

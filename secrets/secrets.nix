@@ -16,4 +16,11 @@ in {
 	"mealieOidcSecret.age".publicKeys = [keys.hostKeys.shuttle];
 	"shuttlePorkbunApiKey.age".publicKeys = [keys.hostKeys.shuttle];
 	"shuttlePorkbunApiSecret.age".publicKeys = [keys.hostKeys.shuttle];
+	"minPorkbunApiKey.age".publicKeys = [keys.hostKeys.min];
+	"minPorkbunApiSecret.age".publicKeys = [keys.hostKeys.min];
+	"minSpaceshipApiKey.age".publicKeys = [keys.hostKeys.min];
+	"minSpaceshipApiSecret.age".publicKeys = [keys.hostKeys.min];
+	"linkyAssetsTar.age".publicKeys = [keys.hostKeys.shuttle keys.hostKeys.min];
+	"linkyValuesJson.age".publicKeys = [keys.hostKeys.shuttle keys.hostKeys.min];
+	"linkyDomain.age".publicKeys = [keys.hostKeys.shuttle keys.hostKeys.min];
 }
