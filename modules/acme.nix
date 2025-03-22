@@ -240,7 +240,7 @@ in {
 			script = let
 				replacements = lib.concatMapStrings
 					(certificate: ''"s/@${certificate.name}@/$(cat ${certificate.domainFile})/g;"'')
-					certs;
+					(lib.filter (cert: cert.domainFile != null) certs);
 			in ''
 				sed ${replacements} ${acmedConfigFile}
 			'';

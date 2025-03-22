@@ -48,6 +48,11 @@
 		solitaire = {
 			url = "github:dav-wolff/solitaire";
 		};
+		
+		linky = {
+			url = "github:dav-wolff/linky";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 	
 	outputs = { self, nixpkgs, flake-utils, ... } @ inputs: {

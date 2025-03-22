@@ -76,6 +76,10 @@ in {
 						type = types.str;
 						default = "${config.subdomain}.${cfg.baseDomain}";
 					};
+					domainFile = mkOption {
+						type = types.nullOr types.path;
+						default = null;
+					};
 					cert = mkOption {
 						type = types.str;
 						default = cfg.defaultCert;
@@ -202,7 +206,7 @@ in {
 			}
 		'';
 		
-		makeHost = host: let
+		makeHost = name: host: let
 			cert = config.modules.acme.certs.${host.cert};
 		in ''
 			server {
@@ -216,7 +220,8 @@ in {
 			server {
 				listen 0.0.0.0:443 ssl;
 				listen [::0]:443 ssl;
-				server_name ${host.domain};
+				${lib.optionalString (host.domainFile == null) "server_name ${host.domain};"}
+				${lib.optionalString (host.domainFile != null) "include ${config.age.derivedSecrets.${"nginx-server-name-${name}"}.path};"}
 				http2 on;
 				ssl_certificate ${cert.certFile};
 				ssl_certificate_key ${cert.privateKeyFile};
@@ -261,6 +266,19 @@ in {
 					};
 				};
 			};
+			
+			age.derivedSecrets = let
+				hosts = lib.filterAttrs (_: host: host.domainFile != null) cfg.hosts;
+			in lib.mapAttrs' (name: host: {
+				name = "nginx-server-name-${name}";
+				value = {
+					secret = host.domainFile;
+					owner = "nginx";
+					script = ''
+						echo "server_name $(cat $secret);"
+					'';
+				};
+			}) hosts;
 			
 			networking.firewall.allowedTCPPorts = [80 443];
 			
@@ -309,7 +327,7 @@ in {
 						
 						return 444;
 					}
-					${lib.concatMapStringsSep "\n" makeHost (lib.filter (host: host.enable) (builtins.attrValues cfg.hosts))}
+					${lib.concatStringsSep "\n" (lib.mapAttrsToList makeHost (lib.filterAttrs (_: host: host.enable) cfg.hosts))}
 				'';
 			};
 		}

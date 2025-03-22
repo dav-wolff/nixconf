@@ -20,6 +20,10 @@ in {
 						type = types.nullOr types.str;
 						default = null;
 					};
+					isDirectory = mkOption {
+						type = types.bool;
+						default = false;
+					};
 					script = mkOption {
 						type = types.str;
 					};
@@ -49,14 +53,26 @@ in {
 					script = pkgs.writeShellApplication {
 						name = "age-derive-secret-${options.name}";
 						runtimeInputs = options.inputs;
-						text = "secret=${options.secret}\n${options.script}";
+						text = ''
+							secret=${options.secret}
+							out=${options.path}
+							# bypass unused variables error
+							echo "$secret$out" > /dev/null
+							${options.script}
+						'';
 					};
 				in ''
 					echo "deriving secret '${options.name}' from '${options.secret}' to '${options.path}'"
-					touch ${options.path}
-					chmod 400 ${options.path}
-					${lib.getExe script} > ${options.path}
-					${lib.optionalString (options.owner != null) "chown ${options.owner} ${options.path}"}
+					${lib.optionalString (!options.isDirectory) ''
+						touch ${options.path}
+						chmod 400 ${options.path}
+						${lib.getExe script} > ${options.path}
+					''}
+					${lib.optionalString options.isDirectory ''
+						${lib.getExe script}
+						find ${options.path} -type d -exec chmod 500 {} + -o -type f -exec chmod 400 {} +
+					''}
+					${lib.optionalString (options.owner != null) "chown -R ${options.owner} ${options.path}"}
 				'';
 			in {
 				text = builtins.concatStringsSep "\n" (
