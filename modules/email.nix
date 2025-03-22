@@ -10,6 +10,9 @@ in {
 		domain = lib.mkOption {
 			type = lib.types.str;
 		};
+		cert = lib.mkOption {
+			type = lib.types.str;
+		};
 		senders = lib.mkOption {
 			type = lib.types.listOf lib.types.str;
 			default = [];
@@ -39,24 +42,27 @@ in {
 		
 		modules.acme = {
 			enable = true;
-			domain = cfg.domain;
 			users = ["smtpd"];
 		};
 		
 		# because opensmtpd requires the certificate to be owned by root LoadCredential is necessary
 		# https://github.com/OpenSMTPD/OpenSMTPD/issues/1142
 		# https://nixos.org/manual/nixos/stable/#module-security-acme-root-owned
-		security.acme.certs.${cfg.domain}.postRun = ''
-			systemctl restart opensmtpd
-		'';
+		# TODO: amend to work with acmed
+		# security.acme.certs.${cfg.domain}.postRun = ''
+		# 	systemctl restart opensmtpd
+		# '';
 		
-		systemd.services.opensmtpd.requires = ["acme-finished-${cfg.domain}.target"];
-		systemd.services.opensmtpd.serviceConfig.LoadCredential = let
-			certDir = config.security.acme.certs.${cfg.domain}.directory;
-		in [
-			"cert.pem:${certDir}/cert.pem"
-			"key.pem:${certDir}/key.pem"
-		];
+		systemd.services.opensmtpd = {
+			after = ["acmed.service"];
+			wants = ["acmed.service"];
+			serviceConfig.LoadCredential = let
+				cert = config.modules.acme.certs.${cfg.cert};
+			in [
+				"cert.pem:${cert.certFile}"
+				"key.pem:${cert.privateKeyFile}"
+			];
+		};
 		
 		services.opensmtpd = {
 			enable = true;

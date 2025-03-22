@@ -14,4 +14,6 @@ in {
 	"autheliaOidcHmac.age".publicKeys = [keys.hostKeys.shuttle];
 	"autheliaOidcPrivateKey.age".publicKeys = [keys.hostKeys.shuttle];
 	"mealieOidcSecret.age".publicKeys = [keys.hostKeys.shuttle];
+	"shuttlePorkbunApiKey.age".publicKeys = [keys.hostKeys.shuttle];
+	"shuttlePorkbunApiSecret.age".publicKeys = [keys.hostKeys.shuttle];
 }

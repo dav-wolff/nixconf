@@ -1,9 +1,21 @@
 { nixos-hardware, ... }:
+{ config, ... }:
 
 {
 	imports = [
 		nixos-hardware.nixosModules.common-gpu-nvidia-disable
 	];
+	
+	age.secrets = {
+		porkbunApiKey = {
+			file = ../secrets/shuttlePorkbunApiKey.age;
+			owner = "acmed";
+		};
+		porkbunApiSecret = {
+			file = ../secrets/shuttlePorkbunApiSecret.age;
+			owner = "acmed";
+		};
+	};
 	
 	modules = {
 		bootLoader = {
@@ -15,11 +27,21 @@
 		ssh.server.enable = true;
 		hotspot.enable = true;
 		
-		email.domain = "dav.dev";
+		email = {
+			domain = "dav.dev";
+			cert = "dav.dev";
+		};
 		
 		webServer = {
 			enable = true;
 			baseDomain = "dav.dev";
+			defaultCert = "dav.dev";
+		};
+		
+		acme = {
+			porkbunApiKey = config.age.secrets.porkbunApiKey.path;
+			porkbunApiSecret = config.age.secrets.porkbunApiSecret.path;
+			certs."dav.dev".provider = "porkbun";
 		};
 		
 		immich = {
