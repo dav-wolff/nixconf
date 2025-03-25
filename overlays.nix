@@ -29,6 +29,8 @@
 			alacritty = callPackage ./packages/alacritty.nix {
 				shell = final.configured.zellij;
 			};
+			
+			jujutsu = callPackage ./packages/jujutsu.nix {};
 		};
 	};
 	
