@@ -42,7 +42,6 @@ let
 	};
 	
 	toml = formats.toml {};
-	
 	configFile = toml.generate "helix-config" config;
 in wrapPackage helix {
 	args = ["--config" configFile];

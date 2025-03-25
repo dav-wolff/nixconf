@@ -42,6 +42,7 @@
 		configured.helix
 		configured.zsh
 		configured.zellij
+		configured.jujutsu
 		ndent
 		journal
 	];
