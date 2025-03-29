@@ -13,6 +13,14 @@ let
 			diff-editor = ":builtin";
 			paginate = "never";
 		};
+		signing = {
+			behavior = "drop";
+			backend = "gpg";
+			backends.gpg.allow-expired-keys = false;
+		};
+		git = {
+			sign-on-push = true;
+		};
 	};
 	
 	toml = formats.toml {};
