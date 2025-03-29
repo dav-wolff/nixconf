@@ -9,7 +9,10 @@ let
 			name = "David Wolff";
 			email = "david@dav.dev";
 		};
-		ui.diff-editor = ":builtin";
+		ui = {
+			diff-editor = ":builtin";
+			paginate = "never";
+		};
 	};
 	
 	toml = formats.toml {};
