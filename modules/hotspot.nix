@@ -9,6 +9,8 @@ in {
 	options.modules.hotspot.enable = lib.mkEnableOption "hotspot";
 	
 	config = lib.mkIf cfg.enable {
+		networking.firewall.allowedUDPPorts = [67];
+		
 		age.secrets.hotspotPassword.file = ../secrets/hotspotPassword.age;
 		
 		systemd.services.create_ap = {
