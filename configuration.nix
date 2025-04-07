@@ -32,7 +32,7 @@
 		pinentry-tty
 		rbw
 		fzf
-		xsel
+		wl-clipboard
 		bat
 		xplr
 		tree
