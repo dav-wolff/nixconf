@@ -12,7 +12,7 @@
 		};
 		
 		networking.enable = true;
-		sshServer.enable = true;
+		ssh.server.enable = true;
 		hotspot.enable = true;
 		
 		email.domain = "dav.dev";
