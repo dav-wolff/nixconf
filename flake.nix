@@ -90,11 +90,10 @@
 				inputs.agenix.nixosModules.default
 				inputs.nixos-wsl.nixosModules.default
 				inputs.nix-minecraft.nixosModules.minecraft-servers
-				# TODO remove
-				./configuration.nix
 			] ++ lib.filesystem.listFilesRecursive ./modules;
 			nixpkgs.overlays = [self.overlays.default];
 			modules.nix.pkgs = self;
+			system.stateVersion = "24.05";
 		};
 	} // flake-utils.lib.eachDefaultSystem (system: let
 		pkgs = import nixpkgs {

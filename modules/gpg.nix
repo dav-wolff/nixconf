@@ -10,8 +10,14 @@ in {
 		};
 	};
 	
-	environment.sessionVariables = {
-		GNUPGHOME = gnupgHome;
+	environment = {
+		sessionVariables = {
+			GNUPGHOME = gnupgHome;
+		};
+		
+		systemPackages = with pkgs; [
+			pinentry-tty
+		];
 	};
 	
 	programs.gnupg = {

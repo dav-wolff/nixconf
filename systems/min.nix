@@ -1,6 +1,6 @@
 {
 	modules = {
-		sshServer = {
+		ssh.server = {
 			enable = true;
 			public = true;
 		};
