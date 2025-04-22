@@ -7,9 +7,11 @@
 		systemPackages = with pkgs; [
 			fzf
 			wl-clipboard
+			jq
 			bat
 			xplr
 			tree
+			ripgrep
 			configured.zsh
 			configured.zellij
 			configured.helix
