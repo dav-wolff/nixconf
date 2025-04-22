@@ -6,5 +6,7 @@
 		backy
 		ndent
 		journal
+		ncdu
+		httpie
 	];
 }
