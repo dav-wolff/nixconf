@@ -8,5 +8,6 @@
 		journal
 		ncdu
 		httpie
+		dysk
 	];
 }
