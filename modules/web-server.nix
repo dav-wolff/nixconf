@@ -322,13 +322,18 @@ in {
 						endpoints.authz.auth-request.implementation = "AuthRequest";
 					};
 					authentication_backend.file.path = usersFile;
-					session.cookies = [
-						{
-							domain = cfg.baseDomain;
-							authelia_url = "https://${cfg.auth.domain}";
-							default_redirection_url = "https://${cfg.baseDomain}";
-						}
-					];
+					session = {
+						inactivity = "30d";
+						expiration = "6h";
+						remember_me = "90d";
+						cookies = [
+							{
+								domain = cfg.baseDomain;
+								authelia_url = "https://${cfg.auth.domain}";
+								default_redirection_url = "https://${cfg.baseDomain}";
+							}
+						];
+					};
 					storage.local.path = "/var/lib/authelia-main/db.sqlite3";
 					access_control.default_policy = "one_factor";
 					notifier.filesystem.filename = "/var/lib/authelia-main/notifications.txt";
