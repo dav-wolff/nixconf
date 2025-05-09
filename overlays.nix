@@ -27,6 +27,8 @@ in {
 		# make sure not to override existing packages, which others might depend on
 		ndent = assert !(prev ? ndent); inputs.ndent.packages.${system}.ndent;
 		journal = assert !(prev ? journal); inputs.journal.packages.${system}.journal;
+		# TODO: remove if acmed is available on nixpkgs
+		acmed = prev.callPackage ./packages/acmed.nix {};
 		# TODO: remove if overlay works again
 		solitaire = assert !(prev ? solitaire); prev.lib.makeScope prev.newScope (self: {
 			cards = inputs.solitaire.packages.${system}.cards;
