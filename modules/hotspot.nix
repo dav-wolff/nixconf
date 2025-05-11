@@ -3,7 +3,7 @@
 let
 	cfg = config.modules.hotspot;
 	name = config.networking.hostName;
-	wifi = "wlp3s0";
+	wifi = "wlp0s29f7u5";
 	internet = "enp2s0f5";
 in {
 	options.modules.hotspot.enable = lib.mkEnableOption "hotspot";
