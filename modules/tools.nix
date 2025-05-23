@@ -7,7 +7,7 @@
 		ndent
 		journal
 		ncdu
-		httpie
+		xh
 		dysk
 	];
 }
