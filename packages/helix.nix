@@ -1,10 +1,12 @@
 { wrapPackage
+, runCommandLocal
 , helix
 , formats
 }:
 
 let
 	config = {
+		theme = "blue";
 		editor = {
 			mouse = false;
 			line-number = "relative";
@@ -43,6 +45,14 @@ let
 	
 	toml = formats.toml {};
 	configFile = toml.generate "helix-config" config;
+	
+	runtimeDirectory = runCommandLocal "helix-themes" {} ''
+		mkdir -p $out/themes
+		cp ${./helix-theme.toml} $out/themes/blue.toml
+	'';
 in wrapPackage helix {
 	args = ["--config" configFile];
+	env = {
+		HELIX_RUNTIME = runtimeDirectory;
+	};
 }

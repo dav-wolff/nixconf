@@ -1,0 +1,154 @@
+keyword = "orange"
+operator = "orange"
+special = "pink"
+
+type = "yellow"
+"type.parameter" = {fg = "yellow", modifiers = ["italic"]}
+"type.enum.variant" = "white"
+
+punctuation = "blue"
+"punctuation.delimiter" = "blue-gray"
+namespace = "blue-gray"
+
+# Literals
+string = "mint"
+"constant.builtin" = "mint"
+"constant.numeric" = "mint"
+
+# Variables
+"variable" = "light-blue"
+"variable.builtin" = "blue"
+"variable.other.member" = "white"
+
+# TODO
+comment = "blue-gray"
+"comment.block.documentation" = "pink" # not working!
+
+function = "white"
+constant = "white"
+
+# TODO
+# "label"
+# "attribute"
+# "constant.character"
+# "function.special"
+# "tag"
+
+# Diff
+"diff.plus" = "green"
+"diff.minus" = "red"
+"diff.delta" = "blue"
+
+# TODO
+"diff.conflict" = {bg = "#ff0000"}
+
+# Markup
+"markup.heading" = {fg = "blue", modifiers = ["bold"]}
+"markup.bold" = {modifiers = ["bold"]}
+"markup.italic" = {modifiers = ["italic"]}
+"markup.strikethrough" = {modifiers = ["crossed_out"]}
+"markup.link.url" = {fg = "blue-gray", modifiers = ["underlined"]}
+"markup.link.text" = "mint"
+"markup.link" = "light-blue"
+"markup.raw" = "yellow"
+
+# General
+"ui.background" = {fg = "white", bg = "dark-purple"}
+"ui.text" = "white"
+
+"ui.virtual.whitespace" = "light-purple"
+"ui.virtual.inlay-hint" = {fg = "light-purple", modifiers = ["italic"]} # bg = "purple"?
+"ui.virtual.jump-label" = {fg = "pink", underline = {color = "blue", style = "line"}}
+
+"ui.window" = "white"
+
+# Menus
+"ui.popup" = {bg = "dark-blue"}
+# "ui.menu.scroll" = {fg = "yellow", bg = "dark-blue"}
+"ui.menu.scroll" = {fg = "yellow", bg = "blue"}
+"ui.menu" = {fg = "white", bg = "dark-blue"}
+"ui.menu.selected" = {bg = "blue", modifiers = ["bold"]}
+"ui.help" = {fg = "white", bg = "dark-blue"}
+
+# Picker
+"ui.background.separator" = {fg = "blue", modifiers = ["bold"]}
+"ui.picker.header.column" = "blue-gray"
+"ui.picker.header.column.active" = {fg = "light-blue", modifiers = ["bold"]}
+"ui.text.focus" = {bg = "dark-blue"}
+"ui.highlight" = {bg = "purple"}
+
+"ui.text.inactive" = "blue-gray"
+
+# TODO
+"ui.text.directory" = {fg = "yellow", modifiers = ["bold"]}
+
+# Cursor
+"ui.cursor.primary" = {fg = "black", bg = "white"}
+# TODO: is this the correct color to use? nothing else has blue-gray bg
+"ui.cursor" = {fg = "black", bg = "blue-gray"}
+"ui.cursor.primary.select" = {fg = "black", bg = "green"}
+"ui.cursor.select" = {fg = "black", bg = "mint"}
+"ui.cursor.match" = {bg = "purple"}
+"ui.selection" = {bg = "dark-blue"}
+
+# Status line
+"ui.statusline.select" = {fg = "dark-blue", bg = "green"}
+"ui.statusline.insert" = {fg = "dark-blue", bg = "yellow"}
+
+"ui.statusline" = {fg = "white", bg = "blue", modifiers = ["bold"]}
+"ui.statusline.inactive" = {fg = "white", bg = "dark-blue"}
+
+# what?
+"ui.statusline.separator" = {fg = "#ff0000", bg = "#ff0000"}
+
+# Buffer line
+"ui.bufferline" = {fg = "white", bg = "blue", modifiers = ["bold"]}
+"ui.bufferline.active" = {bg = "dark-blue"}
+
+# Gutter
+"ui.gutter.selected" = {bg = "purple", modifiers = ["bold"]}
+"ui.linenr" = "blue-gray"
+"ui.linenr.selected" = {fg = "blue", modifiers = ["bold"]}
+
+# Diagnostics
+"diagnostic.error" = {underline = {color = "red", style = "curl"}}
+"diagnostic.warning" = {underline = {color = "warn-yellow", style = "curl"}}
+"diagnostic.info" = {underline = {color = "blue-gray", style = "line"}}
+"diagnostic.hint" = {underline = {color = "blue-gray", style = "line"}}
+# TODO
+"diagnostic.deprecated" = {modifiers = "crossed_out"}
+"diagnostic.unnecessary" = "#ff0000"
+
+error = {fg = "red", modifiers = ["bold", "italic"]}
+warning = {fg = "warn-yellow", modifiers = ["bold", "italic"]}
+info = {fg = "blue-gray", modifiers = ["bold", "italic"]}
+hint = {fg = "blue-gray", modifiers = ["bold", "italic"]}
+
+# TODO
+# "ui.debug.breakpoint" = {fg = "#ff0000", bg = "#ffff00"}
+# "ui.debug.active"
+# "ui.virtual.ruler"
+# "ui.virtual.indent-guide"
+# "ui.virtual.wrap"
+# "ui.cursorline.primary"
+# "ui.cursorline.secondary"
+# "ui.cursorcolumn.primary"
+# "ui.cursorcolumn.secondary"
+# "tabstop"
+
+[palette]
+white = "#ffffff"
+blue-gray = "#a7c6db"
+blue = "#008cff"
+light-blue = "#6bc4ff"
+dark-blue = "#3045b0"
+light-purple = "#844ddb"
+purple = "#482580"
+dark-purple = "#270c52"
+yellow = "#ffed33"
+warn-yellow = "#ffc95e"
+orange = "#e8851c"
+mint = "#3bffa3"
+green = "#56ff4a"
+red = "#ff6969"
+pink = "#ff6b97"
