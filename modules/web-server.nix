@@ -212,7 +212,8 @@ in {
 			server {
 				listen 0.0.0.0:80;
 				listen [::0]:80;
-				server_name ${host.domain};
+				${lib.optionalString (host.domainFile == null) "server_name ${host.domain};"}
+				${lib.optionalString (host.domainFile != null) "include ${config.age.derivedSecrets.${"nginx-server-name-${name}"}.path};"}
 				location / {
 					return 301 https://$host$request_uri;
 				}
