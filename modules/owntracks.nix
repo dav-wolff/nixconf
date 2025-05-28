@@ -8,6 +8,7 @@ in {
 	
 	config = lib.mkIf cfg.enable {
 		modules.webServer.hosts.owntracks = {
+			headers.content-security-policy = "frame-ancestors: none;default-src: 'self' 'unsafe-inline' data:; image-src *.tile.openstreetmap.org";
 			locations = {
 				"/" = {
 					files = pkgs.owntracks-frontend;

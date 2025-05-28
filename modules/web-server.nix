@@ -104,6 +104,14 @@ in {
 						type = types.nullOr types.str;
 						default = null;
 					};
+					defaultHeaders = mkOption {
+						type = types.bool;
+						default = true;
+					};
+					headers = mkOption {
+						type = types.attrsOf (types.nullOr types.str);
+						default = {};
+					};
 					locations = mkOption {
 						type = types.attrsOf (types.submodule (locationOptions config));
 						default = {};
@@ -126,6 +134,13 @@ in {
 						extraConfig = "include ${authLocation};";
 						auth = false;
 					};
+					headers = mkIf config.defaultHeaders (lib.mapAttrs (_: lib.mkDefault) {
+						strict-transport-security = "max-age=63072000; includesubdomains; preload";
+						referrer-policy = "same-origin";
+						content-security-policy = "frame-ancestors 'none'; default-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' data: blob:";
+						x-content-type-options = "nosniff";
+						x-frame-options = "deny";
+					});
 				};
 			};
 			
@@ -155,9 +170,19 @@ in {
 						type = types.bool;
 						default = host.auth;
 					};
+					headers = mkOption {
+						type = types.attrsOf (types.nullOr types.str);
+						default = {};
+					};
 					extraConfig = mkOption {
 						type = types.str;
 						default = "";
+					};
+				};
+				
+				config = {
+					headers = host.headers // {
+						cache-control = mkIf config.immutable "public, max-age=604800, immutable";
 					};
 				};
 			};
@@ -182,6 +207,17 @@ in {
 			proxy_set_header X-Forwarded-Server $host;
 		'';
 		
+		makeHeaders = headers: lib.concatStringsSep "\n" (
+			lib.mapAttrsToList (name: value: ''
+				proxy_hide_header ${name};
+				add_header ${name} "${value}";
+			'')
+				(lib.filterAttrs (name: value:
+					assert (builtins.match "([a-z]|-)*" name) != null; # make sure all headers are lowercase, otherwise they're not combined properly
+					value != null)
+				headers)
+		);
+		
 		makeLocation = path: location: let
 			ifNotNull = value: lib.optionalString (value != null);
 		in ''
@@ -191,7 +227,7 @@ in {
 					root ${location.files};
 				''}
 				${ifNotNull location.staticText ''
-					add_header Content-Type text/plain;
+					add_header content-type text/plain;
 					return 200 '${location.staticText}';
 				''}
 				${ifNotNull location.proxyPort ''
@@ -199,9 +235,7 @@ in {
 					proxy_pass http://localhost:${toString location.proxyPort};
 				''}
 				${lib.optionalString location.auth "include ${authRequest};"}
-				${lib.optionalString location.immutable ''
-					add_header Cache-Control "public, max-age=604800, immutable";
-				''}
+				${makeHeaders location.headers}
 				${location.extraConfig}
 			}
 		'';
@@ -256,6 +290,7 @@ in {
 				auth = {
 					enable = enableAuth;
 					auth = false;
+					headers.content-security-policy = null; # set by authelia
 					locations = let
 						location = {
 							proxyPort = ports.authelia;
