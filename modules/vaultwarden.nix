@@ -12,6 +12,10 @@ in {
 		modules.webServer.hosts.bitwarden = {
 			auth = false;
 			proxyPort = ports.vaultwarden;
+			headers = {
+				content-security-policy = null; # set by vaultwarden
+				x-frame-options = null; # set by vaultwarden
+			};
 		};
 		
 		age.secrets.vaultwardenKey.file = ../secrets/vaultwardenKey.age;
