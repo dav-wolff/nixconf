@@ -234,6 +234,9 @@ in {
 					include ${proxyHeaders};
 					proxy_pass http://localhost:${toString location.proxyPort};
 				''}
+				${ifNotNull location.redirect ''
+					return 301 ${location.redirect};
+				''}
 				${lib.optionalString location.auth "include ${authRequest};"}
 				${makeHeaders location.headers}
 				${location.extraConfig}
