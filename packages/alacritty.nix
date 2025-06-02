@@ -9,7 +9,10 @@ let
 	config = {
 		general.live_config_reload = false;
 		terminal.shell = lib.meta.getExe shell;
-		window.startup_mode = "Maximized";
+		window = {
+			startup_mode = "Maximized";
+			opacity = 0.8;
+		};
 		mouse.hide_when_typing = true;
 		font = let
 			font = {

@@ -1,0 +1,115 @@
+// -*- mode: jsonc -*-
+{
+	"reload_style_on_change": false,
+	"layer": "top",
+	"position": "bottom",
+	"spacing": 4,
+	"modules-left": [
+		"niri/window",
+	],
+	"modules-center": [
+		"mpris",
+	],
+	"modules-right": [
+		"pulseaudio",
+		"power-profiles-daemon",
+		"cpu",
+		"battery",
+		// "tray",
+		"clock",
+		"custom/power"
+	],
+	"niri/window": {
+		"rewrite": {
+			"^(.*) — Mozilla Firefox$": "<span foreground=\"#E66000\">\udb80\ude39</span> $1"
+		},
+	},
+	"mpris": {
+		"format": "{player_icon} {dynamic}",
+		"format-paused": " ",
+		"dynamic-order": ["title", "artist"],
+		"tooltip-format": "",
+		"on-click": "niri msg action focus-workspace Music",
+		"on-click-middle": "",
+		"on-click-right": "",
+		"player-icons": {
+			"default": "▶",
+			"spotify": "<span foreground=\"#1ED760\">\uf1bc</span>"
+		},
+		"status-icons": {
+			"paused": "⏸"
+		},
+	},
+	"pulseaudio": {
+		"scroll-step": 2, // %, can be a float
+		"format": "{volume}% {icon}",
+		"format-bluetooth": "{volume}% {icon}",
+		"format-bluetooth-muted": "{volume}% \ueee8",
+		"format-muted": "{volume}% \ueee8",
+		"format-source": "",
+		"format-source-muted": "",
+		"format-icons": {
+			"headphone": "",
+			"hands-free": "?",
+			"headset": "",
+			"phone": "",
+			"portable": "",
+			"car": "",
+			"default": ["", ""]
+		},
+		"on-click": "GSK_RENDERER=cairo GTK_USE_PORTAL=0 mixxc --anchor bottom --anchor right --margin 5 --margin 180 -i -P"
+	},
+	"power-profiles-daemon": {
+		"format": "{icon}",
+		"tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+		"tooltip": true,
+		"format-icons": {
+			"default": "",
+			"performance": "",
+			"balanced": "",
+			"power-saver": ""
+		}
+	},
+	"cpu": {
+		"format": " {usage}%",
+		"interval": 1
+	},
+	// TODO
+	"battery": {
+		"states": {
+			// "good": 95,
+			"warning": 30,
+			"critical": 15
+		},
+		"format": "{capacity}% {icon}",
+		"format-full": "{capacity}% {icon}",
+		"format-charging": "{capacity}% ",
+		"format-plugged": "{capacity}% ",
+		"format-alt": "{time} {icon}",
+		// "format-good": "", // An empty format will hide the module
+		// "format-full": "",
+		"format-icons": ["", "", "", "", ""]
+	},
+	// TODO
+	"tray": {
+		// "icon-size": 21,
+		"spacing": 10,
+	},
+	"clock": {
+		// "timezone": "America/New_York",
+		"format": "\udb80\udced {:%b %d \uf017 %H:%M:%S}",
+		"interval": 1,
+		"tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+	},
+	"custom/power": {
+		"format" : "⏻ ",
+		"tooltip": false,
+		"menu": "on-click",
+		"menu-file": "@POWER_MENU@",
+		"menu-actions": {
+			"suspend": "systemctl suspend",
+			"reboot": "reboot",
+			"shutdown": "shutdown 0",
+		}
+	}
+}

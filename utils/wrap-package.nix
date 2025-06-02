@@ -2,14 +2,17 @@
 , writeTextFile
 , bash
 , unindent
+, ripgrep
+, wrapPackage
 }:
 
 package: {
 	env ? {},
 	args ? [],
 	passthru ? {},
-	extraOutputs ? []
-}: let
+	extraOutputs ? [],
+	replaceDerivationInFiles ? false
+} @ wrapArgs: let
 	start = builtins.stringLength (lib.getBin package);
 	len = builtins.stringLength (lib.getExe package) - start;
 	path = builtins.substring start len (lib.getExe package);
@@ -22,8 +25,11 @@ in writeTextFile {
 	executable = true;
 	
 	derivationArgs = {
-		inherit passthru;
+		passthru = passthru // {
+			override = overrideArgs: wrapPackage (package.override overrideArgs) wrapArgs;
+		};
 		outputs = ["out"] ++ extraOutputs;
+		nativeBuildInputs = lib.optional replaceDerivationInFiles ripgrep;
 	};
 	
 	checkPhase = let
@@ -32,11 +38,24 @@ in writeTextFile {
 		) extraOutputs;
 	in unindent ''
 		${linkExtraOutputs}
-		for f in ${package}/* ; do
-			[ "$f" = "${package}/bin" ] && continue
-			name=$(basename $f)
-			ln -s $f $out/$name
-		done
+		${if replaceDerivationInFiles then ''
+			for f in ${package}/* ; do
+				[[ "$f" = "${package}/bin" ]] && continue
+				name=$(basename $f)
+				cp -r $f $out/$name
+			done
+			for f in $(rg --files-with-matches "${package}" $out) ; do
+				[[ "$f" = $out/bin/* ]] && continue
+				echo $f
+				substituteInPlace $f --replace-quiet "${package}" "$out"
+			done
+		'' else ''
+			for f in ${package}/* ; do
+				[[ "$f" = "${package}/bin" ]] && continue
+				name=$(basename $f)
+				ln -s $f $out/$name
+			done
+		''}
 	'';
 	
 	text = unindent ''
