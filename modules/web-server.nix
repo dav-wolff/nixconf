@@ -207,9 +207,9 @@ in {
 			proxy_set_header X-Forwarded-Server $host;
 		'';
 		
-		makeHeaders = headers: lib.concatStringsSep "\n" (
+		makeHeaders = isProxy: headers: lib.concatStringsSep "\n" (
 			lib.mapAttrsToList (name: value: ''
-				proxy_hide_header ${name};
+				${lib.optionalString isProxy "proxy_hide_header ${name};"}
 				add_header ${name} "${value}";
 			'')
 				(lib.filterAttrs (name: value:
@@ -238,7 +238,7 @@ in {
 					return 301 ${location.redirect};
 				''}
 				${lib.optionalString location.auth "include ${authRequest};"}
-				${makeHeaders location.headers}
+				${makeHeaders (location.proxyPort != null) location.headers}
 				${location.extraConfig}
 			}
 		'';
