@@ -52,7 +52,7 @@ in {
 			zellij = callPackage ./packages/zellij.nix {};
 			
 			alacritty = callPackage ./packages/alacritty.nix {
-				shell = final.configured.zellij;
+				shell = final.configured.zsh;
 			};
 			
 			jujutsu = callPackage ./packages/jujutsu.nix {};

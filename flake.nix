@@ -91,12 +91,14 @@
 		
 		overlays = import ./overlays.nix inputs;
 		
-		nixosModules.default = { lib, ... }: {
+		nixosModules.default = { lib, ... }: let
+			modules = lib.filter (lib.strings.hasSuffix ".nix") (lib.filesystem.listFilesRecursive ./modules);
+		in {
 			imports = [
 				inputs.agenix.nixosModules.default
 				inputs.nixos-wsl.nixosModules.default
 				inputs.nix-minecraft.nixosModules.minecraft-servers
-			] ++ lib.filesystem.listFilesRecursive ./modules;
+			] ++ modules;
 			nixpkgs.overlays = [self.overlays.default];
 			modules.nix.pkgs = self;
 			system.stateVersion = "24.05";
