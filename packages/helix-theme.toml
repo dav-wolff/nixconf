@@ -113,11 +113,11 @@ constant = "white"
 # Diagnostics
 "diagnostic.error" = {underline = {color = "red", style = "curl"}}
 "diagnostic.warning" = {underline = {color = "warn-yellow", style = "curl"}}
+"diagnostic.unnecessary" = {underline = {color = "warn-yellow", style = "curl"}}
 "diagnostic.info" = {underline = {color = "blue-gray", style = "line"}}
 "diagnostic.hint" = {underline = {color = "blue-gray", style = "line"}}
 # TODO
-"diagnostic.deprecated" = {modifiers = "crossed_out"}
-"diagnostic.unnecessary" = "#ff0000"
+"diagnostic.deprecated" = {modifiers = ["crossed_out"]}
 
 error = {fg = "red", modifiers = ["bold", "italic"]}
 warning = {fg = "warn-yellow", modifiers = ["bold", "italic"]}
