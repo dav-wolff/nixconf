@@ -21,7 +21,7 @@
 	],
 	"niri/window": {
 		"rewrite": {
-			"^(.*) — Mozilla Firefox$": "<span foreground=\"#E66000\">\udb80\ude39</span> $1"
+			"^(.*) — Mozilla Firefox$": "<span foreground=\"#E66000\">󰈹</span> $1"
 		},
 	},
 	"mpris": {
@@ -34,7 +34,7 @@
 		"on-click-right": "",
 		"player-icons": {
 			"default": "▶",
-			"spotify": "<span foreground=\"#1ED760\">\uf1bc</span>"
+			"spotify": "<span foreground=\"#1ED760\"></span>"
 		},
 		"status-icons": {
 			"paused": "⏸"
@@ -44,8 +44,8 @@
 		"scroll-step": 2, // %, can be a float
 		"format": "{volume}% {icon}",
 		"format-bluetooth": "{volume}% {icon}",
-		"format-bluetooth-muted": "{volume}% \ueee8",
-		"format-muted": "{volume}% \ueee8",
+		"format-bluetooth-muted": "{volume}% ",
+		"format-muted": "{volume}% ",
 		"format-source": "",
 		"format-source-muted": "",
 		"format-icons": {
@@ -74,21 +74,17 @@
 		"format": " {usage}%",
 		"interval": 1
 	},
-	// TODO
 	"battery": {
 		"states": {
-			// "good": 95,
-			"warning": 30,
 			"critical": 15
 		},
 		"format": "{capacity}% {icon}",
 		"format-full": "{capacity}% {icon}",
-		"format-charging": "{capacity}% ",
-		"format-plugged": "{capacity}% ",
-		"format-alt": "{time} {icon}",
-		// "format-good": "", // An empty format will hide the module
-		// "format-full": "",
-		"format-icons": ["", "", "", "", ""]
+		"format-charging": "{capacity}% <span foreground=\"#56ff4a\">󰂄</span>",
+		"format-plugged": "{capacity}% <span foreground=\"#008cff\"></span>",
+		"format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+		// "format-icons": ["", "", "", "", ""],
+		"interval": 1
 	},
 	// TODO
 	"tray": {
@@ -96,8 +92,7 @@
 		"spacing": 10,
 	},
 	"clock": {
-		// "timezone": "America/New_York",
-		"format": "\udb80\udced {:%b %d \uf017 %H:%M:%S}",
+		"format": "󰃭 {:%b %d  %H:%M:%S}",
 		"interval": 1,
 		"tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
 	},
