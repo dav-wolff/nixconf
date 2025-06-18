@@ -32,6 +32,7 @@ in {
 		};
 		
 		programs.kdeconnect.enable = true;
+		programs.localsend.enable = true;
 		
 		users.users.dav.packages = with pkgs; [
 			firefox
