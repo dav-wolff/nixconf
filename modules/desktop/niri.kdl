@@ -97,7 +97,9 @@ window-rule {
 // Only for extensions, but unfortunately the title isn't set in time to match
 window-rule {
 	match app-id="firefox$" title="^Mozilla Firefox$"
-	open-floating true
+	// disable until this can be done properly
+	// open-floating true
+}
 }
 
 window-rule {
