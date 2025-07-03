@@ -11,6 +11,11 @@ in {
 			source = pkgs.writeText "niri-config.kdl" (builtins.readFile ./niri.kdl);
 		};
 		
+		# programs.niri.enable enables services.gnome.gnome-keyring
+		# and services.gnome.gnome-keyring enables services.gnome.gcr-ssh-agent
+		# which conflicts with programs.ssh.startAgent
+		services.gnome.gcr-ssh-agent.enable = false;
+		
 		services.power-profiles-daemon.enable = true; # already enabled without this, but not sure by what, maybe KDE?
 		services.playerctld.enable = true;
 		
