@@ -9,6 +9,7 @@ in {
 		programs.niri.enable = true;
 		environment.etc."niri/config.kdl" = {
 			source = pkgs.writeText "niri-config.kdl" (builtins.readFile ./niri.kdl);
+			mode = "644";
 		};
 		
 		# programs.niri.enable enables services.gnome.gnome-keyring
