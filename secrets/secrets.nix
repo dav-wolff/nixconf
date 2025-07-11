@@ -7,7 +7,10 @@ in {
 	# htpasswd -c /path/to/password.age dav
 	"dkim.rsa.age".publicKeys = [keys.hostKeys.shuttle]; # openssl genrsa -out /path/to/dkim.rsa.age 2048
 	"opensmtpdPassword.age".publicKeys = [keys.hostKeys.shuttle];
-	"keys.gpg.age".publicKeys = keys.allHostKeys; # gpg --export-secret-keys --export-options backup --output keys.gpg
+	# gpg --full-generate-key
+	# ECC sign and encrypt Curve 25519 6m
+	# gpg --export-secret-keys --export-options backup --output keys.gpg
+	"keys.gpg.age".publicKeys = keys.allHostKeys;
 	# nix run pkgs#openssl -- rand -base64 32 > /path/to/key.age
 	"autheliaJwtSecret.age".publicKeys = [keys.hostKeys.shuttle];
 	"autheliaStorageEncryptionKey.age".publicKeys = [keys.hostKeys.shuttle];
