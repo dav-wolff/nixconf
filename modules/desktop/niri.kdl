@@ -168,12 +168,12 @@ binds {
 	Mod+Ctrl+K          { focus-workspace-up; }
 	Mod+Page_Up         { focus-workspace-up; }
 	Mod+Ctrl+Shift+J    { move-column-to-workspace-down; }
-	Mod+Shift+Page_Down { move-column-to-workspace-down; }
 	Mod+Ctrl+Shift+K    { move-column-to-workspace-up; }
-	Mod+Shift+Page_Up   { move-column-to-workspace-up; }
 	
-	Mod+Ctrl+Page_Down { move-workspace-down; }
-	Mod+Ctrl+Page_Up   { move-workspace-up; }
+	Mod+Ctrl+Alt+J     { move-workspace-down; }
+	Mod+Shift+Page_Down { move-workspace-down; }
+	Mod+Ctrl+Alt+K     { move-workspace-up; }
+	Mod+Shift+Page_Up   { move-workspace-up; }
 	
 	Mod+WheelScrollDown      cooldown-ms=80 { focus-workspace-down; }
 	Mod+WheelScrollUp        cooldown-ms=80 { focus-workspace-up; }
