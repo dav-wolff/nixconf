@@ -9,5 +9,6 @@
 		ncdu
 		xh
 		dysk
+		rclone
 	];
 }
