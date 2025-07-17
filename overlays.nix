@@ -3,9 +3,10 @@
 let
 	lib = inputs.nixpkgs.lib;
 	
+	# nixpkgs-pinned = [pinned-packages];
 	pinnedPackages = {
-		# not building on unstable: https://github.com/NixOS/nixpkgs/pull/403959
-		nixpkgs-mealie = ["mealie"];
+		# not building on unstable
+		nixpkgs-prismlauncher = ["prismlauncher"];
 	};
 in {
 	pinnedPackages = final: prev: lib.concatMapAttrs (input: packages:
