@@ -67,6 +67,13 @@ in {
 		environment.systemPackages = with pkgs; [
 			nixd
 			nix-tree
+			manix
+			nix-output-monitor
 		];
+		
+		programs.nh = {
+			enable = true;
+			flake = "/home/dav/nixconf";
+		};
 	};
 }
