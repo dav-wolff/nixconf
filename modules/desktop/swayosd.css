@@ -1,0 +1,6 @@
+window#osd {
+	border-radius: 1000px;
+	border: none;
+	font-size: 12pt;
+	background: rgba(0, 140, 255, 0.8);
+}

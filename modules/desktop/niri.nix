@@ -25,6 +25,7 @@ in {
 			xwayland-satellite
 			swaybg
 			swaylock
+			swayosd
 		];
 		
 		programs.waybar = let
@@ -56,6 +57,7 @@ in {
 				];
 				mako.wantedBy = ["niri.service"];
 				xwayland-satellite.wantedBy = ["niri.service"];
+				
 				wallpaper = let
 					wallpaper = pkgs.fetchurl {
 						url = "https://w.wallhaven.cc/full/7j/wallhaven-7jgyre.jpg";
@@ -68,6 +70,28 @@ in {
 					after = ["graphical-session.target"];
 					serviceConfig = {
 						ExecStart = "${lib.getExe pkgs.swaybg} -i ${wallpaper}";
+						Restart = "on-failure";
+					};
+				};
+				
+				swayosd = let
+					config = {
+						server = {
+							show_percentage = true;
+							top_margin = 0.08;
+						};
+					};
+					
+					toml = pkgs.formats.toml {};
+					configFile = toml.generate "swayosd.toml" config;
+					style = pkgs.writeText "swayosd.css" (builtins.readFile ./swayosd.css);
+				in {
+					wantedBy = ["niri.service"];
+					partOf = ["graphical-session.target"];
+					after = ["graphical-session.target"];
+					
+					serviceConfig = {
+						ExecStart = "${pkgs.swayosd}/bin/swayosd-server --config ${configFile} --style ${style}";
 						Restart = "on-failure";
 					};
 				};

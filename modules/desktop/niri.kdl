@@ -119,14 +119,21 @@ binds {
 	Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
 	Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 	
-	XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.02+"; }
-	XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.02-"; }
-	XF86AudioMute        allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
-	XF86AudioMicMute     allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
+	XF86AudioRaiseVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "2"; }
+	XF86AudioLowerVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "-2"; }
+	XF86AudioMute        allow-when-locked=true { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
+	XF86AudioMicMute     allow-when-locked=true { spawn "swayosd-client" "--input-volume" "mute-toggle"; }
 	XF86AudioPlay        allow-when-locked=true { spawn "playerctl" "play-pause"; }
 	XF86AudioStop        allow-when-locked=true { spawn "playerctl" "stop"; }
 	XF86AudioPrev        allow-when-locked=true { spawn "playerctl" "previous"; }
 	XF86AudioNext        allow-when-locked=true { spawn "playerctl" "next"; }
+	
+	// without sleep swayosd seems to always think num lock and caps lock are on
+	// call swayosd-client twice, first for instant feedback, second time for accuracy
+	Num_Lock { spawn "sh" "-c" "swayosd-client --num-lock && sleep 0.15 && swayosd-client --num-lock"; }
+	Caps_Lock { spawn "sh" "-c" "swayosd-client --caps-lock && sleep 0.15 && swayosd-client --caps-lock"; }
+	// scroll lock isn't turning on currently
+	Scroll_Lock { spawn "swayosd-client" "--scroll-lock"; }
 	
 	Mod+O repeat=false { toggle-overview; }
 	
