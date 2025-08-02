@@ -337,7 +337,6 @@ in {
 				recommendedTlsSettings = true;
 				recommendedOptimisation = true;
 				recommendedGzipSettings = true;
-				recommendedZstdSettings = true;
 				recommendedBrotliSettings = true;
 				
 				commonHttpConfig = ''
