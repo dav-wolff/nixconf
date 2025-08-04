@@ -145,6 +145,8 @@ binds {
 	Mod+O repeat=false { toggle-overview; }
 	
 	Mod+Q { close-window; }
+	Mod+Ctrl+Q { spawn "sh" "-c" "niri msg --json focused-window | jq '.pid // empty' | xargs --no-run-if-empty kill"; }
+	Mod+Ctrl+Shift+Q { spawn "sh" "-c" "niri msg --json focused-window | jq '.pid // empty' | xargs --no-run-if-empty kill -kill"; }
 	
 	Mod+H     { focus-column-left; }
 	Mod+Left  { focus-column-left; }
