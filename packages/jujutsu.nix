@@ -10,8 +10,9 @@ let
 			email = "david@dav.dev";
 		};
 		ui = {
+			default-command = "log";
 			diff-editor = ":builtin";
-			paginate = "never";
+			pager = "less -FRX";
 		};
 		signing = {
 			behavior = "drop";
