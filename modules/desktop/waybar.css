@@ -118,21 +118,15 @@ button:hover {
 	margin-left: 3px;
 }
 
-/* TODO */
 #battery {
-	background-color: #ffffff;
-	color: #000000;
-}
-
-#battery.charging, #battery.plugged {
-	color: #ffffff;
-	background-color: #26A65B;
+	margin-right: 6px;
+	margin-left: 5px;
+	min-width: 65px;
 }
 
 @keyframes blink {
 	to {
-		background-color: #ffffff;
-		color: #000000;
+		color: #ff6969;
 	}
 }
 
@@ -147,6 +141,7 @@ button:hover {
 	animation-direction: alternate;
 }
 
+/* TODO */
 #tray {
 	background-color: #2980b9;
 }
