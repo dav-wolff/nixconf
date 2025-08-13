@@ -123,6 +123,7 @@ binds {
 	Mod+Shift+Slash { show-hotkey-overlay; }
 	
 	Mod+T hotkey-overlay-title="Open a Terminal: alacritty" { spawn "sh" "-c" "alacritty msg create-window || alacritty"; }
+	Mod+A hotkey-overlay-title="Open browser" { spawn "firefox"; }
 	Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
 	Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 	
