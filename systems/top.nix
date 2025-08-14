@@ -4,6 +4,7 @@
 		networking.enable = true;
 		desktop.enable = true;
 		bluetooth.enable = true;
+		backlight.enable = true;
 		games = {
 			enable = true;
 			minecraftServer.enable = true;
