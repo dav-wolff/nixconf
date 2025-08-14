@@ -127,14 +127,16 @@ binds {
 	Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
 	Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 	
-	XF86AudioRaiseVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "2"; }
-	XF86AudioLowerVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "-2"; }
-	XF86AudioMute        allow-when-locked=true { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
-	XF86AudioMicMute     allow-when-locked=true { spawn "swayosd-client" "--input-volume" "mute-toggle"; }
-	XF86AudioPlay        allow-when-locked=true { spawn "playerctl" "play-pause"; }
-	XF86AudioStop        allow-when-locked=true { spawn "playerctl" "stop"; }
-	XF86AudioPrev        allow-when-locked=true { spawn "playerctl" "previous"; }
-	XF86AudioNext        allow-when-locked=true { spawn "playerctl" "next"; }
+	XF86AudioRaiseVolume  allow-when-locked=true { spawn "swayosd-client" "--output-volume" "2"; }
+	XF86AudioLowerVolume  allow-when-locked=true { spawn "swayosd-client" "--output-volume" "-2"; }
+	XF86AudioMute         allow-when-locked=true { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
+	XF86AudioMicMute      allow-when-locked=true { spawn "swayosd-client" "--input-volume" "mute-toggle"; }
+	XF86AudioPlay         allow-when-locked=true { spawn "playerctl" "play-pause"; }
+	XF86AudioStop         allow-when-locked=true { spawn "playerctl" "stop"; }
+	XF86AudioPrev         allow-when-locked=true { spawn "playerctl" "previous"; }
+	XF86AudioNext         allow-when-locked=true { spawn "playerctl" "next"; }
+	XF86MonBrightnessDown allow-when-locked=true { spawn "xbacklight" "-5"; }
+	XF86MonBrightnessUp   allow-when-locked=true { spawn "xbacklight" "+5"; }
 	
 	// without sleep swayosd seems to always think num lock and caps lock are on
 	// call swayosd-client twice, first for instant feedback, second time for accuracy
