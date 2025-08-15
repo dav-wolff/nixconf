@@ -46,5 +46,18 @@ in {
 			protonmail-desktop
 			configured.alacritty
 		];
+		
+		services.earlyoom = {
+			enable = true;
+			# TODO: doesn't seem to be working right now
+			enableNotifications = true;
+			freeMemThreshold = 8;
+			freeMemKillThreshold = 3;
+			extraArgs = [
+				"--ignore-root-user"
+				"--ignore"
+				"^niri$"
+			];
+		};
 	};
 }
