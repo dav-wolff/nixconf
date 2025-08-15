@@ -5,8 +5,6 @@ let
 	
 	# nixpkgs-pinned = [pinned-packages];
 	pinnedPackages = {
-		# not building on unstable
-		nixpkgs-prismlauncher = ["prismlauncher"];
 	};
 in {
 	pinnedPackages = final: prev: lib.concatMapAttrs (input: packages:

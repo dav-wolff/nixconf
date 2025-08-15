@@ -18,6 +18,7 @@ in {
 		})
 		
 		(lib.mkIf (cfg.enable && cfg.minecraftServer.enable) {
+			# /srv/minecraft/smp
 			services.minecraft-servers = {
 				enable = true;
 				eula = true;
@@ -29,7 +30,7 @@ in {
 				servers.smp = {
 					enable = true;
 					autoStart = false;
-					package = pkgs.paperServers.paper-1_21_1;
+					package = pkgs.paperServers.paper-1_21_8;
 					jvmOpts = "-Xms6G -Xmx6G";
 					serverProperties = {
 						white-list = true;
