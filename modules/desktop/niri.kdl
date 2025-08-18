@@ -86,6 +86,15 @@ window-rule {
 	opacity 0.95
 	geometry-corner-radius 10
 	clip-to-geometry true
+	border {
+		on
+		width 2
+		active-color "#008cff"
+		inactive-color "#777777"
+	}
+	focus-ring {
+		off
+	}
 }
 
 // Open the Firefox picture-in-picture player as floating by default.
