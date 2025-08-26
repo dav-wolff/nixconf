@@ -24,6 +24,7 @@ in {
 				MusicFolder = "${cfg.volume}/music";
 				DataFolder = "${cfg.volume}/data";
 				CacheFolder = "${cfg.volume}/cache";
+				ReverseProxyWhitelist = "127.0.0.1/32";
 			};
 		};
 	};
