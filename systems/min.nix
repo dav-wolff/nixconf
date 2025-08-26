@@ -31,6 +31,10 @@
 			enable = true;
 			baseDomain = "min.dav.dev";
 			defaultCert = "main";
+			auth = {
+				baseDomain = "dav.dev";
+				sessionName = "min";
+			};
 		};
 		
 		acme = {
@@ -43,6 +47,21 @@
 				subdomain = "min";
 				provider = "porkbun";
 			};
+			certs.git = {
+				domain = "dav.dev";
+				subdomain = "git";
+				provider = "porkbun";
+			};
+		};
+		
+		forgejo = {
+			enable = true;
+			dataDir = "/var/lib/forgejo";
+		};
+		
+		webServer.hosts.forgejo = {
+			domain = "git.dav.dev";
+			cert = "git";
 		};
 		
 		solitaire.web = true;

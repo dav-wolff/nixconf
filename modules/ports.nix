@@ -12,6 +12,7 @@ let
 		changedetection = 9060;
 		authelia = 9070;
 		mealie = 9080;
+		forgejo = 9090;
 	};
 in {
 	options.ports = with lib; mkOption {

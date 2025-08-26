@@ -61,9 +61,19 @@ in {
 			default = null;
 		};
 		
-		auth.enableOidc = lib.mkOption {
-			type = types.bool;
-			default = false;
+		auth = {
+			baseDomain = lib.mkOption {
+				type = types.str;
+				default = cfg.baseDomain;
+			};
+			sessionName = lib.mkOption {
+				type = types.str;
+				default = "main";
+			};
+			enableOidc = lib.mkOption {
+				type = types.bool;
+				default = false;
+			};
 		};
 		
 		hosts = let
@@ -427,7 +437,8 @@ in {
 						remember_me = "90d";
 						cookies = [
 							{
-								domain = cfg.baseDomain;
+								name = "authelia_session_${cfg.auth.sessionName}";
+								domain = cfg.auth.baseDomain;
 								authelia_url = "https://${cfg.hosts.auth.domain}";
 								default_redirection_url = "https://${cfg.baseDomain}";
 							}
