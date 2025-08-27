@@ -61,6 +61,11 @@ in {
 			default = null;
 		};
 		
+		auth.enableOidc = lib.mkOption {
+			type = types.bool;
+			default = false;
+		};
+		
 		hosts = let
 			hostOptions = {config, ...}: {
 				options = {
@@ -382,11 +387,11 @@ in {
 					file = ../secrets/autheliaStorageEncryptionKey.age;
 					owner = config.services.authelia.instances.main.user;
 				};
-				autheliaOidcHmac = {
+				autheliaOidcHmac = lib.mkIf cfg.auth.enableOidc {
 					file = ../secrets/autheliaOidcHmac.age;
 					owner = config.services.authelia.instances.main.user;
 				};
-				autheliaOidcPrivateKey = {
+				autheliaOidcPrivateKey = lib.mkIf cfg.auth.enableOidc {
 					file = ../secrets/autheliaOidcPrivateKey.age;
 					owner = config.services.authelia.instances.main.user;
 				};
@@ -406,8 +411,8 @@ in {
 				secrets = {
 					jwtSecretFile = config.age.secrets.autheliaJwtSecret.path;
 					storageEncryptionKeyFile = config.age.secrets.autheliaStorageEncryptionKey.path;
-					oidcHmacSecretFile = config.age.secrets.autheliaOidcHmac.path;
-					oidcIssuerPrivateKeyFile = config.age.secrets.autheliaOidcPrivateKey.path;
+					oidcHmacSecretFile = lib.mkIf cfg.auth.enableOidc config.age.secrets.autheliaOidcHmac.path;
+					oidcIssuerPrivateKeyFile = lib.mkIf cfg.auth.enableOidc config.age.secrets.autheliaOidcPrivateKey.path;
 				};
 				settings = {
 					theme = "dark";

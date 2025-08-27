@@ -7,8 +7,11 @@ in {
 	options.modules.mealie.enable = lib.mkEnableOption "mealie";
 	
 	config = lib.mkIf cfg.enable {
-		modules.webServer.hosts.mealie = {
-			proxyPort = ports.mealie;
+		modules.webServer = {
+			auth.enableOidc = true;
+			hosts.mealie = {
+				proxyPort = ports.mealie;
+			};
 		};
 		
 		age.secrets.mealieOidcSecret = {
@@ -47,7 +50,6 @@ in {
 						"profile"
 						"groups"
 					];
-					
 				}
 			];
 		};

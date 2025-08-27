@@ -40,11 +40,13 @@
 			spaceshipApiSecret = config.age.secrets.spaceshipApiSecret.path;
 			certs.main = {
 				domain = "dav.dev";
+				subdomain = "min";
 				provider = "porkbun";
 			};
 		};
 		
 		solitaire.web = true;
 		linky.enable = true;
+		changedetection.enable = true;
 	};
 }

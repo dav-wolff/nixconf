@@ -11,7 +11,7 @@ in {
 		spaceshipApiKey = mkOption {
 			type = types.nullOr types.path;
 			default = null;
-		};
+	};
 		spaceshipApiSecret = mkOption {
 			type = types.nullOr types.path;
 			default = null;
@@ -36,6 +36,11 @@ in {
 						type = types.str;
 						default = config.name;
 					};
+					subdomain = mkOption {
+						type = types.nullOr types.str;
+						default = null;
+					};
+					# subdomain not currently supported for domainFile
 					domainFile = mkOption {
 						type = types.nullOr types.str;
 						default = null;
@@ -59,6 +64,8 @@ in {
 	};
 	
 	config = lib.mkIf cfg.enable (let
+		# TODO get nginx and other services to reload when certificates are renewed
+		
 		certs = builtins.attrValues cfg.certs;
 		
 		isSpaceship = cert: cert.provider == "spaceship";
@@ -100,7 +107,6 @@ in {
 					stderr = "/var/lib/acmed/logs/spaceship-dns-err";
 					cmd = spaceshipDns;
 					args = [
-						"{{ identifier }}"
 						"{{ proof }}"
 					];
 				}
@@ -110,9 +116,6 @@ in {
 					stdout = "/var/lib/acmed/logs/spaceship-dns-clean-out";
 					stderr = "/var/lib/acmed/logs/spaceship-dns-clean-err";
 					cmd = spaceshipDnsClean;
-					args = [
-						"{{ identifier }}"
-					];
 				}
 			] ++ lib.optionals usePorkbun [
 				{
@@ -122,7 +125,6 @@ in {
 					stderr = "/var/lib/acmed/logs/porkbun-dns-err";
 					cmd = porkbunDns;
 					args = [
-						"{{ identifier }}"
 						"{{ proof }}"
 					];
 				}
@@ -132,13 +134,10 @@ in {
 					stdout = "/var/lib/acmed/logs/porkbun-dns-clean-out";
 					stderr = "/var/lib/acmed/logs/porkbun-dns-clean-err";
 					cmd = porkbunDnsClean;
-					args = [
-						"{{ identifier }}"
-					];
 				}
 			];
 			
-			certificate = map (cert: {
+			certificate = map (cert: assert cert.subdomain != null -> cert.provider == "porkbun"; {
 					endpoint = "Let's Encrypt v2 production";
 					# use this endpoint for testing
 					# endpoint = "Let's Encrypt v2 staging";
@@ -154,16 +153,25 @@ in {
 						"porkbun-dns"
 						"porkbun-dns-clean"
 					];
+					env = {
+						domain = cert.domain;
+					} // lib.optionalAttrs (cert.subdomain != null) {
+						subdomain = cert.subdomain;
+					};
 					identifiers = [
 						{
 							dns = if cert.domainFile == null
+								then if cert.subdomain == null
 								then "${cert.domain}"
+								else "${cert.subdomain}.${cert.domain}"
 								else "@${cert.name}@";
 							challenge = "dns-01";
 						}
 						{
 							dns = if cert.domainFile == null
+								then if cert.subdomain == null
 								then "*.${cert.domain}"
+								else "*.${cert.subdomain}.${cert.domain}"
 								else "*.@${cert.name}@";
 							challenge = "dns-01";
 						}
@@ -177,17 +185,17 @@ in {
 			set -euxo pipefail
 			# https://docs.spaceship.dev/#tag/DNS-records/operation/saveRecords
 			# TODO: why is --ignore-stdin necessary? there's no stdin
-			${xh} PUT https://spaceship.dev/api/v1/dns/records/$1 \
+			${xh} PUT https://spaceship.dev/api/v1/dns/records/$domain \
 				--ignore-stdin \
 				X-API-Key:@${cfg.spaceshipApiKey} X-API-Secret:@${cfg.spaceshipApiSecret} \
-				items[0][type]=TXT items[0][name]=_acme-challenge items[0][ttl]:=60 items[0][value]=$2
+				items[0][type]=TXT items[0][name]=_acme-challenge items[0][ttl]:=60 items[0][value]=$1
 		'';
 		
 		spaceshipDnsClean = pkgs.writeShellScript "spaceship-dns-clean" ''
 			set -euxo pipefail
 			# https://docs.spaceship.dev/#tag/DNS-records/operation/deleteRecords
 			# TODO: why is --ignore-stdin necessary? there's no stdin
-			${xh} DELETE https://spaceship.dev/api/v1/dns/records/$1 \
+			${xh} DELETE https://spaceship.dev/api/v1/dns/records/$domain \
 				--ignore-stdin \
 				X-API-Key:@${cfg.spaceshipApiKey} X-API-Secret:@${cfg.spaceshipApiSecret} \
 				[0][type]=TXT [0][name]=_acme-challenge [0][value]=null # documentation says a value is required
@@ -195,19 +203,29 @@ in {
 		
 		porkbunDns = pkgs.writeShellScript "porkbun-dns" ''
 			set -euxo pipefail
+			if [[ -v subdomain ]]; then
+				name="_acme-challenge.$subdomain"
+			else
+				name="_acme-challenge"
+			fi
 			# https://porkbun.com/api/json/v3/documentation#DNS%20Create%20Record
 			# TODO: why is --ignore-stdin necessary? there's no stdin
-			${xh} POST https://api.porkbun.com/api/json/v3/dns/create/$1 \
+			${xh} POST https://api.porkbun.com/api/json/v3/dns/create/$domain \
 				--ignore-stdin \
-				apikey=@${cfg.porkbunApiKey} secretapikey=@${cfg.porkbunApiSecret} type=TXT name=_acme-challenge content=$2
+				apikey=@${cfg.porkbunApiKey} secretapikey=@${cfg.porkbunApiSecret} type=TXT name=$name content=$1
 			sleep 30s # allow some time for records to propagate
 		'';
 		
 		porkbunDnsClean = pkgs.writeShellScript "porkbun-dns-clean" ''
 			set -euxo pipefail
+			if [[ -v subdomain ]]; then
+				name="_acme-challenge.$subdomain"
+			else
+				name="_acme-challenge"
+			fi
 			# https://porkbun.com/api/json/v3/documentation#DNS%20Delete%20Records%20by%20Domain,%20Subdomain%20and%20Type
 			# TODO: why is --ignore-stdin necessary? there's no stdin
-			${xh} POST https://api.porkbun.com/api/json/v3/dns/deleteByNameType/$1/TXT/_acme-challenge \
+			${xh} POST https://api.porkbun.com/api/json/v3/dns/deleteByNameType/$domain/TXT/$name \
 				--ignore-stdin \
 				apikey=@${cfg.porkbunApiKey} secretapikey=@${cfg.porkbunApiSecret}
 		'';
