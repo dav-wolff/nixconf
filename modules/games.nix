@@ -14,10 +14,15 @@ in {
 				prismlauncher
 			];
 			
-			programs.steam.enable = true;
+			programs.steam = {
+				enable = true;
+				extraCompatPackages = with pkgs; [
+					proton-ge-bin
+				];
+			};
 		})
 		
-		(lib.mkIf (cfg.enable && cfg.minecraftServer.enable) {
+		(lib.mkIf cfg.minecraftServer.enable {
 			# /srv/minecraft/smp
 			services.minecraft-servers = {
 				enable = true;
