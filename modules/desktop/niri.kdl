@@ -4,7 +4,6 @@ environment {
 	NIXOS_OZONE_WL "1"
 }
 
-spawn-at-startup "swaybg -i /home/dav/wallpaper.jpg"
 spawn-at-startup "spotify"
 spawn-at-startup "sh" "-c" "sleep 2 && niri msg action focus-workspace-down"
 
@@ -95,6 +94,11 @@ window-rule {
 	focus-ring {
 		off
 	}
+}
+
+layer-rule {
+	match namespace="overlay-wallpaper"
+	place-within-backdrop true
 }
 
 // Open the Firefox picture-in-picture player as floating by default.

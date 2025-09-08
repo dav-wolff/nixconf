@@ -52,6 +52,8 @@
 			url = "github:dav-wolff/linky";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		
+		simplewall.url = "github:dav-wolff/simplewall";
 	};
 	
 	outputs = { self, nixpkgs, flake-utils, ... } @ inputs: {

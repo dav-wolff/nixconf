@@ -71,6 +71,7 @@ in {
 		# inputs.vault.overlays.default
 		# TODO: enable if it works again
 		# inputs.solitaire.overlays.default
+		inputs.simplewall.overlays.default
 		inputs.backy.overlays.default
 		inputs.linky.overlays.default
 		self.overlays.utils

@@ -24,7 +24,6 @@ in {
 			fuzzel
 			mako
 			xwayland-satellite
-			swaybg
 			swaylock
 			swayosd
 		];
@@ -64,13 +63,18 @@ in {
 						url = "https://w.wallhaven.cc/full/7j/wallhaven-7jgyre.jpg";
 						hash = "sha256-1psemyS4GqYddmvIplS7o7xGQmcu505Ujb/zy/CQY9Y=";
 					};
+					# source: https://www.reddit.com/r/NixOS/comments/1mpwpvp/i_made_some_nix_wallpapers/
+					overlayWallpaper = pkgs.fetchurl {
+						url = "https://drive.usercontent.google.com/download?id=1IEzCRf8CVq0Kx4ba8FEx_gyyfCRH6VnD&export=download";
+						hash = "sha256-ktvxacXcZdGjbJ0VF260K2NFDELEmxDCqbhecJI9ioM=";
+					};
 				in {
 					wantedBy = ["niri.service"];
 					requisite = ["graphical-session.target"];
 					partOf = ["graphical-session.target"];
 					after = ["graphical-session.target"];
 					serviceConfig = {
-						ExecStart = "${lib.getExe pkgs.swaybg} -i ${wallpaper}";
+						ExecStart = "${lib.getExe pkgs.simplewall} ${wallpaper} -- --namespace overlay-wallpaper ${overlayWallpaper} --format png";
 						Restart = "on-failure";
 					};
 				};
