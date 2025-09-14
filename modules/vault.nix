@@ -39,11 +39,11 @@ in {
 			
 			serviceConfig = {
 				ExecStart = "${vault-wrapped}/bin/vault-wrapped";
-				User="vault";
-				Group="vault";
+				User ="vault";
+				Group ="vault";
 				StateDirectory = "vault";
-				StateDirectoryMode ="0700";
-				AmbientCapabilities="CAP_NET_BIND_SERVICE";
+				StateDirectoryMode = "0700";
+				AmbientCapabilities = "CAP_NET_BIND_SERVICE";
 			};
 		};
 	};
