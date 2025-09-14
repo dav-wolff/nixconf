@@ -11,6 +11,8 @@ let
 		owntracks = 9050;
 		changedetection = 9060;
 		authelia = 9070;
+		lldap = 9071;
+		lldapWeb = 9072;
 		mealie = 9080;
 		forgejo = 9090;
 	};
