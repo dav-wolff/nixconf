@@ -56,7 +56,9 @@ in {
 					(mixxc.override {enableX11 = false;})
 				];
 				mako.wantedBy = ["niri.service"];
-				xwayland-satellite.wantedBy = ["niri.service"];
+				
+				# service is not needed as niri now handles spawning xwayland-satellite on demand
+				xwayland-satellite.enable = false;
 				
 				wallpaper = let
 					wallpaper = pkgs.fetchurl {
