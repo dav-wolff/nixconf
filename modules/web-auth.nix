@@ -2,7 +2,6 @@
 
 let
 	cfg = config.modules.webServer;
-	inherit (pkgs) unindent;
 	inherit (config) ports;
 in {
 	options.modules.webServer.auth = let
@@ -51,6 +50,10 @@ in {
 				file = ../secrets/lldapAdminPassword.age;
 				owner = "lldap";
 			};
+			lldapAutheliaPassword = {
+				inherit owner;
+				file = ../secrets/lldapAutheliaPassword.age;
+			};
 		};
 		
 		## Authelia
@@ -69,16 +72,7 @@ in {
 			};
 		};
 		
-		services.authelia.instances.main = let
-			usersFile = pkgs.writeText "authelia-users.yml" (unindent ''
-				users:
-				  dav:
-				    disabled: false
-				    displayname: dav
-				    email: david@dav.dev
-				    password: $argon2id$v=19$m=65536,t=3,p=4$tJilRMOcf7kfNiM8DbagUw$I3Lf5HlaHM69hw7FI6E4qWsWxGQMijhyff8OIpbjz3k
-			'');
-		in {
+		services.authelia.instances.main = {
 			enable = true;
 			secrets = {
 				jwtSecretFile = config.age.secrets.autheliaJwtSecret.path;
@@ -92,7 +86,16 @@ in {
 					address = "tcp://:${toString ports.authelia}/";
 					endpoints.authz.auth-request.implementation = "AuthRequest";
 				};
-				authentication_backend.file.path = usersFile;
+				authentication_backend = {
+					refresh_interval = "1m";
+					ldap = {
+						implementation = "lldap";
+						address = "ldap://localhost:${toString ports.lldap}";
+						base_dn = config.services.lldap.settings.ldap_base_dn;
+						# TODO: can this user be created automatically?
+						user = "uid=authelia,ou=people,${config.services.lldap.settings.ldap_base_dn}";
+					};
+				};
 				session = {
 					inactivity = "30d";
 					expiration = "6h";
@@ -110,6 +113,10 @@ in {
 				access_control.default_policy = "one_factor";
 				notifier.filesystem.filename = "/var/lib/authelia-main/notifications.txt";
 				log.format = "text";
+			};
+			environmentVariables = {
+				# for some reason not available in services.authelia.instances.main.secrets
+				AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE = config.age.secrets.lldapAutheliaPassword.path;
 			};
 		};
 		
