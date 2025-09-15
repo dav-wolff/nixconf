@@ -35,6 +35,17 @@
 	
 	modules.navidrome.volume = "/vol/navidrome";
 	
+	fileSystems."/vol/filebrowser" = {
+		device = "/dev/disk/by-label/T7";
+		fsType = "btrfs";
+		options = [
+			"subvol=filebrowser"
+			"compress=zstd"
+		];
+	};
+	
+	modules.filebrowser.volume = "/vol/filebrowser";
+	
 	swapDevices = [{
 		device = "/dev/disk/by-label/swap";
 	}];

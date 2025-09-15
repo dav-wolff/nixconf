@@ -15,6 +15,7 @@ let
 		lldapWeb = 9072;
 		mealie = 9080;
 		forgejo = 9090;
+		filebrowser = 10000;
 	};
 in {
 	options.ports = with lib; mkOption {

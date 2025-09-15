@@ -56,5 +56,6 @@
 		owntracks.enable = true;
 		changedetection.enable = true;
 		mealie.enable = true;
+		filebrowser.enable = true;
 	};
 }
