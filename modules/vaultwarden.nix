@@ -26,6 +26,7 @@ in {
 			config = {
 				ROCKET_PORT = ports.vaultwarden;
 				DOMAIN = "https://${config.modules.webServer.hosts.bitwarden.domain}";
+				SIGNUPS_ALLOWED = false;
 				PUSH_ENABLED = true;
 				PUSH_RELAY_URI = "https://api.bitwarden.eu";
 				PUSH_IDENTITY_URI = "https://identity.bitwarden.eu";
