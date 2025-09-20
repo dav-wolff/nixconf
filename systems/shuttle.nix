@@ -36,6 +36,7 @@
 			enable = true;
 			baseDomain = "dav.dev";
 			defaultCert = "dav.dev";
+			auth.replicaDomain = "min.dav.dev";
 		};
 		
 		acme = {
@@ -56,5 +57,6 @@
 		owntracks.enable = true;
 		changedetection.enable = true;
 		mealie.enable = true;
+		filebrowser.enable = true;
 	};
 }

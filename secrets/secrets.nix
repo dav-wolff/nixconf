@@ -26,4 +26,9 @@ in {
 	"linkyAssetsTar.age".publicKeys = [keys.hostKeys.shuttle keys.hostKeys.min];
 	"linkyValuesJson.age".publicKeys = [keys.hostKeys.shuttle keys.hostKeys.min];
 	"linkyDomain.age".publicKeys = [keys.hostKeys.shuttle keys.hostKeys.min];
+	# 64 randomly generated characters
+	"lldapKeySeed.age".publicKeys = [keys.hostKeys.shuttle keys.hostKeys.min];
+	"lldapAdminPassword.age".publicKeys = [keys.hostKeys.shuttle keys.hostKeys.min];
+	"lldapAutheliaPassword.age".publicKeys = [keys.hostKeys.shuttle keys.hostKeys.min];
+	"lldapPushdbSshPrivateKey.age".publicKeys = [keys.hostKeys.shuttle];
 }

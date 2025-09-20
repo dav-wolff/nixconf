@@ -2,6 +2,10 @@
 
 let
 	cfg = config.modules.ssh;
+	publicKeys = import ../public-keys.nix;
+	knownHosts = builtins.mapAttrs (name: publicKey: {
+		inherit publicKey;
+	}) publicKeys.sshKnownHosts;
 in {
 	options.modules.ssh.server = {
 		enable = lib.mkEnableOption "sshServer";
@@ -14,6 +18,7 @@ in {
 	config = lib.mkMerge [{
 			programs.ssh = {
 				startAgent = true;
+				inherit knownHosts;
 			};
 		}
 		(lib.mkIf cfg.server.enable {
@@ -24,9 +29,10 @@ in {
 				openFirewall = cfg.server.public;
 				settings.PasswordAuthentication = false;
 				settings.KbdInteractiveAuthentication = false;
+				inherit knownHosts;
 			};
 			
-			users.users.dav.openssh.authorizedKeys.keys = (import ../public-keys.nix).allUserKeys;
+			users.users.dav.openssh.authorizedKeys.keys = publicKeys.allUserKeys;
 		})
 	];
 }

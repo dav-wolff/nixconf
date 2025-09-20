@@ -12,6 +12,22 @@ in {
 			proxyPort = ports.changedetection;
 		};
 		
+		# TODO add options for this in webServer hosts
+		# service is single user, so don't allow everyone to log in
+		services.authelia.instances.main = {
+			settings.access_control.rules = [
+				{
+					domain = config.modules.webServer.hosts.changedetection.domain;
+					policy = "one_factor";
+					subject = "user:dav";
+				}
+				{
+					domain = config.modules.webServer.hosts.changedetection.domain;
+					policy = "deny";
+				}
+			];
+		};
+		
 		services.changedetection-io = {
 			enable = true;
 			behindProxy = true;

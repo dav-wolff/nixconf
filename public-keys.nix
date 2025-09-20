@@ -14,9 +14,17 @@ let
 		shuttle = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAdIp/YIm2ncVFMmEqtg7y4cbnzP1tjX2Jx/YXRJsT15 root@shuttle";
 		min = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK7skAFKlwq+YAs6HDKMf5uuYgpXeqbc4CW6qXkRBzmK root@min";
 	};
+	
+	applicationKeys = {
+		lldapPushdb = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM309OsAn2f+lzQTzKKGT6y9ajOZHhU+T6JRal6hXNPt";
+	};
 in {
-	inherit userKeys hostKeys;
+	inherit userKeys hostKeys applicationKeys;
 	
 	allUserKeys = builtins.attrValues userKeys;
 	allHostKeys = builtins.attrValues hostKeys;
+	
+	sshKnownHosts = {
+		"min.dav.dev" = hostKeys.min;
+	};
 }

@@ -3,8 +3,7 @@
 let
 	cfg = config.modules.webServer;
 	inherit (config) ports;
-	inherit (pkgs) unindent;
-	inherit (lib) mkIf mkMerge;
+	inherit (lib) mkIf;
 	
 	authRequest = pkgs.writeText "authelia-authrequest.conf" ''
 		auth_request /internal/authelia/authz;
@@ -61,20 +60,7 @@ in {
 			default = null;
 		};
 		
-		auth = {
-			baseDomain = lib.mkOption {
-				type = types.str;
-				default = cfg.baseDomain;
-			};
-			sessionName = lib.mkOption {
-				type = types.str;
-				default = "main";
-			};
-			enableOidc = lib.mkOption {
-				type = types.bool;
-				default = false;
-			};
-		};
+		# auth = { ... } in web-auth.nix
 		
 		hosts = let
 			hostOptions = {config, ...}: {
@@ -208,8 +194,6 @@ in {
 	};
 	
 	config = mkIf cfg.enable (let
-		enableAuth = lib.any (hostConfig: hostConfig.auth) (lib.attrValues cfg.hosts);
-		
 		proxyHeaders = pkgs.writeText "proxy-headers.conf" ''
 			proxy_http_version 1.1;
 			proxy_set_header Upgrade $http_upgrade;
@@ -284,172 +268,91 @@ in {
 				${lib.concatStringsSep "\n" (lib.mapAttrsToList makeLocation host.locations)}
 			}
 		'';
-	in mkMerge [
-		{
-			assertions = let
-				checkLocation = _: location: {
-					assertion = lib.count (a: a != null) (with location; [files staticText proxyPort redirect]) <= 1;
-					message = "can only use one of files, staticText, proxyPort, or redirect";
-				};
-				checkHost = _: hostConfig: lib.mapAttrsToList checkLocation hostConfig.locations;
-			in lib.flatten (lib.mapAttrsToList checkHost cfg.hosts);
-			
-			modules.webServer.hosts = {
-				"@" = {
-					domain = cfg.baseDomain;
-					auth = false;
-					locations."/".staticText = "Hello world";
-				};
-				www = {
-					auth = false;
-					robots = false;
-					redirect = "https://${cfg.baseDomain}$request_uri";
-				};
-				auth = {
-					enable = enableAuth;
-					auth = false;
-					headers.content-security-policy = null; # set by authelia
-					locations = let
-						location = {
-							proxyPort = ports.authelia;
-						};
-					in {
-						"/" = location;
-						"= /api/verify" = location;
-						"/api/authz/" = location;
-					};
-				};
+	in {
+		modules.webServer.auth.enable = lib.any (hostConfig: hostConfig.auth) (lib.attrValues cfg.hosts);
+		
+		assertions = let
+			checkLocation = _: location: {
+				assertion = lib.count (a: a != null) (with location; [files staticText proxyPort redirect]) <= 1;
+				message = "can only use one of files, staticText, proxyPort, or redirect";
 			};
-			
-			age.derivedSecrets = let
-				hosts = lib.filterAttrs (_: host: host.domainFile != null) cfg.hosts;
-			in lib.mapAttrs' (name: host: {
-				name = "nginx-server-name-${name}";
-				value = {
-					secret = host.domainFile;
-					owner = "nginx";
-					script = ''
-						echo "server_name $(cat $secret);"
-					'';
-				};
-			}) hosts;
-			
-			networking.firewall.allowedTCPPorts = [80 443];
-			
-			modules.acme = {
-				enable = true;
-				users = [config.services.nginx.user];
+			checkHost = _: hostConfig: lib.mapAttrsToList checkLocation hostConfig.locations;
+		in lib.flatten (lib.mapAttrsToList checkHost cfg.hosts);
+		
+		modules.webServer.hosts = {
+			"@" = {
+				domain = cfg.baseDomain;
+				auth = false;
+				locations."/".staticText = "Hello world";
 			};
-			
-			systemd.services.nginx = {
-				after = ["acmed.service"];
-				wants = ["acmed.service"];
+			www = {
+				auth = false;
+				robots = false;
+				redirect = "https://${cfg.baseDomain}$request_uri";
 			};
+		};
+		
+		age.derivedSecrets = let
+			hosts = lib.filterAttrs (_: host: host.domainFile != null) cfg.hosts;
+		in lib.mapAttrs' (name: host: {
+			name = "nginx-server-name-${name}";
+			value = {
+				secret = host.domainFile;
+				owner = "nginx";
+				script = ''
+					echo "server_name $(cat $secret);"
+				'';
+			};
+		}) hosts;
+		
+		networking.firewall.allowedTCPPorts = [80 443];
+		
+		modules.acme = {
+			enable = true;
+			users = [config.services.nginx.user];
+		};
+		
+		systemd.services.nginx = {
+			after = ["acmed.service"];
+			wants = ["acmed.service"];
+		};
+		
+		services.nginx = {
+			enable = true;
+			recommendedProxySettings = true;
+			recommendedTlsSettings = true;
+			recommendedOptimisation = true;
+			recommendedGzipSettings = true;
+			recommendedBrotliSettings = true;
 			
-			services.nginx = {
-				enable = true;
-				recommendedProxySettings = true;
-				recommendedTlsSettings = true;
-				recommendedOptimisation = true;
-				recommendedGzipSettings = true;
-				recommendedBrotliSettings = true;
+			commonHttpConfig = ''
+				map $remote_addr $ip_truncated {
+					~^(?P<ip>\d+.\d+.\d+). $ip.0;
+					~^(?P<ip>[^:]+[^:]+): $ip::;
+					default 0.0.0.0;
+				}
 				
-				commonHttpConfig = ''
-					map $remote_addr $ip_truncated {
-						~^(?P<ip>\d+.\d+.\d+). $ip.0;
-						~^(?P<ip>[^:]+[^:]+): $ip::;
-						default 0.0.0.0;
-					}
+				log_format log '[$time_local] $ip_truncated "$request" $status Sent:$body_bytes_sent Ref:"$http_referrer" "$http_user_agent"';
+				log_format host_log '[$time_local] $http_host $ip_truncated "$request" $status Sent:$body_bytes_sent Ref:"$http_referrer" "$http_user_agent"';
+			'';
+			
+			appendHttpConfig = let
+				cert = config.modules.acme.certs.${cfg.defaultCert};
+			in ''
+				# Reject connections on unknown hosts
+				server {
+					listen 80 default_server;
+					listen 443 ssl default_server;
 					
-					log_format log '[$time_local] $ip_truncated "$request" $status Sent:$body_bytes_sent Ref:"$http_referrer" "$http_user_agent"';
-					log_format host_log '[$time_local] $http_host $ip_truncated "$request" $status Sent:$body_bytes_sent Ref:"$http_referrer" "$http_user_agent"';
-				'';
-				
-				appendHttpConfig = let
-					cert = config.modules.acme.certs.${cfg.defaultCert};
-				in ''
-					# Reject connections on unknown hosts
-					server {
-						listen 80 default_server;
-						listen 443 ssl default_server;
-						
-						access_log /var/log/nginx/access.log host_log;
-						
-						ssl_certificate ${cert.certFile};
-						ssl_certificate_key ${cert.privateKeyFile};
-						
-						return 444;
-					}
-					${lib.concatStringsSep "\n" (lib.mapAttrsToList makeHost (lib.filterAttrs (_: host: host.enable) cfg.hosts))}
-				'';
-			};
-		}
-		
-		## Authelia
-		
-		(mkIf enableAuth {
-			age.secrets = {
-				autheliaJwtSecret = {
-					file = ../secrets/autheliaJwtSecret.age;
-					owner = config.services.authelia.instances.main.user;
-				};
-				autheliaStorageEncryptionKey = {
-					file = ../secrets/autheliaStorageEncryptionKey.age;
-					owner = config.services.authelia.instances.main.user;
-				};
-				autheliaOidcHmac = lib.mkIf cfg.auth.enableOidc {
-					file = ../secrets/autheliaOidcHmac.age;
-					owner = config.services.authelia.instances.main.user;
-				};
-				autheliaOidcPrivateKey = lib.mkIf cfg.auth.enableOidc {
-					file = ../secrets/autheliaOidcPrivateKey.age;
-					owner = config.services.authelia.instances.main.user;
-				};
-			};
-			
-			services.authelia.instances.main = let
-				usersFile = pkgs.writeText "authelia-users.yml" (unindent ''
-					users:
-					  dav:
-					    disabled: false
-					    displayname: dav
-					    email: david@dav.dev
-					    password: $argon2id$v=19$m=65536,t=3,p=4$tJilRMOcf7kfNiM8DbagUw$I3Lf5HlaHM69hw7FI6E4qWsWxGQMijhyff8OIpbjz3k
-				'');
-			in {
-				enable = true;
-				secrets = {
-					jwtSecretFile = config.age.secrets.autheliaJwtSecret.path;
-					storageEncryptionKeyFile = config.age.secrets.autheliaStorageEncryptionKey.path;
-					oidcHmacSecretFile = lib.mkIf cfg.auth.enableOidc config.age.secrets.autheliaOidcHmac.path;
-					oidcIssuerPrivateKeyFile = lib.mkIf cfg.auth.enableOidc config.age.secrets.autheliaOidcPrivateKey.path;
-				};
-				settings = {
-					theme = "dark";
-					server = {
-						address = "tcp://:${toString ports.authelia}/";
-						endpoints.authz.auth-request.implementation = "AuthRequest";
-					};
-					authentication_backend.file.path = usersFile;
-					session = {
-						inactivity = "30d";
-						expiration = "6h";
-						remember_me = "90d";
-						cookies = [
-							{
-								name = "authelia_session_${cfg.auth.sessionName}";
-								domain = cfg.auth.baseDomain;
-								authelia_url = "https://${cfg.hosts.auth.domain}";
-								default_redirection_url = "https://${cfg.baseDomain}";
-							}
-						];
-					};
-					storage.local.path = "/var/lib/authelia-main/db.sqlite3";
-					access_control.default_policy = "one_factor";
-					notifier.filesystem.filename = "/var/lib/authelia-main/notifications.txt";
-					log.format = "text";
-				};
-			};
-		})
-	]);
+					access_log /var/log/nginx/access.log host_log;
+					
+					ssl_certificate ${cert.certFile};
+					ssl_certificate_key ${cert.privateKeyFile};
+					
+					return 444;
+				}
+				${lib.concatStringsSep "\n" (lib.mapAttrsToList makeHost (lib.filterAttrs (_: host: host.enable) cfg.hosts))}
+			'';
+		};
+	});
 }
