@@ -66,6 +66,5 @@
 		
 		solitaire.web = true;
 		linky.enable = true;
-		changedetection.enable = true;
 	};
 }
