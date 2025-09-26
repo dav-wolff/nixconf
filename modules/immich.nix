@@ -51,7 +51,7 @@ in {
 				auth = false;
 				proxyPort = ports.immich;
 				maxBodySize = "10000M";
-				headers.content-security-policy = "frame-ancestors 'none'; default-src 'self' 'unsafe-inline' blob:; img-src 'self' data:; connect-src 'self' tiles.immich.cloud static.immich.cloud";
+				headers.content-security-policy = "frame-ancestors 'none'; default-src 'self' 'unsafe-inline' blob:; img-src 'self' data: blob:; connect-src 'self' tiles.immich.cloud static.immich.cloud";
 				extraConfig = ''
 					# https://immich.app/docs/administration/reverse-proxy/
 					proxy_read_timeout 600s;
