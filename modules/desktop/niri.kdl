@@ -72,6 +72,10 @@ layout {
 	}
 }
 
+overview {
+	zoom 0.25
+}
+
 workspace "Music"
 
 window-rule {
