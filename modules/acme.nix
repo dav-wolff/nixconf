@@ -107,6 +107,7 @@ in {
 					stderr = "/var/lib/acmed/logs/spaceship-dns-err";
 					cmd = spaceshipDns;
 					args = [
+						"{{ identifier }}"
 						"{{ proof }}"
 					];
 				}
@@ -116,6 +117,10 @@ in {
 					stdout = "/var/lib/acmed/logs/spaceship-dns-clean-out";
 					stderr = "/var/lib/acmed/logs/spaceship-dns-clean-err";
 					cmd = spaceshipDnsClean;
+					args = [
+						"{{ identifier }}"
+						"{{ proof }}"
+					];
 				}
 			] ++ lib.optionals usePorkbun [
 				{
@@ -137,7 +142,10 @@ in {
 				}
 			];
 			
-			certificate = map (cert: assert cert.subdomain != null -> cert.provider == "porkbun"; {
+			certificate = map (cert:
+					assert cert.subdomain != null -> cert.provider == "porkbun"
+						&& cert.domainFile != null -> cert.provider == "spaceship";
+				{
 					endpoint = "Let's Encrypt v2 production";
 					# use this endpoint for testing
 					# endpoint = "Let's Encrypt v2 staging";
@@ -185,20 +193,20 @@ in {
 			set -euxo pipefail
 			# https://docs.spaceship.dev/#tag/DNS-records/operation/saveRecords
 			# TODO: why is --ignore-stdin necessary? there's no stdin
-			${xh} PUT https://spaceship.dev/api/v1/dns/records/$domain \
+			${xh} PUT https://spaceship.dev/api/v1/dns/records/$1 \
 				--ignore-stdin \
 				X-API-Key:@${cfg.spaceshipApiKey} X-API-Secret:@${cfg.spaceshipApiSecret} \
-				items[0][type]=TXT items[0][name]=_acme-challenge items[0][ttl]:=60 items[0][value]=$1
+				items[0][type]=TXT items[0][name]=_acme-challenge items[0][ttl]:=60 items[0][value]=$2
 		'';
 		
 		spaceshipDnsClean = pkgs.writeShellScript "spaceship-dns-clean" ''
 			set -euxo pipefail
 			# https://docs.spaceship.dev/#tag/DNS-records/operation/deleteRecords
 			# TODO: why is --ignore-stdin necessary? there's no stdin
-			${xh} DELETE https://spaceship.dev/api/v1/dns/records/$domain \
+			${xh} DELETE https://spaceship.dev/api/v1/dns/records/$1 \
 				--ignore-stdin \
 				X-API-Key:@${cfg.spaceshipApiKey} X-API-Secret:@${cfg.spaceshipApiSecret} \
-				[0][type]=TXT [0][name]=_acme-challenge [0][value]=null # documentation says a value is required
+				[0][type]=TXT [0][name]=_acme-challenge [0][value]=$2 # proof is required to delete by value
 		'';
 		
 		porkbunDns = pkgs.writeShellScript "porkbun-dns" ''
