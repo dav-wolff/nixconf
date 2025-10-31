@@ -1,11 +1,9 @@
-{ wrapPackage
-, runCommandLocal
-, helix
-, formats
-}:
+{ pkgs, wrapperModules, ... }:
 
-let
-	config = {
+wrapperModules.helix.apply {
+	inherit pkgs;
+	
+	settings = {
 		theme = "blue";
 		editor = {
 			mouse = false;
@@ -43,16 +41,7 @@ let
 		};
 	};
 	
-	toml = formats.toml {};
-	configFile = toml.generate "helix-config" config;
-	
-	runtimeDirectory = runCommandLocal "helix-themes" {} ''
-		mkdir -p $out/themes
-		cp ${./helix-theme.toml} $out/themes/blue.toml
-	'';
-in wrapPackage helix {
-	args = ["--config" configFile];
-	env = {
-		HELIX_RUNTIME = runtimeDirectory;
+	themes = {
+		blue = builtins.readFile ./helix-theme.toml;
 	};
 }

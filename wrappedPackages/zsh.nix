@@ -1,4 +1,7 @@
+# TODO: write a wrapModule for zsh
+
 { lib
+, pkgs
 , wrapPackage
 , runCommand
 , zsh
@@ -41,7 +44,10 @@ let
 		zsh -c "zcompile $out/p10k_nerd_font.zsh"
 		zsh -c "zcompile $out/p10k_tty.zsh"
 	'';
-in wrapPackage zsh {
+in wrapPackage {
+	inherit pkgs;
+	package = zsh;
+	
 	env = {
 		ZDOTDIR = compiledConfig;
 	};
@@ -50,6 +56,4 @@ in wrapPackage zsh {
 		shellPath = "/bin/zsh";
 		testMarker = 2;
 	};
-	
-	extraOutputs = ["man"];
 }

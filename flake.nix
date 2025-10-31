@@ -16,6 +16,11 @@
 			url = "github:NixOS/nixos-hardware";
 		};
 		
+		wrappers = {
+			url = "github:Lassulus/wrappers";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
+		
 		nixos-wsl = {
 			url = "github:nix-community/NixOS-WSL";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -112,9 +117,7 @@
 			];
 		};
 	in {
-		packages = {
-			inherit (pkgs.configured) helix zsh zellij alacritty;
-		};
+		packages = pkgs.configured;
 		
 		# Packages for use from flake registry
 		legacyPackages = pkgs;

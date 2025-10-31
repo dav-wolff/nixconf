@@ -766,7 +766,8 @@
         "nixpkgs": "nixpkgs_3",
         "simplewall": "simplewall",
         "solitaire": "solitaire",
-        "vault": "vault"
+        "vault": "vault",
+        "wrappers": "wrappers"
       }
     },
     "rust-analyzer-src": {
@@ -1049,6 +1050,26 @@
       "original": {
         "owner": "dav-wolff",
         "repo": "vault",
+        "type": "github"
+      }
+    },
+    "wrappers": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1761915343,
+        "narHash": "sha256-pEszVJ3mDjf2SGItyW6rQ6YB+l7XXK1uhuMprn6zVmk=",
+        "owner": "Lassulus",
+        "repo": "wrappers",
+        "rev": "c33eda4514e5a952a45db52cff88af58b3106cc6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Lassulus",
+        "repo": "wrappers",
         "type": "github"
       }
     }

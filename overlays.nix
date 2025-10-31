@@ -1,4 +1,4 @@
-{ self, ... } @ inputs:
+{ self, wrappers, ... } @ inputs:
 
 let
 	lib = inputs.nixpkgs.lib;
@@ -42,19 +42,34 @@ in {
 	
 	configuredPackages = final: prev: let
 		inherit (prev) callPackage;
+		lib = final.lib;
+		wlib = wrappers.lib;
+		wrapperModules = wrappers.wrapperModules // {
+			zellij = (import ./extraWrappers/zellij.nix) {
+				inherit lib wlib;
+			};
+			jujutsu = (import ./extraWrappers/jujutsu.nix) {
+				inherit lib wlib;
+			};
+		};
+		wrapper = path: extraArgs: (import path ({
+			inherit wrapperModules;
+			pkgs = final;
+		} // extraArgs)).wrapper;
 	in {
 		configured = assert !(prev ? configured); {
-			helix = callPackage ./packages/helix.nix {};
-			
-			zsh = callPackage ./packages/zsh.nix {};
-			
-			zellij = callPackage ./packages/zellij.nix {};
-			
-			alacritty = callPackage ./packages/alacritty.nix {
+			helix = wrapper ./wrappedPackages/helix.nix {};
+			alacritty = wrapper ./wrappedPackages/alacritty.nix {
 				shell = final.configured.zsh;
 			};
+			zellij = wrapper ./wrappedPackages/zellij.nix {};
+			jujutsu = wrapper ./wrappedPackages/jujutsu.nix {};
 			
-			jujutsu = callPackage ./packages/jujutsu.nix {};
+			zsh = callPackage ./wrappedPackages/zsh.nix {
+				inherit (wlib) wrapPackage;
+			};
+			
+			# zsh = callPackage ./packages/zsh.nix {};
 		};
 	};
 	

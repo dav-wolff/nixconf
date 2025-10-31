@@ -1,14 +1,11 @@
-{ lib
-, wrapPackage
-, alacritty
-, formats
-, shell
-}:
+{ pkgs, wrapperModules, shell, ... }:
 
-let
-	config = {
+wrapperModules.alacritty.apply {
+	inherit pkgs;
+	
+	settings = {
 		general.live_config_reload = false;
-		terminal.shell = lib.meta.getExe shell;
+		terminal.shell = pkgs.lib.meta.getExe shell;
 		window = {
 			startup_mode = "Maximized";
 			opacity = 0.8;
@@ -28,10 +25,4 @@ let
 		};
 		env.NERD_FONT = "1";
 	};
-	
-	toml = formats.toml {};
-	
-	configFile = toml.generate "alacritty-config" config;
-in wrapPackage alacritty {
-	args = ["--config-file" configFile];
 }
