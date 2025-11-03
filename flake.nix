@@ -78,7 +78,6 @@
 				else
 					config;
 			in lib.nixosSystem {
-				system = null;
 				modules = [
 					self.nixosModules.default
 					{
