@@ -79,6 +79,9 @@ in {
 	};
 	
 	overrides = final: prev: {
+		authing = prev.authing.override {
+			env.RUST_BACKTRACE = "1";
+		};
 	};
 	
 	default = inputs.nixpkgs.lib.composeManyExtensions [
@@ -92,6 +95,7 @@ in {
 		inputs.simplewall.overlays.default
 		inputs.backy.overlays.default
 		inputs.linky.overlays.default
+		inputs.authing.overlays.default
 		self.overlays.utils
 		self.overlays.extraPackages
 		self.overlays.configuredPackages

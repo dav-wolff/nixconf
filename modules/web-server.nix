@@ -4,47 +4,7 @@ let
 	cfg = config.modules.webServer;
 	inherit (config) ports;
 	inherit (lib) mkIf;
-	
-	authRequest = pkgs.writeText "authelia-authrequest.conf" ''
-		auth_request /internal/authelia/authz;
-		
-		auth_request_set $user $upstream_http_remote_user;
-		auth_request_set $groups $upstream_http_remote_groups;
-		auth_request_set $name $upstream_http_remote_name;
-		auth_request_set $email $upstream_http_remote_email;
-		
-		proxy_set_header Remote-User $user;
-		proxy_set_header Remote-Groups $groups;
-		proxy_set_header Remote-Email $email;
-		proxy_set_header Remote-Name $name;
-		
-		auth_request_set $redirection_url $upstream_http_location;
-		error_page 401 =302 $redirection_url;
-	'';
-	
-	authLocation = pkgs.writeText "authelia-location.conf" ''
-		internal;
-		proxy_pass http://localhost:${toString ports.authelia}/api/authz/auth-request;
-		
-		proxy_set_header X-Original-Method $request_method;
-		proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
-		proxy_set_header X-Forwarded-For $remote_addr;
-		proxy_set_header Content-Length "";
-		proxy_set_header Connection "";
-		
-		proxy_pass_request_body off;
-		proxy_redirect http:// $scheme://;
-		proxy_http_version 1.1;
-		proxy_cache_bypass $cookie_session;
-		proxy_no_cache $cookie_session;
-		proxy_buffers 4 32k;
-		client_body_buffer_size 128k;
-		
-		send_timeout 5m;
-		proxy_read_timeout 240;
-		proxy_send_timeout 240;
-		proxy_connect_timeout 240;
-	'';
+	inherit (pkgs) authing;
 in {
 	options.modules.webServer = let
 		inherit (lib) mkEnableOption mkOption types;
@@ -129,10 +89,6 @@ in {
 					};
 					locations."= /robots.txt" = mkIf config.robots {
 						staticText = "User-agent: *\\nDisallow: /";
-						auth = false;
-					};
-					locations."/internal/authelia/authz" = mkIf config.auth {
-						extraConfig = "include ${authLocation};";
 						auth = false;
 					};
 					headers = mkIf config.defaultHeaders (lib.mapAttrs (_: lib.mkDefault) {
@@ -231,12 +187,13 @@ in {
 				''}
 				${ifNotNull location.proxyPort ''
 					include ${proxyHeaders};
-					proxy_pass http://localhost:${toString location.proxyPort};
+					# use IPv4 address instead of localhost as some services aren't listening on IPv6
+					proxy_pass http://127.0.0.1:${toString location.proxyPort};
 				''}
 				${ifNotNull location.redirect ''
 					return 301 ${location.redirect};
 				''}
-				${lib.optionalString location.auth "include ${authRequest};"}
+				${lib.optionalString location.auth "include ${authing.authRequest};"}
 				${makeHeaders (location.proxyPort != null) location.headers}
 				${location.extraConfig}
 			}
@@ -265,6 +222,11 @@ in {
 				access_log /var/log/nginx/${host.domain}.access.log log;
 				${lib.optionalString (host.maxBodySize != null) "client_max_body_size ${host.maxBodySize};"}
 				${host.extraConfig}
+				${lib.optionalString host.auth ''
+					# use IPv4 address instead of localhost as authing isn't listening on IPv6
+					set $authing_upstream http://127.0.0.1:${toString ports.authing};
+					include ${authing.authLocation};
+				''}
 				${lib.concatStringsSep "\n" (lib.mapAttrsToList makeLocation host.locations)}
 			}
 		'';

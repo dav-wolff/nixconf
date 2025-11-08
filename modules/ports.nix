@@ -13,6 +13,7 @@ let
 		authelia = 9070;
 		lldap = 9071;
 		lldapWeb = 9072;
+		authing = 9073;
 		mealie = 9080;
 		forgejo = 9090;
 		filebrowser = 10000;

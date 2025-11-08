@@ -64,9 +64,26 @@ in {
 			};
 		};
 		
+		## Authing
+		
+		modules.webServer.hosts.authing = {
+			subdomain = "auth";
+			auth = false;
+			proxyPort = ports.authing;
+		};
+		
+		services.authing = {
+			enable = true;
+			settings = {
+				port = config.ports.authing;
+				base_domain = config.modules.webServer.baseDomain;
+				url = "https://${config.modules.webServer.hosts.authing.domain}";
+			};
+		};
+		
 		## Authelia
 		
-		modules.webServer.hosts.auth = {
+		modules.webServer.hosts.authelia = {
 			auth = false;
 			headers.content-security-policy = null; # set by authelia
 			locations = let
@@ -112,7 +129,7 @@ in {
 						{
 							name = "authelia_session_${cfg.auth.sessionName}";
 							domain = cfg.auth.baseDomain;
-							authelia_url = "https://${cfg.hosts.auth.domain}";
+							authelia_url = "https://${cfg.hosts.authelia.domain}";
 							default_redirection_url = "https://${cfg.baseDomain}";
 						}
 					];

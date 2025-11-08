@@ -3,62 +3,45 @@
 	
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-		
-		flake-utils = {
-			url = "github:numtide/flake-utils";
-		};
-		
-		agenix = {
-			url = "github:ryantm/agenix";
-		};
-		
-		nixos-hardware = {
-			url = "github:NixOS/nixos-hardware";
-		};
-		
+		flake-utils.url = "github:numtide/flake-utils";
+		agenix.url = "github:ryantm/agenix";
+		nixos-hardware.url = "github:NixOS/nixos-hardware";
+		nix-minecraft.url = "github:Infinidoge/nix-minecraft";
 		wrappers = {
 			url = "github:Lassulus/wrappers";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		
 		nixos-wsl = {
 			url = "github:nix-community/NixOS-WSL";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		
-		nix-minecraft = {
-			url = "github:Infinidoge/nix-minecraft";
-		};
-		
 		backy = {
 			url = "github:dav-wolff/backy";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		
 		ndent = {
 			url = "github:dav-wolff/ndent";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		
 		journal = {
 			url = "github:dav-wolff/journal";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		
-		vault = {
-			url = "github:dav-wolff/vault";
-		};
-		
-		solitaire = {
-			url = "github:dav-wolff/solitaire";
-		};
-		
 		linky = {
 			url = "github:dav-wolff/linky";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		
+		vault = {
+			url = "github:dav-wolff/vault";
+		};
+		solitaire = {
+			url = "github:dav-wolff/solitaire";
+		};
 		simplewall.url = "github:dav-wolff/simplewall";
+		authing = {
+			url = "git+ssh://git@git.dav.dev/dav/authing.git";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 	
 	outputs = { self, nixpkgs, flake-utils, ... } @ inputs: {
@@ -103,6 +86,7 @@
 				inputs.agenix.nixosModules.default
 				inputs.nixos-wsl.nixosModules.default
 				inputs.nix-minecraft.nixosModules.minecraft-servers
+				inputs.authing.nixosModules.default
 			] ++ modules;
 			nixpkgs.overlays = [self.overlays.default];
 			modules.nix.pkgs = self;
