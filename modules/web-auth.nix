@@ -62,6 +62,10 @@ in {
 				file = ../secrets/lldapPushdbSshPrivateKey.age;
 				owner = "lldap";
 			};
+			authingSessionKey = {
+				file = ../secrets/authingSessionKey.age;
+				owner = "authing";
+			};
 		};
 		
 		## Authing
@@ -78,6 +82,7 @@ in {
 				port = config.ports.authing;
 				base_domain = cfg.baseDomain;
 				url = "https://${config.modules.webServer.hosts.authing.domain}";
+				session_key_file = config.age.secrets.authingSessionKey.path;
 			};
 		};
 		
