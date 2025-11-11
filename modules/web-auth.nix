@@ -76,7 +76,7 @@ in {
 			enable = true;
 			settings = {
 				port = config.ports.authing;
-				base_domain = config.modules.webServer.baseDomain;
+				base_domain = cfg.baseDomain;
 				url = "https://${config.modules.webServer.hosts.authing.domain}";
 			};
 		};
