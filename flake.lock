@@ -31,11 +31,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1762754485,
-        "narHash": "sha256-63fT+AqwvuHfw4LiMdknxfWgYD+21CasnWJHyWI6vAE=",
+        "lastModified": 1762863111,
+        "narHash": "sha256-72nK6L0gJbxqge9SJIv9DoWeB+IeJPqdCa1qZ4l5rgQ=",
         "ref": "refs/heads/main",
-        "rev": "6d925160692f4cc3974e8b7b4c6002309c20f40b",
-        "revCount": 36,
+        "rev": "2d47dd040f907d97922dec5858723160de7c5154",
+        "revCount": 45,
         "type": "git",
         "url": "ssh://git@git.dav.dev/dav/authing.git"
       },

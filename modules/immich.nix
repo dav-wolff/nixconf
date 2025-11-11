@@ -48,7 +48,6 @@ in {
 			settingsFile = jsonFormat.generate "immich.json" settings;
 		in {
 			modules.webServer.hosts.immich = {
-				auth = false;
 				proxyPort = ports.immich;
 				maxBodySize = "10000M";
 				headers.content-security-policy = "frame-ancestors 'none'; default-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:; img-src 'self' data: blob:; connect-src 'self' tiles.immich.cloud static.immich.cloud";
@@ -59,6 +58,12 @@ in {
 					send_timeout 600s;
 				'';
 				locations."^~ /_app/immutable".files = pkgs.immich.web;
+			};
+			
+			services.authing.settings.share_links.immich = {
+				match_prefix = "https://${config.modules.webServer.hosts.immich.domain}/share/";
+				redirect = "http://127.0.0.1:${toString ports.immich}";
+				method = "GET";
 			};
 			
 			modules.email = {
