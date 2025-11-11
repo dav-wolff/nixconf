@@ -42,6 +42,11 @@
 			url = "git+ssh://git@git.dav.dev/dav/authing.git";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		immich = {
+			url = "github:immich-app/immich/0b3633db4f2c6b050475554387e63be03bdf9a6d";
+			flake = false;
+		};
+		nixpkgs-immich.url = "github:dav-wolff/nixpkgs/immich-overridable";
 	};
 	
 	outputs = { self, nixpkgs, flake-utils, ... } @ inputs: {

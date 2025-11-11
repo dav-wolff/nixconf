@@ -5,6 +5,7 @@ let
 	
 	# nixpkgs-pinned = [pinned-packages];
 	pinnedPackages = {
+		nixpkgs-immich = ["immich"];
 	};
 in {
 	pinnedPackages = final: prev: lib.concatMapAttrs (input: packages:
@@ -82,6 +83,12 @@ in {
 		authing = prev.authing.override {
 			env.RUST_BACKTRACE = "1";
 		};
+		immich = prev.immich.overrideAttrs (prevAttrs: {
+			src = inputs.immich;
+			pnpmDeps = prevAttrs.pnpmDeps.override {
+				hash = "sha256-tV66fbFam6eZUUtT8wPGzRYAxHe5sqjKr8MkgBJ40ZU=";
+			};
+		});
 	};
 	
 	default = inputs.nixpkgs.lib.composeManyExtensions [
