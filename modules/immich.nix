@@ -87,6 +87,7 @@ in {
 				port = ports.immich;
 				environment = {
 					IMMICH_CONFIG_FILE = config.age.derivedSecrets."immich.json".path;
+					TRUSTED_HEADER_LOGOUT = "https://${config.modules.webServer.hosts.authing.domain}/logout";
 				};
 				machine-learning.environment = {
 					IMMICH_PORT = lib.mkForce (toString ports.immichMachineLearning);

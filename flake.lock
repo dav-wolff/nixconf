@@ -620,17 +620,17 @@
     "immich": {
       "flake": false,
       "locked": {
-        "lastModified": 1762865231,
-        "narHash": "sha256-SncmSnXePPFVbpMbyTQH9BHRcgRpjuzvax1pIIdn8Ko=",
-        "owner": "immich-app",
+        "lastModified": 1763123645,
+        "narHash": "sha256-gSd8REI/MTIJVZY057lTznWXY0ISv8mAxfcmwQNPcKE=",
+        "owner": "dav-wolff",
         "repo": "immich",
-        "rev": "0b3633db4f2c6b050475554387e63be03bdf9a6d",
+        "rev": "f6fb301341c5bfcaf21555e6fdcf836677e2bac8",
         "type": "github"
       },
       "original": {
-        "owner": "immich-app",
+        "owner": "dav-wolff",
+        "ref": "trusted-header-auth",
         "repo": "immich",
-        "rev": "0b3633db4f2c6b050475554387e63be03bdf9a6d",
         "type": "github"
       }
     },
