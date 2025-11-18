@@ -61,7 +61,8 @@ in {
 			};
 			
 			services.authing.settings.share_links.immich = {
-				match_prefix = "https://${config.modules.webServer.hosts.immich.domain}/share/";
+				match_host = config.modules.webServer.hosts.immich.domain;
+				match_paths = ["/share/" "/s/"];
 				redirect = "http://127.0.0.1:${toString ports.immich}";
 			};
 			
