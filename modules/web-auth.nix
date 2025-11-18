@@ -80,7 +80,7 @@ in {
 			enable = true;
 			settings = {
 				port = config.ports.authing;
-				base_domain = cfg.baseDomain;
+				base_domain = cfg.auth.baseDomain;
 				url = "https://${config.modules.webServer.hosts.authing.domain}";
 				session_key_file = config.age.secrets.authingSessionKey.path;
 			};
