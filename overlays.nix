@@ -5,7 +5,6 @@ let
 	
 	# nixpkgs-pinned = [pinned-packages];
 	pinnedPackages = {
-		nixpkgs-immich = ["immich"];
 	};
 in {
 	pinnedPackages = final: prev: lib.concatMapAttrs (input: packages:
@@ -47,9 +46,6 @@ in {
 		wlib = wrappers.lib;
 		wrapperModules = wrappers.wrapperModules // {
 			zellij = (import ./extraWrappers/zellij.nix) {
-				inherit lib wlib;
-			};
-			jujutsu = (import ./extraWrappers/jujutsu.nix) {
 				inherit lib wlib;
 			};
 		};

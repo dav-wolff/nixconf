@@ -46,7 +46,6 @@
 			url = "github:dav-wolff/immich/trusted-header-auth";
 			flake = false;
 		};
-		nixpkgs-immich.url = "github:dav-wolff/nixpkgs/immich-overridable";
 	};
 	
 	outputs = { self, nixpkgs, flake-utils, ... } @ inputs: {
