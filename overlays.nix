@@ -81,10 +81,14 @@ in {
 		};
 		immich = prev.immich.overrideAttrs (prevAttrs: {
 			src = inputs.immich;
+			version = (lib.importJSON "${inputs.immich}/server/package.json").version;
 			pnpmDeps = prevAttrs.pnpmDeps.override {
-				hash = "sha256-tV66fbFam6eZUUtT8wPGzRYAxHe5sqjKr8MkgBJ40ZU=";
+				hash = "sha256-i0JHKjsQcdDUrDLK0hJGOvVRh/aOyvms/k+6WEPbyh8=";
 			};
 		});
+		immich-cli = prev.immich-cli.override {
+			inherit (prev) immich;
+		};
 	};
 	
 	default = inputs.nixpkgs.lib.composeManyExtensions [
