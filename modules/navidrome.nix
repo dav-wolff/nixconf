@@ -25,6 +25,9 @@ in {
 				DataFolder = "${cfg.volume}/data";
 				CacheFolder = "${cfg.volume}/cache";
 				ReverseProxyWhitelist = "127.0.0.1/32";
+				BaseUrl = "https://${config.modules.webServer.hosts.navidrome.domain}";
+				EnableSharing = true;
+				EnableUserEditing = false;
 			};
 		};
 	};
