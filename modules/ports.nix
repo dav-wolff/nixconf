@@ -17,6 +17,7 @@ let
 		mealie = 9080;
 		forgejo = 9090;
 		filebrowser = 10000;
+		qbittorrent = 10010;
 	};
 in {
 	options.ports = with lib; mkOption {

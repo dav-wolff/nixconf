@@ -23,7 +23,11 @@
 			useGrub = true;
 		};
 		
-		networking.enable = true;
+		networking = {
+			enable = true;
+			useNetworkd = true;
+		};
+		
 		ssh.server.enable = true;
 		hotspot.enable = true;
 		
@@ -58,5 +62,6 @@
 		changedetection.enable = true;
 		mealie.enable = true;
 		filebrowser.enable = true;
+		torrent.enable = true;
 	};
 }

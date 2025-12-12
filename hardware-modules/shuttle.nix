@@ -46,6 +46,20 @@
 	
 	modules.filebrowser.volume = "/vol/filebrowser";
 	
+	# sudo mount /dev/disk/by-label/T7 /mnt
+	# sudo btrfs subvolume create /mnt/torrent
+	# sudo chown -R qbittorrent:qbittorrent /vol/torrent
+	fileSystems."/vol/torrent" = {
+		device = "/dev/disk/by-label/T7";
+		fsType = "btrfs";
+		options = [
+			"subvol=torrent"
+			"compress=zstd"
+		];
+	};
+	
+	modules.torrent.volume = "/vol/torrent";
+	
 	swapDevices = [{
 		device = "/dev/disk/by-label/swap";
 	}];

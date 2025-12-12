@@ -94,7 +94,7 @@ in {
 					headers = mkIf config.defaultHeaders (lib.mapAttrs (_: lib.mkDefault) {
 						strict-transport-security = "max-age=63072000; includesubdomains; preload";
 						referrer-policy = "same-origin";
-						content-security-policy = "frame-ancestors 'none'; default-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' data: blob:";
+						content-security-policy = "frame-ancestors 'self'; default-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' data: blob:";
 						x-content-type-options = "nosniff";
 						x-frame-options = "deny";
 					});

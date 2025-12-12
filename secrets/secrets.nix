@@ -33,4 +33,5 @@ in {
 	"lldapPushdbSshPrivateKey.age".publicKeys = [keys.hostKeys.shuttle];
 	# authing generate-key
 	"authingSessionKey.age".publicKeys = [keys.hostKeys.shuttle keys.hostKeys.min];
+	"wireguardPrivateKey".publicKeys = [keys.hostKeys.shuttle];
 }
