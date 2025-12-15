@@ -28,6 +28,10 @@ in {
 				BaseUrl = "https://${config.modules.webServer.hosts.navidrome.domain}";
 				EnableSharing = true;
 				EnableUserEditing = false;
+				AutoImportPlaylists = false;
+				DefaultTheme = "Nord";
+				Inspect.Enabled = false;
+				Scanner.PurgeMissing = "always";
 			};
 		};
 	};
