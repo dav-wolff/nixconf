@@ -7,7 +7,7 @@ wrapperModules.alacritty.apply {
 		general.live_config_reload = false;
 		terminal.shell = pkgs.lib.meta.getExe shell;
 		window = {
-			startup_mode = "Maximized";
+			startup_mode = "Windowed";
 			opacity = 0.8;
 		};
 		mouse.hide_when_typing = true;

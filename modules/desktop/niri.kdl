@@ -81,6 +81,7 @@ workspace "Music"
 window-rule {
 	draw-border-with-background false
 	clip-to-geometry true
+	open-maximized-to-edges false
 }
 
 window-rule {
