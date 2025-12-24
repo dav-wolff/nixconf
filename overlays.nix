@@ -77,14 +77,14 @@ in {
 	
 	overrides = final: prev: {
 		authing = prev.authing.override {
-			env.RUST_BACKTRACE = "1";
+			env = {
+				RUST_BACKTRACE = "1";
+				AUTHING_LOG = "DEBUG";
+			};
 		};
 		immich = prev.immich.overrideAttrs (prevAttrs: {
 			src = inputs.immich;
 			version = (lib.importJSON "${inputs.immich}/server/package.json").version;
-			pnpmDeps = prevAttrs.pnpmDeps.override {
-				hash = "sha256-i0JHKjsQcdDUrDLK0hJGOvVRh/aOyvms/k+6WEPbyh8=";
-			};
 		});
 		immich-cli = prev.immich-cli.override {
 			inherit (prev) immich;
