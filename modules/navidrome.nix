@@ -15,6 +15,22 @@ in {
 		modules.webServer.hosts.navidrome = {
 			subdomain = "music";
 			proxyPort = ports.navidrome;
+			
+			locations."= /auth/login" = {
+				# return 200 so clients don't think that login faile
+				# add dummy data so clients don't fail parsing the response
+				# https://github.com/navidrome/navidrome/blob/cc3cca607749dc086480f1af078fbbeb3fac2bdb/server/auth.go#L66-L95
+				headers.content-type = "application/json";
+				staticText = builtins.toJSON {
+					id = "-";
+					name = "-";
+					username = "-";
+					isAdmin = false;
+					subsonicSalt = "-";
+					subsonicToken = "-";
+					token = "-";
+				};
+			};
 		};
 		
 		services.navidrome = {
