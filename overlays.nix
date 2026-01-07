@@ -5,6 +5,7 @@ let
 	
 	# nixpkgs-pinned = [pinned-packages];
 	pinnedPackages = {
+		nixpkgs-subfont = ["subfont"];
 	};
 in {
 	pinnedPackages = final: prev: lib.concatMapAttrs (input: packages:
