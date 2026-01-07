@@ -38,19 +38,7 @@ in {
 					script = let
 						assets = config.age.derivedSecrets.linkyAssets.path;
 					in ''
-						LINKY_ICON_16=${assets}/icon_16.png
-						LINKY_ICON_32=${assets}/icon_32.png
-						LINKY_ICON_48=${assets}/icon_48.png
-						LINKY_ICON_64=${assets}/icon_64.png
-						LINKY_ICON_96=${assets}/icon_96.png
-						LINKY_ICON_144=${assets}/icon_144.png
-						LINKY_ICON_192=${assets}/icon_192.png
-						LINKY_BANNER_JPG=${assets}/banner.jpg
-						LINKY_FACE_JPG=${assets}/face.jpg
-						LINKY_FACE_125_WEBP=${assets}/face_125.webp
-						LINKY_FACE_250_WEBP=${assets}/face_250.webp
-						LINKY_FACE_500_WEBP=${assets}/face_500.webp
-						LINKY_FACE_1000_WEBP=${assets}/face_1000.webp
+						LINKY_ASSETS=${assets}
 						LINKY_NAME=$(jq -r .name $secret)
 						LINKY_URL=$(jq -r .url $secret)
 						LINKY_INSTAGRAM=$(jq -r .instagram $secret)
@@ -59,19 +47,7 @@ in {
 						LINKY_TELEGRAM=$(jq -r .telegram $secret)
 						LINKY_BANNER_THUMBHASH=$(jq -r .banner $secret)
 						LINKY_FACE_THUMBHASH=$(jq -r .face $secret)
-						export LINKY_ICON_16
-						export LINKY_ICON_32
-						export LINKY_ICON_48
-						export LINKY_ICON_64
-						export LINKY_ICON_96
-						export LINKY_ICON_144
-						export LINKY_ICON_192
-						export LINKY_BANNER_JPG
-						export LINKY_FACE_JPG
-						export LINKY_FACE_125_WEBP
-						export LINKY_FACE_250_WEBP
-						export LINKY_FACE_500_WEBP
-						export LINKY_FACE_1000_WEBP
+						export LINKY_ASSETS
 						export LINKY_NAME
 						export LINKY_URL
 						export LINKY_INSTAGRAM
@@ -86,14 +62,25 @@ in {
 			};
 		};
 		
-		modules.webServer.hosts.linky = {
-			domainFile = config.age.secrets.linkyDomain.path;
-			cert = "linky";
-			auth = false;
-			robots = false;
-			locations."/" = {
-				files = config.age.derivedSecrets.linky.path;
-				immutable = false;
+		modules.webServer.hosts = {
+			linky = {
+				domainFile = config.age.secrets.linkyDomain.path;
+				cert = "linky";
+				auth = false;
+				robots = false;
+				locations."/" = {
+					files = config.age.derivedSecrets.linky.path;
+					immutable = false;
+				};
+			};
+			linkyDemo = {
+				subdomain = "linky";
+				auth = false;
+				robots = false;
+				locations."/" = {
+					files = pkgs.linky-demo;
+					immutable = false;
+				};
 			};
 		};
 		

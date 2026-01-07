@@ -52,6 +52,11 @@
 				subdomain = "git";
 				provider = "porkbun";
 			};
+			certs.linkyDemo = {
+				domain = "dav.dev";
+				subdomain = "linky";
+				provider = "porkbun";
+			};
 		};
 		
 		forgejo = {
@@ -62,6 +67,11 @@
 		webServer.hosts.forgejo = {
 			domain = "git.dav.dev";
 			cert = "git";
+		};
+		
+		webServer.hosts.linkyDemo = {
+			domain = "linky.dav.dev";
+			cert = "linkyDemo";
 		};
 		
 		solitaire.web = true;

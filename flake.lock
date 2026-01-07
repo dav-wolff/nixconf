@@ -662,11 +662,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1747689005,
-        "narHash": "sha256-o0ukmbT3MdCo12UqfnSvlbjTM1FFYiO+sTY0A/m564c=",
+        "lastModified": 1767772752,
+        "narHash": "sha256-Yt2f19rEPfSR/sYiPt/v6lKfQhW/h19H+5rFBeIsf5k=",
         "owner": "dav-wolff",
         "repo": "linky",
-        "rev": "e9835e281f2e6d3a525ce8a8da296906ec5771a0",
+        "rev": "940b2d0cea519b0a9a1b3428911b9527aa40f16b",
         "type": "github"
       },
       "original": {
