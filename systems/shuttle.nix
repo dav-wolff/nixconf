@@ -17,6 +17,10 @@
 		};
 	};
 	
+	boot.kernelParams = [
+		"panic=30"
+	];
+	
 	modules = {
 		bootLoader = {
 			enable = true;
