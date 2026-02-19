@@ -39,7 +39,7 @@ in {
 			kdePackages.kate
 			discord
 			telegram-desktop
-			spotify
+			feishin
 			bitwarden-desktop
 			keepass
 			thunderbird
