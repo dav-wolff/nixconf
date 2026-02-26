@@ -66,5 +66,6 @@
 		mealie.enable = true;
 		filebrowser.enable = true;
 		torrent.enable = true;
+		yamtrack.enable = true;
 	};
 }

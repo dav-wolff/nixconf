@@ -32,6 +32,7 @@ in {
 		acmed = prev.callPackage ./packages/acmed.nix {
 			acceptLetsencryptTerms = true;
 		};
+		yamtrack = prev.callPackage ./packages/yamtrack.nix {};
 		# TODO: remove if overlay works again
 		solitaire = assert !(prev ? solitaire); prev.lib.makeScope prev.newScope (self: {
 			cards = inputs.solitaire.packages.${system}.cards;
