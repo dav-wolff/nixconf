@@ -63,7 +63,6 @@
 		vaultwarden.enable = true;
 		navidrome.enable = true;
 		owntracks.enable = true;
-		changedetection.enable = true;
 		mealie.enable = true;
 		filebrowser.enable = true;
 		torrent.enable = true;

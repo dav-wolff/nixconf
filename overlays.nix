@@ -5,7 +5,8 @@ let
 	
 	# nixpkgs-pinned = [pinned-packages];
 	pinnedPackages = {
-		nixpkgs-subfont = ["subfont"];
+		nixpkgs-navidrome = ["navidrome"];
+		nixpkgs-mealie = ["mealie"];
 	};
 in {
 	pinnedPackages = final: prev: lib.concatMapAttrs (input: packages:

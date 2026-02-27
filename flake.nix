@@ -3,8 +3,8 @@
 	
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-		# TODO: remove once merged, for some reason overrideAttrs in overlay doesn't seem to work
-		nixpkgs-subfont.url = "github:dav-wolff/nixpkgs/subfont-pin-nodejs";
+		nixpkgs-navidrome.url = "github:NixOS/nixpkgs/54caed8f89e27a841ec890b7663f9a53b0e4e25c";
+		nixpkgs-mealie.url = "github:NixOS/nixpkgs/0182a361324364ae3f436a63005877674cf45efb";
 		flake-utils.url = "github:numtide/flake-utils";
 		agenix.url = "github:ryantm/agenix";
 		nixos-hardware.url = "github:NixOS/nixos-hardware";

@@ -74,7 +74,6 @@
 			cert = "linkyDemo";
 		};
 		
-		solitaire.web = true;
 		linky.enable = true;
 	};
 }
