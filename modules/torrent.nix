@@ -16,6 +16,14 @@ in {
 			proxyPort = ports.qbittorrent;
 		};
 		
+		services.authing.settings = {
+			groups = ["torrent"];
+			hosts.torrent = {
+				host = config.modules.webServer.hosts.torrent.domain;
+				allow_group = "torrent";
+			};
+		};
+		
 		services.qbittorrent = {
 			enable = true;
 			webuiPort = ports.qbittorrent;

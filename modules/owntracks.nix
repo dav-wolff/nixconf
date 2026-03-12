@@ -19,6 +19,14 @@ in {
 			};
 		};
 		
+		services.authing.settings = {
+			groups = ["owntracks"];
+			hosts.owntracks = {
+				host = config.modules.webServer.hosts.owntracks.domain;
+				allow_group = "owntracks";
+			};
+		};
+		
 		users.users.owntracks = {
 			group = "owntracks";
 			isSystemUser = true;
