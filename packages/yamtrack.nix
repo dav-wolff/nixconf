@@ -71,7 +71,6 @@ let
 	python = (python3.override {
 		packageOverrides = final: prev: {
 			inherit django-debug-toolbar django-select2 django-decorator-include;
-			pyrate-limiter = final.pyrate-limiter_2;
 		};
 	}).withPackages (ps: with ps; [
 		aiohttp
