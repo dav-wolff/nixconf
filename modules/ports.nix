@@ -18,6 +18,7 @@ let
 		forgejo = 9090;
 		filebrowser = 10000;
 		qbittorrent = 10010;
+		yamtrack = 10020;
 	};
 in {
 	options.ports = with lib; mkOption {

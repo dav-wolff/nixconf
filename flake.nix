@@ -3,6 +3,7 @@
 	
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+		nixpkgs-yamtrack.url = "github:dav-wolff/nixpkgs/yamtrack-stable";
 		nixpkgs-navidrome.url = "github:NixOS/nixpkgs/54caed8f89e27a841ec890b7663f9a53b0e4e25c";
 		nixpkgs-mealie.url = "github:NixOS/nixpkgs/0182a361324364ae3f436a63005877674cf45efb";
 		flake-utils.url = "github:numtide/flake-utils";
@@ -93,6 +94,7 @@
 				inputs.nixos-wsl.nixosModules.default
 				inputs.nix-minecraft.nixosModules.minecraft-servers
 				inputs.authing.nixosModules.default
+				"${inputs.nixpkgs-yamtrack}/nixos/modules/services/web-apps/yamtrack.nix"
 			] ++ modules;
 			nixpkgs.overlays = [self.overlays.default];
 			modules.nix.pkgs = self;
