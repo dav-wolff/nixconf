@@ -45,6 +45,9 @@ in {
 			thunderbird
 			protonmail-desktop
 			configured.alacritty
+			mpv
+			beets
+			gocryptfs
 		];
 		
 		services.earlyoom = {

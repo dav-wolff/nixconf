@@ -10,5 +10,8 @@
 		xh
 		dysk
 		rclone
+		btop
+		sshfs
+		bindfs
 	];
 }
