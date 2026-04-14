@@ -8,6 +8,7 @@ in {
 	config = lib.mkIf cfg.enable {
 		modules.fonts.enable = true;
 		modules.niri.enable = true;
+		services.displayManager.defaultSession = "niri";
 		
 		services.displayManager.sddm.enable = true;
 		services.displayManager.sddm.wayland.enable = true;
