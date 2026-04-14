@@ -11,7 +11,7 @@ let
 in {
 	pinnedPackages = final: prev: lib.concatMapAttrs (input: packages:
 		builtins.listToAttrs (map (package: (
-			lib.nameValuePair package inputs.${input}.legacyPackages.${final.system}.${package}
+			lib.nameValuePair package inputs.${input}.legacyPackages.${final.stdenv.hostPlatform.system}.${package}
 		)) packages)
 	) pinnedPackages;
 	
@@ -23,7 +23,7 @@ in {
 	};
 	
 	extraPackages = final: prev: let
-		system = final.system;
+		system = final.stdenv.hostPlatform.system;
 	in {
 		# make sure not to override existing packages, which others might depend on
 		ndent = assert !(prev ? ndent); inputs.ndent.packages.${system}.ndent;
