@@ -1,6 +1,9 @@
 {
 	modules = {
-		bootLoader.enable = true;
+		bootLoader = {
+			enable = true;
+			theme = "angular_alt";
+		};
 		networking.enable = true;
 		desktop.enable = true;
 		nvidia.enable = true;
