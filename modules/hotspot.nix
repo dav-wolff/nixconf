@@ -21,7 +21,8 @@ in {
 				EnvironmentFile = config.age.secrets.hotspotPassword.path;
 				ExecStart = "${pkgs.linux-wifi-hotspot}/bin/create_ap ${wifi} ${internet} ${name} $HOTSPOT_PASSWORD";
 				KillSignal = "SIGINT";
-				Restart = "on-failure";
+				Restart = "always";
+				RuntimeMaxSec = "1h";
 			};
 		};
 	};
