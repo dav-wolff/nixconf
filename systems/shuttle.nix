@@ -68,4 +68,17 @@
 		torrent.enable = true;
 		yamtrack.enable = true;
 	};
+	
+	# shuttle's cpu doesn't support x86_64-v2
+	nixpkgs.overlays = [(final: prev: {
+		immich-machine-learning = prev.immich-machine-learning.override {
+			python3 = final.python3.override {
+				packageOverrides = finalPy: prevPy: {
+					numpy = prevPy.numpy.overrideAttrs (prevAttrs: {
+						mesonFlags = (prevAttrs.mesonFlags or []) ++ [ "-Dcpu-baseline=none" ];
+					});
+				};
+			};
+		};
+	})];
 }
