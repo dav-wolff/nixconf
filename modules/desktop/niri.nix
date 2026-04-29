@@ -53,7 +53,7 @@ in {
 			user.services = {
 				waybar.path = with pkgs; [
 					niri
-					(mixxc.override {enableX11 = false;})
+					mixxc
 				];
 				mako.wantedBy = ["niri.service"];
 				

@@ -57,7 +57,7 @@
 			"car": "",
 			"default": ["", ""]
 		},
-		"on-click": "GSK_RENDERER=cairo GTK_USE_PORTAL=0 mixxc --anchor bottom --anchor right --margin 5 --margin 180 -i -P"
+		"on-click": "pkill mixxc || GSK_RENDERER=cairo GTK_USE_PORTAL=0 mixxc --anchor bottom --anchor right --margin 5 --margin 180 -i -P"
 	},
 	"power-profiles-daemon": {
 		"format": "{icon}",
