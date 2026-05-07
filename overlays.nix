@@ -79,6 +79,10 @@ in {
 	};
 	
 	overrides = final: prev: {
+		# TODO: remove
+		openldap = prev.openldap.overrideAttrs {
+			doCheck = !prev.stdenv.hostPlatform.isi686;
+		};
 		authing = prev.authing.override {
 			env = {
 				RUST_BACKTRACE = "1";
