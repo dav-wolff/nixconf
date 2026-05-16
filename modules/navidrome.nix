@@ -56,5 +56,13 @@ in {
 				Scanner.PurgeMissing = "always";
 			};
 		};
+		
+		# access to music library
+		users.groups.music = {
+			members = ["dav" "navidrome"];
+		};
+		systemd.services.navidrome.serviceConfig.BindReadOnlyPaths = [
+			"/vol/filebrowser"
+		];
 	};
 }
