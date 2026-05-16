@@ -35,6 +35,7 @@
 		ssh.server.enable = true;
 		waypipe.enable = true;
 		hotspot.enable = true;
+		opticalDrive.enable = true;
 		
 		email = {
 			domain = "dav.dev";
