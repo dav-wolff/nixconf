@@ -7,6 +7,7 @@ in {
 	
 	config = lib.mkIf cfg.enable {
 		modules.fonts.enable = true;
+		modules.waypipe.enable = true;
 		modules.niri.enable = true;
 		services.displayManager.defaultSession = "niri";
 		

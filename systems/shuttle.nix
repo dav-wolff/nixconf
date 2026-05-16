@@ -33,6 +33,7 @@
 		};
 		
 		ssh.server.enable = true;
+		waypipe.enable = true;
 		hotspot.enable = true;
 		
 		email = {
