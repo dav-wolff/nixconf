@@ -12,6 +12,7 @@
 			xplr
 			tree
 			ripgrep
+			fd
 			configured.zsh
 			configured.zellij
 			configured.helix
