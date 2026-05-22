@@ -42,7 +42,7 @@
 		};
 		simplewall.url = "github:dav-wolff/simplewall";
 		authing = {
-			url = "git+ssh://git@git.dav.dev/dav/authing.git";
+			url = "git+ssh://git@git.dav.dev/dav/authing.git?shallow=1&ref=release";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		immich = {
