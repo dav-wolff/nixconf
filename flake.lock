@@ -785,11 +785,11 @@
     },
     "nixpkgs-yamtrack": {
       "locked": {
-        "lastModified": 1779761862,
-        "narHash": "sha256-9V/cnW0nSvv2rYxfAk7bR7ApAXlU2tTw0t8YcVh9Yw8=",
+        "lastModified": 1780008747,
+        "narHash": "sha256-kmvl+dicmUfqFM/TmVDg8MM1ZZ82F/XDd1K/9O6tJQY=",
         "owner": "dav-wolff",
         "repo": "nixpkgs",
-        "rev": "dcfaa2b7e89715e35093826a98bd1ac72129ce39",
+        "rev": "6f4bc0bbe5fd9702da1717dfa16bf6ab65920d0d",
         "type": "github"
       },
       "original": {

@@ -33,6 +33,7 @@ in {
 				TMDB_NSFW = "True";
 				IGDB_NSFW = "True";
 			};
+			environmentFile = config.age.secrets.yamtrackSecrets.path;
 		};
 	};
 }
