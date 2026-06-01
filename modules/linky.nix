@@ -87,7 +87,7 @@ in {
 		modules.acme = {
 			certs.linky = {
 				domainFile = config.age.secrets.linkyDomain.path;
-				provider = "spaceship";
+				provider = "porkbun";
 			};
 		};
 	};

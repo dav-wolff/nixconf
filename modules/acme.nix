@@ -143,8 +143,8 @@ in {
 			];
 			
 			certificate = map (cert:
-					assert cert.subdomain != null -> cert.provider == "porkbun"
-						&& cert.domainFile != null -> cert.provider == "spaceship";
+					assert cert.subdomain == null || cert.domainFile == null;
+					assert cert.subdomain != null -> cert.provider == "porkbun";
 				{
 					endpoint = "Let's Encrypt v2 production";
 					# use this endpoint for testing
@@ -162,7 +162,9 @@ in {
 						"porkbun-dns-clean"
 					];
 					env = {
-						domain = cert.domain;
+						domain = if cert.domainFile == null
+							then cert.domain
+							else "@${cert.name}@";
 					} // lib.optionalAttrs (cert.subdomain != null) {
 						subdomain = cert.subdomain;
 					};
