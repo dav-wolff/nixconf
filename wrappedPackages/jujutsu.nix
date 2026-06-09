@@ -12,6 +12,7 @@ wrapperModules.jujutsu.apply {
 			default-command = "log";
 			diff-editor = ":builtin";
 			pager = "less -FRX";
+			show-cryptographic-signatures = true;
 		};
 		signing = {
 			behavior = "drop";
