@@ -281,6 +281,7 @@ in {
 		
 		services.nginx = {
 			enable = true;
+			package = pkgs.nginxMainline;
 			recommendedProxySettings = true;
 			recommendedTlsSettings = true;
 			recommendedOptimisation = true;
