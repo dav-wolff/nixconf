@@ -42,8 +42,9 @@ in {
 			discord
 			telegram-desktop
 			feishin
-			bitwarden-desktop
-			keepass
+			# TODO: reenable
+			# https://github.com/NixOS/nixpkgs/issues/526914
+			# bitwarden-desktop
 			thunderbird
 			protonmail-desktop
 			configured.alacritty

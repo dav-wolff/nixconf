@@ -5,8 +5,9 @@ let
 	
 	# nixpkgs-pinned = [pinned-packages];
 	pinnedPackages = {
-		nixpkgs-navidrome = ["navidrome"];
-		nixpkgs-mealie = ["mealie"];
+		# update immich less often to avoid expensive rebuild
+		nixpkgs-immich = ["immich" "immich-machine-learning"];
+		# nixpkgs-mealie = ["mealie"];
 	};
 in {
 	pinnedPackages = final: prev: lib.concatMapAttrs (input: packages:
@@ -68,8 +69,6 @@ in {
 			zsh = callPackage ./wrappedPackages/zsh.nix {
 				inherit (wlib) wrapPackage;
 			};
-			
-			# zsh = callPackage ./packages/zsh.nix {};
 		};
 	};
 	
@@ -79,10 +78,6 @@ in {
 	};
 	
 	overrides = final: prev: {
-		# TODO: remove
-		openldap = prev.openldap.overrideAttrs {
-			doCheck = !prev.stdenv.hostPlatform.isi686;
-		};
 		authing = prev.authing.override {
 			env = {
 				RUST_BACKTRACE = "1";
