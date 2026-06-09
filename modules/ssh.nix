@@ -49,11 +49,18 @@ in {
 				};
 			};
 			
-			services.openssh = {
+			services.openssh = let
+				banner = pkgs.runCommandLocal "ssh-banner.txt" {} ''
+					${lib.getExe pkgs.figlet} ${config.networking.hostName} > $out
+				'';
+			in {
 				enable = true;
 				openFirewall = cfg.server.public;
-				settings.PasswordAuthentication = false;
-				settings.KbdInteractiveAuthentication = false;
+				settings = {
+					PasswordAuthentication = false;
+					KbdInteractiveAuthentication = false;
+					Banner = "${banner}";
+				};
 				inherit knownHosts;
 			};
 			
