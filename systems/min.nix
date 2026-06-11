@@ -22,10 +22,7 @@
 	};
 	
 	modules = {
-		ssh.server = {
-			enable = true;
-			public = true;
-		};
+		ssh.server.enable = true;
 		
 		webServer = {
 			enable = true;

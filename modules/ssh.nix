@@ -10,7 +10,7 @@ let
 in {
 	options.modules.ssh.server = {
 		enable = lib.mkEnableOption "sshServer";
-		public = lib.mkOption {
+		openPort = lib.mkOption {
 			type = lib.types.bool;
 			default = false;
 		};
@@ -23,6 +23,7 @@ in {
 				extraConfig = unindent ''
 					Host ssh.*
 						ProxyCommand proxytunnel -p %h:443 -E -d %h:%p -C /etc/ssl/certs/ca-certificates.crt -P %r
+						ServerAliveInterval 30
 				'';
 			};
 			
@@ -31,7 +32,7 @@ in {
 			];
 		}
 		(lib.mkIf cfg.server.enable {
-			modules.firewall.localAllowedTCPPorts = lib.mkIf (!cfg.server.public) [22];
+			modules.firewall.localAllowedTCPPorts = lib.mkIf (cfg.server.openPort) [22];
 			
 			modules.webServer.hosts.ssh = {
 				locations."/" = {
@@ -55,7 +56,7 @@ in {
 				'';
 			in {
 				enable = true;
-				openFirewall = cfg.server.public;
+				openFirewall = false;
 				settings = {
 					PasswordAuthentication = false;
 					KbdInteractiveAuthentication = false;

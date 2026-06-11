@@ -32,7 +32,10 @@
 			useNetworkd = true;
 		};
 		
-		ssh.server.enable = true;
+		ssh.server = {
+			enable = true;
+			openPort = true;
+		};
 		waypipe.enable = true;
 		hotspot.enable = true;
 		opticalDrive.enable = true;
