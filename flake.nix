@@ -5,7 +5,6 @@
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 		nixpkgs-immich.url = "github:NixOS/nixpkgs/549bd84d6279f9852cae6225e372cc67fb91a4c1";
 		nixpkgs-yamtrack.url = "github:dav-wolff/nixpkgs/yamtrack-stable";
-		nixpkgs-mealie.url = "github:NixOS/nixpkgs/0182a361324364ae3f436a63005877674cf45efb";
 		flake-utils.url = "github:numtide/flake-utils";
 		agenix.url = "github:ryantm/agenix";
 		nixos-hardware.url = "github:NixOS/nixos-hardware";

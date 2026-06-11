@@ -7,7 +7,6 @@ let
 	pinnedPackages = {
 		# update immich less often to avoid expensive rebuild
 		nixpkgs-immich = ["immich" "immich-machine-learning"];
-		# nixpkgs-mealie = ["mealie"];
 	};
 in {
 	pinnedPackages = final: prev: lib.concatMapAttrs (input: packages:

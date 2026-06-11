@@ -770,22 +770,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-mealie": {
-      "locked": {
-        "lastModified": 1771369470,
-        "narHash": "sha256-0NBlEBKkN3lufyvFegY4TYv5mCNHbi5OmBDrzihbBMQ=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "0182a361324364ae3f436a63005877674cf45efb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "0182a361324364ae3f436a63005877674cf45efb",
-        "type": "github"
-      }
-    },
     "nixpkgs-yamtrack": {
       "locked": {
         "lastModified": 1780008747,
@@ -910,7 +894,6 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_4",
         "nixpkgs-immich": "nixpkgs-immich",
-        "nixpkgs-mealie": "nixpkgs-mealie",
         "nixpkgs-yamtrack": "nixpkgs-yamtrack",
         "simplewall": "simplewall",
         "solitaire": "solitaire",
