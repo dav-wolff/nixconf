@@ -32,6 +32,11 @@ in {
 			credentialsFile = config.age.secrets.mealieOidcSecret.path;
 		};
 		
+		systemd.services.mealie.serviceConfig = {
+			# mealie can be slow to start
+			TimeoutStartSec = 300;
+		};
+		
 		services.authelia.instances.main = {
 			settings.identity_providers.oidc.clients = [
 				{
