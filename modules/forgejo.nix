@@ -14,8 +14,16 @@ in {
 	config = lib.mkIf cfg.enable {
 		modules.webServer.hosts.forgejo = {
 			subdomain = "git";
-			proxyPort = ports.forgejo;
 			maxBodySize = "512M";
+			locations."/" = {
+				proxyPort = ports.forgejo;
+				# SSH over HTTPS
+				extraConfig = lib.mkIf config.modules.ssh.server.enable ''
+					if ($request_method = CONNECT) {
+						tunnel_pass localhost:22;
+					}
+				'';
+			};
 		};
 		
 		# set user to git for nicer ssh urls
