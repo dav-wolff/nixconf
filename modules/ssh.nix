@@ -20,9 +20,22 @@ in {
 			programs.ssh = {
 				startAgent = true;
 				inherit knownHosts;
-				extraConfig = unindent ''
-					Host ssh.*
-						ProxyCommand proxytunnel -p %h:443 -E -d %h:%p -C /etc/ssl/certs/ca-certificates.crt -P %r
+				extraConfig = let
+					proxyCommand = pkgs.writeShellScript "proxytunnel" (unindent ''
+						echo "-----------------------------" > /dev/tty
+						echo "| Unlocking bitwarden vault |" > /dev/tty
+						echo "-----------------------------" > /dev/tty
+						
+						# Terminal to request password on
+						export RBW_TTY="/dev/`ps -p $$ -o tty=`"
+						
+						PROXYUSER=$(rbw get -f username Auth) \
+						PROXYPASS=$(rbw get Auth) \
+						proxytunnel -E -p $1:443 -d $1:$2 -C /etc/ssl/certs/ca-certificates.crt
+					'');
+				in unindent ''
+					Host ssh.* git.dav.dev
+						ProxyCommand ${proxyCommand} %h %p
 						ServerAliveInterval 30
 				'';
 			};
