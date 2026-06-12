@@ -58,7 +58,7 @@ in {
 				inherit owner;
 				file = ../secrets/lldapAutheliaPassword.age;
 			};
-			lldapPushdbSshPrivateKey = {
+			lldapPushdbSshPrivateKey = lib.mkIf (cfg.auth.replicaDomain != null) {
 				file = ../secrets/lldapPushdbSshPrivateKey.age;
 				owner = "lldap";
 			};
