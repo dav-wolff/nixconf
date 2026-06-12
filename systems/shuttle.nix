@@ -63,14 +63,14 @@
 			remoteMachineLearningHost = "max";
 		};
 		
-		solitaire.web = true;
+		# solitaire.web = true;
 		vault.enable = true;
 		vaultwarden.enable = true;
 		navidrome.enable = true;
 		owntracks.enable = true;
 		changedetection.enable = true;
 		mealie.enable = true;
-		filebrowser.enable = true;
+		# filebrowser.enable = true;
 		torrent.enable = true;
 		yamtrack.enable = true;
 	};
