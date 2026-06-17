@@ -73,6 +73,7 @@
 		# filebrowser.enable = true;
 		torrent.enable = true;
 		yamtrack.enable = true;
+		homeAssistant.enable = true;
 	};
 	
 	# shuttle's cpu doesn't support x86_64-v2

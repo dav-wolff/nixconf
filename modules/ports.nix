@@ -19,6 +19,7 @@ let
 		filebrowser = 10000;
 		qbittorrent = 10010;
 		yamtrack = 10020;
+		homeAssistant = 10040;
 	};
 in {
 	options.ports = with lib; mkOption {
