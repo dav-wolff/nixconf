@@ -30,6 +30,8 @@ in {
 				"hue"
 			];
 			config = {
+				"automation ui" = "!include automations.yaml";
+				"scene ui" = "!include scenes.yaml";
 				http = {
 					server_port = ports.homeAssistant;
 					use_x_forwarded_for = true;
