@@ -54,6 +54,11 @@ in {
 			gocryptfs
 		];
 		
+		virtualisation.waydroid = {
+			enable = true;
+			package = pkgs.waydroid-nftables;
+		};
+		
 		services.earlyoom = {
 			enable = true;
 			# TODO: doesn't seem to be working right now
