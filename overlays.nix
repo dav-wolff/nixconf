@@ -93,6 +93,10 @@ in {
 		immich = prev.immich.overrideAttrs (prevAttrs: {
 			src = inputs.immich;
 			version = (lib.importJSON "${inputs.immich}/server/package.json").version;
+			pnpmDeps = prevAttrs.pnpmDeps.override {
+				src = inputs.immich;
+				hash = "sha256-7xUH5b64QfrgWBe32WSFXXNTbjXx6Po6D6L5hbHTHE0=";
+			};
 		});
 		immich-cli = prev.immich-cli.override {
 			inherit (prev) immich;
