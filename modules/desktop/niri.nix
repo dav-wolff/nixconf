@@ -61,22 +61,74 @@ in {
 				xwayland-satellite.enable = false;
 				
 				wallpaper = let
-					wallpaper = pkgs.fetchurl {
-						url = "https://w.wallhaven.cc/full/7j/wallhaven-7jgyre.jpg";
-						hash = "sha256-1psemyS4GqYddmvIplS7o7xGQmcu505Ujb/zy/CQY9Y=";
-					};
+					wallpapers = map pkgs.fetchurl [
+						{
+							url = "https://w.wallhaven.cc/full/7j/wallhaven-7jgyre.jpg";
+							hash = "sha256-1psemyS4GqYddmvIplS7o7xGQmcu505Ujb/zy/CQY9Y=";
+						}
+						{
+							url = "https://w.wallhaven.cc/full/po/wallhaven-po7l8j.jpg";
+							hash = "sha256-xXkQ7jgO5c22Gw6ch/Y8uc7sC6SMlEirDOPlDHtyZH0=";
+						}
+						{
+							url = "https://w.wallhaven.cc/full/yq/wallhaven-yqg6r7.jpg";
+							hash = "sha256-RI/KERuKYPLcIpjawRsElocoOtEcZy6UR/D4dqoLqSg=";
+						}
+						{
+							url = "https://w.wallhaven.cc/full/ly/wallhaven-lyz3d2.png";
+							hash = "sha256-6d19cynu25xCQJFS+TTj1ZOVyZPe5FlYViWRT2sKqUY=";
+						}
+						{
+							url = "https://w.wallhaven.cc/full/po/wallhaven-po99ee.jpg";
+							hash = "sha256-vDDLKopwlSWJOV+YmY1G3r0HJ1sQ1Vk6V0Qa1ooQQZE=";
+						}
+						{
+							url = "https://w.wallhaven.cc/full/d8/wallhaven-d8386j.png";
+							hash = "sha256-kjlrWCnKGLXxkkeu0QjVDHc/3HR79lMkqgRT1k9gbkk=";
+						}
+						{
+							url = "https://w.wallhaven.cc/full/k8/wallhaven-k82jl6.png";
+							hash = "sha256-AEOr+QD9scbnxJooN+m6k63Thtf7CxrELL3/AaO6BQQ=";
+						}
+						{
+							url = "https://w.wallhaven.cc/full/xe/wallhaven-xeez5l.jpg";
+							hash = "sha256-/XGDkWcCc9ODkkQk6HRi6hxZcj5QNL9QpK+GoAt+QhE=";
+						}
+						{
+							url = "https://w.wallhaven.cc/full/vp/wallhaven-vpo5x3.jpg";
+							hash = "sha256-5jmGwtZ36sSOqs1kwwVjVPd5HuF3IgWgorx8PoFmkhU=";
+						}
+						{
+							url = "https://w.wallhaven.cc/full/8g/wallhaven-8gkzoy.jpg";
+							hash = "sha256-PeovFTxfeCGK9WkjL/WI2c+5FVRl06/PUAwcCr2XmWk=";
+						}
+					];
+					wallpapersBash = lib.concatMapStringsSep " " (wallpaper: ''"${wallpaper}"'') wallpapers;
+					wallpapersLength = builtins.length wallpapers;
 					# source: https://www.reddit.com/r/NixOS/comments/1mpwpvp/i_made_some_nix_wallpapers/
 					overlayWallpaper = pkgs.fetchurl {
 						url = "https://drive.usercontent.google.com/download?id=1IEzCRf8CVq0Kx4ba8FEx_gyyfCRH6VnD&export=download";
 						hash = "sha256-ktvxacXcZdGjbJ0VF260K2NFDELEmxDCqbhecJI9ioM=";
 					};
+					chooseWallpaper = pkgs.writeShellScript "chooseWallpaper" ''
+						# choose random wallpaper based on current week
+						WALLPAPERS=(${wallpapersBash})
+						RANDOM=$(date +%Y%V)
+						INDEX=$((RANDOM % ${toString wallpapersLength}))
+						WALLPAPER=''${WALLPAPERS[$INDEX]}
+						echo Selected wallpaper at $WALLPAPER
+						
+						${lib.getExe pkgs.simplewall} \
+							$WALLPAPER \
+							-- ${overlayWallpaper} --namespace overlay-wallpaper --format png
+					'';
 				in {
 					wantedBy = ["niri.service"];
 					requisite = ["graphical-session.target"];
 					partOf = ["graphical-session.target"];
 					after = ["graphical-session.target"];
 					serviceConfig = {
-						ExecStart = "${lib.getExe pkgs.simplewall} ${wallpaper} -- --namespace overlay-wallpaper ${overlayWallpaper} --format png";
+						ExecStart = "${chooseWallpaper}";
 						Restart = "on-failure";
 					};
 				};
