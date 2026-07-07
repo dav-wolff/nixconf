@@ -6,7 +6,7 @@ in {
 	options.modules.solitaire = {
 		web = lib.mkEnableOption "solitaire-web";
 		native = lib.mkEnableOption "solitaire-native" // {
-			default = config.modules.desktop.enable;
+			# default = config.modules.desktop.enable;
 		};
 	};
 	

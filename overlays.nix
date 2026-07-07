@@ -6,7 +6,7 @@ let
 	# nixpkgs-pinned = [pinned-packages];
 	pinnedPackages = {
 		# update immich less often to avoid expensive rebuild
-		nixpkgs-immich = ["immich" "immich-machine-learning"];
+		nixpkgs-immich = ["immich" "immich-machine-learning" "immich-cli"];
 	};
 in {
 	pinnedPackages = final: prev: lib.concatMapAttrs (input: packages:

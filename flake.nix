@@ -3,7 +3,7 @@
 	
 	inputs = {
 		nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-		nixpkgs-immich.url = "github:NixOS/nixpkgs/549bd84d6279f9852cae6225e372cc67fb91a4c1";
+		nixpkgs-immich.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 		nixpkgs-yamtrack.url = "github:dav-wolff/nixpkgs/yamtrack-stable";
 		flake-utils.url = "github:numtide/flake-utils";
 		agenix.url = "github:ryantm/agenix";
@@ -45,7 +45,7 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		immich = {
-			url = "github:dav-wolff/immich/trusted-header-auth";
+			url = "github:dav-wolff/immich/fork";
 			flake = false;
 		};
 	};
