@@ -79,6 +79,12 @@ in {
 			};
 			
 			users.users.dav.openssh.authorizedKeys.keys = publicKeys.allUserKeys;
+			
+			# ssh runs through nginx, so restarting drops the connection
+			systemd.services = {
+				authing.stopIfChanged = false;
+				nginx.restartIfChanged = false;
+			};
 		})
 	];
 }

@@ -57,7 +57,7 @@ in {
 					proxy_send_timeout 600s;
 					send_timeout 600s;
 				'';
-				locations."^~ /_app/immutable".files = pkgs.immich.web;
+				locations."^~ /_app/immutable".files = "${pkgs.immich}/lib/node_modules/immich/build/www";
 			};
 			
 			services.authing.settings.share_links.immich = {
