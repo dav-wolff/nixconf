@@ -8,7 +8,7 @@ in {
 	"dkim.rsa.age".publicKeys = [keys.hostKeys.shuttle]; # openssl genrsa -out /path/to/dkim.rsa.age 2048
 	"opensmtpdPassword.age".publicKeys = [keys.hostKeys.shuttle];
 	# gpg --full-generate-key
-	# ECC sign and encrypt Curve 25519 6m
+	# ECC sign and encrypt Curve 25519 1y
 	# gpg --export-secret-keys --export-options backup --output keys.gpg
 	"keys.gpg.age".publicKeys = keys.allHostKeys;
 	# nix run pkgs#openssl -- rand -base64 32 > /path/to/key.age
