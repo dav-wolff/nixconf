@@ -2,7 +2,7 @@
 
 {
 	environment = {
-		shells = [pkgs.configured.zsh];
+		shells = [pkgs.configured.nushell pkgs.configured.zsh];
 		
 		systemPackages = with pkgs; [
 			fzf
@@ -24,8 +24,7 @@
 	};
 	
 	users = {
-		defaultUserShell = pkgs.configured.zsh;
-		# TODO is it better to use programs.zsh.enable?
+		defaultUserShell = pkgs.configured.nushell;
 		users.root.ignoreShellProgramCheck = true;
 		users.dav.ignoreShellProgramCheck = true;
 	};

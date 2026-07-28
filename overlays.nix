@@ -60,8 +60,9 @@ in {
 		configured = assert !(prev ? configured); {
 			helix = wrapper ./wrappedPackages/helix.nix {};
 			alacritty = wrapper ./wrappedPackages/alacritty.nix {
-				shell = final.configured.zsh;
+				shell = final.configured.nushell;
 			};
+			nushell = wrapper ./wrappedPackages/nushell.nix {};
 			zellij = wrapper ./wrappedPackages/zellij.nix {};
 			jujutsu = wrapper ./wrappedPackages/jujutsu.nix {};
 			
