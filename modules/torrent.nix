@@ -13,7 +13,7 @@ in {
 	
 	config = lib.mkIf cfg.enable {
 		modules.webServer.hosts.torrent = {
-			proxyPort = ports.qbittorrent;
+			proxyPort = ports.qui;
 			authing.allow_group = "torrent";
 		};
 		
@@ -44,7 +44,25 @@ in {
 			};
 		};
 		
+		age.secrets.quiSecret = {
+			file = ../secrets/quiSecret.age;
+		};
+		
+		services.qui = {
+			enable = true;
+			# NixOS module expects this option
+			secretFile = config.age.secrets.quiSecret.path;
+			settings = {
+				port = ports.qui;
+				checkForUpdates = false;
+				authDisabled = true;
+				authDisabledAllowedCIDRs = "127.0.0.1";
+				# referring to disabling auth, not a bad idea as auth is handled by authing
+				I_ACKNOWLEDGE_THIS_IS_A_BAD_IDEA = true;
+			};
+		};
+		
 		modules.vpn.enable = true;
-		modules.firewall.forceVpn.members = [config.services.qbittorrent.user];
+		modules.firewall.forceVpn.members = [config.services.qbittorrent.user config.services.qui.user];
 	};
 }

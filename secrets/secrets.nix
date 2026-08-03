@@ -35,4 +35,6 @@ in {
 	"authingSessionKey.age".publicKeys = [keys.hostKeys.shuttle keys.hostKeys.min];
 	"wireguardPrivateKey".publicKeys = [keys.hostKeys.shuttle];
 	"yamtrackSecrets.age".publicKeys = [keys.hostKeys.shuttle];
+	# openssl rand -hex 32
+	"quiSecret.age".publicKeys = [keys.hostKeys.shuttle];
 }

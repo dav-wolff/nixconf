@@ -18,6 +18,7 @@ let
 		forgejo = 9090;
 		filebrowser = 10000;
 		qbittorrent = 10010;
+		qui = 10011;
 		yamtrack = 10020;
 		homeAssistant = 10040;
 	};
