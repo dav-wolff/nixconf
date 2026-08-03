@@ -70,7 +70,7 @@
 		owntracks.enable = true;
 		changedetection.enable = true;
 		mealie.enable = true;
-		# filebrowser.enable = true;
+		filebrowser.enable = true;
 		torrent.enable = true;
 		yamtrack.enable = true;
 		homeAssistant.enable = true;
