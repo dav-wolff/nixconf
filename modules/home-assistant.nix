@@ -10,14 +10,7 @@ in {
 		modules.webServer.hosts.homeAssistant = {
 			subdomain = "ha";
 			proxyPort = ports.homeAssistant;
-		};
-		
-		services.authing.settings = {
-			groups = ["home-assistant"];
-			hosts.homeAssistant = {
-				host = config.modules.webServer.hosts.homeAssistant.domain;
-				allow_group = "home-assistant";
-			};
+			authing.allow_group = "home-assistant";
 		};
 		
 		services.home-assistant = {

@@ -10,15 +10,7 @@ in {
 		modules.webServer.hosts.changedetection = {
 			subdomain = "change";
 			proxyPort = ports.changedetection;
-		};
-		
-		# service is single user, so don't allow everyone to log in
-		services.authing.settings = {
-			groups = ["changedetection"];
-			hosts.changedetection = {
-				host = config.modules.webServer.hosts.changedetection.domain;
-				allow_group = "changedetection";
-			};
+			authing.allow_group = "changedetection";
 		};
 		
 		services.changedetection-io = {

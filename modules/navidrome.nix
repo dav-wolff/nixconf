@@ -31,20 +31,18 @@ in {
 					token = "-";
 				};
 			};
-		};
-		
-		services.authing.settings = {
-			share_links.navidrome = {
-				match_host = config.modules.webServer.hosts.navidrome.domain;
-				match_paths = ["/share/"];
-				redirect = "http://127.0.0.1:${toString ports.navidrome}";
-			};
-			hosts.navidrome = {
-				host = config.modules.webServer.hosts.navidrome.domain;
+			
+			authing = {
 				intercept_user = "u";
 				intercept_password = "p";
 				intercept_separator = ":";
 			};
+		};
+		
+		services.authing.settings.share_links.navidrome = {
+			match_host = config.modules.webServer.hosts.navidrome.domain;
+			match_paths = ["/share/"];
+			redirect = "http://127.0.0.1:${toString ports.navidrome}";
 		};
 		
 		services.navidrome = {

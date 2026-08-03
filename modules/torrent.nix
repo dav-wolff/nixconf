@@ -14,14 +14,7 @@ in {
 	config = lib.mkIf cfg.enable {
 		modules.webServer.hosts.torrent = {
 			proxyPort = ports.qbittorrent;
-		};
-		
-		services.authing.settings = {
-			groups = ["torrent"];
-			hosts.torrent = {
-				host = config.modules.webServer.hosts.torrent.domain;
-				allow_group = "torrent";
-			};
+			authing.allow_group = "torrent";
 		};
 		
 		services.qbittorrent = {

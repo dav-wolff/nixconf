@@ -81,6 +81,10 @@ in {
 						type = types.str;
 						default = "";
 					};
+					authing = mkOption {
+						type = types.nullOr (types.attrsOf types.anything);
+						default = null;
+					};
 				};
 				
 				config = {
@@ -150,6 +154,10 @@ in {
 	};
 	
 	config = mkIf cfg.enable (let
+		enabledHosts = lib.pipe cfg.hosts [
+			(lib.filterAttrs (_: host: host.enable))
+		];
+		
 		proxyHeaders = pkgs.writeText "proxy-headers.conf" ''
 			proxy_http_version 1.1;
 			proxy_set_header Upgrade $http_upgrade;
@@ -314,8 +322,24 @@ in {
 					
 					return 444;
 				}
-				${lib.concatStringsSep "\n" (lib.mapAttrsToList makeHost (lib.filterAttrs (_: host: host.enable) cfg.hosts))}
+				${lib.pipe enabledHosts [
+					(lib.mapAttrsToList makeHost)
+					(lib.concatStringsSep "\n")
+				]}
 			'';
 		};
+		
+		services.authing.settings.hosts = lib.pipe enabledHosts [
+			(lib.filterAttrs (_: host: host.authing != null))
+			(lib.mapAttrs (_: host: host.authing // {
+				host = host.domain;
+			}))
+		];
+		
+		services.authing.settings.groups = lib.pipe enabledHosts [
+		 (lib.filterAttrs (_: host: host.authing != null && host.authing ? allow_group && host.authing.allow_group != null))
+		 (lib.mapAttrsToList (_: host: host.authing.allow_group))
+		 (lib.unique)
+		];
 	});
 }

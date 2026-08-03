@@ -53,14 +53,7 @@ in {
 						tunnel_pass localhost:22;
 					'';
 				};
-			};
-			
-			services.authing.settings = {
-				groups = ["ssh"];
-				hosts.ssh = {
-					host = config.modules.webServer.hosts.ssh.domain;
-					allow_group = "ssh";
-				};
+				authing.allow_group = "ssh";
 			};
 			
 			services.openssh = let

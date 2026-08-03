@@ -17,14 +17,7 @@ in {
 				"/pub".proxyPort = ports.owntracks;
 				"/api".proxyPort = ports.owntracks;
 			};
-		};
-		
-		services.authing.settings = {
-			groups = ["owntracks"];
-			hosts.owntracks = {
-				host = config.modules.webServer.hosts.owntracks.domain;
-				allow_group = "owntracks";
-			};
+			authing.allow_group = "owntracks";
 		};
 		
 		users.users.owntracks = {
