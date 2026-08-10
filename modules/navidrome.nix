@@ -68,6 +68,7 @@ in {
 			members = ["dav" "navidrome"];
 		};
 		systemd.services.navidrome.serviceConfig.BindReadOnlyPaths = [
+			"/vol/navidrome/soundtracks"
 			"/vol/filebrowser"
 		];
 	};
