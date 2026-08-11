@@ -17,14 +17,24 @@ in {
 			proxyPort = ports.navidrome;
 			
 			locations."= /auth/login" = {
+				extraConfig = ''
+					# need to use try_files instead of return so the auth request can run first
+					try_files "" @dummy_login;
+				'';
+			};
+			
+			locations."@dummy_login" = {
+				auth = false;
+				extraConfig = "internal;";
 				# return 200 so clients don't think that login faile
 				# add dummy data so clients don't fail parsing the response
 				# https://github.com/navidrome/navidrome/blob/cc3cca607749dc086480f1af078fbbeb3fac2bdb/server/auth.go#L66-L95
 				headers.content-type = "application/json";
+				staticTextExpandVariables = true;
 				staticText = builtins.toJSON {
 					id = "-";
-					name = "-";
-					username = "-";
+					name = "$authing_name";
+					username = "$authing_user";
 					isAdmin = false;
 					subsonicSalt = "-";
 					subsonicToken = "-";

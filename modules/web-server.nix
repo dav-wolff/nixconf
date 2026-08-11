@@ -115,6 +115,10 @@ in {
 						type = types.nullOr types.path;
 						default = null;
 					};
+					staticTextExpandVariables = mkOption {
+						type = types.bool;
+						default = false;
+					};
 					staticText = mkOption {
 						type = types.nullOr types.str;
 						default = null;
@@ -144,6 +148,7 @@ in {
 				config = {
 					headers = host.headers // {
 						cache-control = mkIf config.immutable "public, max-age=604800, immutable";
+						content-type = mkIf (config.staticText != null) (lib.mkDefault "text/plain");
 					};
 				};
 			};
@@ -185,14 +190,17 @@ in {
 			ifNotNull = value: lib.optionalString (value != null);
 		in ''
 			location ${path} {
+				${makeHeaders (location.proxyPort != null) location.headers}
+				${lib.optionalString location.auth "include ${authing.authRequest};"}
 				${ifNotNull location.files ''
 					try_files $uri $uri/ =404;
 					root ${location.files};
 				''}
-				${ifNotNull location.staticText ''
-					add_header content-type text/plain;
-					return 200 '${location.staticText}';
-				''}
+				${ifNotNull location.staticText (if location.staticTextExpandVariables then ''
+					return 200 "${lib.escape ["\""] location.staticText}";
+				'' else ''
+					return 200 '${lib.escape ["'"] location.staticText}';
+				'')}
 				${ifNotNull location.proxyPort ''
 					include ${proxyHeaders};
 					# use IPv4 address instead of localhost as some services aren't listening on IPv6
@@ -201,8 +209,6 @@ in {
 				${ifNotNull location.redirect ''
 					return 301 ${location.redirect};
 				''}
-				${lib.optionalString location.auth "include ${authing.authRequest};"}
-				${makeHeaders (location.proxyPort != null) location.headers}
 				${location.extraConfig}
 			}
 		'';
