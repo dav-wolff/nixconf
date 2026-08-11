@@ -68,3 +68,6 @@ $env.config.keybindings = $env.config.keybindings | update keycode {|keybind|
 }
 
 use completions-jj.nu *
+
+# required by gpg
+$env.GPG_TTY = (tty)
