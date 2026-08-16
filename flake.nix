@@ -46,6 +46,7 @@
 		};
 		immich = {
 			url = "github:dav-wolff/immich/fork";
+			# url = "git+file:///home/dav/repos/immich?shallow=1";
 			flake = false;
 		};
 	};

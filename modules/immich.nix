@@ -48,14 +48,41 @@ in {
 			settingsFile = jsonFormat.generate "immich.json" settings;
 		in {
 			modules.webServer.hosts.immich = {
+				# auth is enabled but manually configured
+				auth = false;
 				proxyPort = ports.immich;
 				maxBodySize = "10000M";
-				headers.content-security-policy = "frame-ancestors 'none'; default-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:; img-src 'self' data: blob:; connect-src 'self' tiles.immich.cloud static.immich.cloud";
+				headers.content-security-policy = null;
 				extraConfig = ''
 					# https://immich.app/docs/administration/reverse-proxy/
 					proxy_read_timeout 600s;
 					proxy_send_timeout 600s;
 					send_timeout 600s;
+					set $authing_upstream http://127.0.0.1:${toString ports.authing};
+					include ${pkgs.authing.authLocation};
+				'';
+				# manually configure auth request,
+				# skipping Set-Cookie as that currently crashed the mobile app
+				locations."/".extraConfig = ''
+					auth_request /internal/auth-request;
+					
+					auth_request_set $authing_redirection $upstream_http_location;
+					auth_request_set $authing_cookies $upstream_http_set_cookie;
+					auth_request_set $authing_www_authenticate $upstream_http_www_authenticate;
+					
+					auth_request_set $authing_user $upstream_http_remote_user;
+					auth_request_set $authing_email $upstream_http_remote_email;
+					auth_request_set $authing_name $upstream_http_remote_name;
+					auth_request_set $authing_groups $upstream_http_remote_groups;
+					
+					proxy_set_header Remote-User $authing_user;
+					proxy_set_header Remote-Email $authing_email;
+					proxy_set_header Remote-Name $authing_name;
+					proxy_set_header Remote-Groups $authing_groups;
+					proxy_set_header Proxy-Authorization "";
+					
+					# add_header Set-Cookie $authing_cookies always;
+					error_page 403 =302 $authing_redirection;
 				'';
 				locations."^~ /_app/immutable".files = "${pkgs.immich}/lib/node_modules/immich/build/www";
 			};

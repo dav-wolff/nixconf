@@ -604,11 +604,11 @@
     "immich": {
       "flake": false,
       "locked": {
-        "lastModified": 1784692068,
-        "narHash": "sha256-LqVb1ycqn398tZNSEZKFT0+rhb/eHIFDty6vqmNvDAA=",
+        "lastModified": 1787086143,
+        "narHash": "sha256-6EXdcXEZWX38JNfoWu87KOIa1ZuKfM027V+cbinwaAk=",
         "owner": "dav-wolff",
         "repo": "immich",
-        "rev": "1dff86f53051b3013743100eadf87589fbf63356",
+        "rev": "e0af6ab8028f3df7fef680219129dac7289cc420",
         "type": "github"
       },
       "original": {
@@ -756,11 +756,11 @@
     },
     "nixpkgs-immich": {
       "locked": {
-        "lastModified": 1784555310,
-        "narHash": "sha256-/FCliTPgiuV1owejZFNx3Ch9irdvkOfOFl+HHZ+DrtM=",
+        "lastModified": 1786719841,
+        "narHash": "sha256-QcpQOT0NQEFkI77t+YXPZqDJc35iIodG7zinieOwFUg=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "421eebfd0ec7bccd4abe826ce62d7e6e83129493",
+        "rev": "8be7bd0c83f12e2e3bbba07c9044d6fed9e66f7f",
         "type": "github"
       },
       "original": {
