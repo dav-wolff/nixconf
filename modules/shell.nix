@@ -1,9 +1,14 @@
 { pkgs, ... }:
 
 {
+	programs.bash = {
+		enable = true;
+		interactiveShellInit = ''
+			exec nu
+		'';
+	};
+	
 	environment = {
-		shells = [pkgs.configured.nushell pkgs.configured.zsh];
-		
 		systemPackages = with pkgs; [
 			fzf
 			wl-clipboard
@@ -13,6 +18,7 @@
 			tree
 			ripgrep
 			fd
+			configured.nushell
 			configured.zsh
 			configured.zellij
 			configured.helix
@@ -24,7 +30,7 @@
 	};
 	
 	users = {
-		defaultUserShell = pkgs.configured.nushell;
+		defaultUserShell = pkgs.bash;
 		users.root.ignoreShellProgramCheck = true;
 		users.dav.ignoreShellProgramCheck = true;
 	};
