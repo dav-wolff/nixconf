@@ -879,6 +879,27 @@
         "type": "github"
       }
     },
+    "psysonic": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786917333,
+        "narHash": "sha256-1p7D2eZWJ0Tp9RKAVpAK8TGY9Y5CXriGOlur8IN7xuA=",
+        "owner": "Psysonic",
+        "repo": "psysonic",
+        "rev": "7d35e74e57a7c5a4a9027f075f0633dabb83108d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Psysonic",
+        "ref": "release",
+        "repo": "psysonic",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "agenix": "agenix",
@@ -895,6 +916,7 @@
         "nixpkgs": "nixpkgs_4",
         "nixpkgs-immich": "nixpkgs-immich",
         "nixpkgs-yamtrack": "nixpkgs-yamtrack",
+        "psysonic": "psysonic",
         "simplewall": "simplewall",
         "solitaire": "solitaire",
         "vault": "vault",
