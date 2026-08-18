@@ -15,7 +15,6 @@ in {
 		
 		services.home-assistant = {
 			enable = true;
-			openFirewall = false;
 			openFirewallForComponents = false;
 			extraComponents = [
 				"met"
