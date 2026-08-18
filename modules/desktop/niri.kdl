@@ -3,7 +3,7 @@ environment {
 	NIXOS_OZONE_WL "1"
 }
 
-spawn-at-startup "feishin"
+spawn-at-startup "psysonic"
 spawn-at-startup "sh" "-c" "sleep 1 && niri msg action focus-workspace-down"
 
 prefer-no-csd
@@ -132,6 +132,7 @@ window-rule {
 window-rule {
 	match app-id="^spotify$"
 	match app-id="^feishin$"
+	match app-id="^psysonic$"
 	open-on-workspace "Music"
 	open-maximized true
 }

@@ -25,6 +25,7 @@ in {
 	extraPackages = final: prev: let
 		system = final.stdenv.hostPlatform.system;
 	in {
+		psysonic = inputs.psysonic.packages.${system}.psysonic;
 		# make sure not to override existing packages, which others might depend on
 		ndent = assert !(prev ? ndent); inputs.ndent.packages.${system}.ndent;
 		journal = assert !(prev ? journal); inputs.journal.packages.${system}.journal;

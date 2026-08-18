@@ -49,6 +49,10 @@
 			# url = "git+file:///home/dav/repos/immich?shallow=1";
 			flake = false;
 		};
+		psysonic = {
+			url = "github:Psysonic/psysonic/release";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 	};
 	
 	outputs = { self, nixpkgs, flake-utils, ... } @ inputs: {

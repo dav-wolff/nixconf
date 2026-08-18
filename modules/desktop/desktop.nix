@@ -41,6 +41,7 @@ in {
 			kdePackages.kate
 			discord
 			telegram-desktop
+			psysonic
 			feishin
 			# TODO: reenable
 			# https://github.com/NixOS/nixpkgs/issues/526914
