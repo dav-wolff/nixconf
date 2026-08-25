@@ -42,6 +42,11 @@ in {
 		});
 		# TODO: remove if overlay works again
 		vault-rs = assert !(prev ? vault-rs); inputs.vault.packages.${system}.default;
+		# TODO: remove if port_extension gets merged into nixpkgs
+		nushellPlugins = prev.nushellPlugins // {
+			inherit (inputs.nixpkgs-nu-plugin.legacyPackages.${system}.nushellPlugins)
+				port_extension;
+		};
 	};
 	
 	configuredPackages = final: prev: let
