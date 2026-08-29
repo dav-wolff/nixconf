@@ -85,12 +85,13 @@ in {
 					error_page 403 =302 $authing_redirection;
 				'';
 				locations."^~ /_app/immutable".files = "${pkgs.immich}/lib/node_modules/immich/build/www";
-			};
-			
-			services.authing.settings.share_links.immich = {
-				match_host = config.modules.webServer.hosts.immich.domain;
-				match_paths = ["/share/" "/s/"];
-				redirect = "http://127.0.0.1:${toString ports.immich}";
+				
+				authing = {
+					share_link = {
+						path_regex = "^(/share/|/s/)[^/?]+";
+						redirect = "http://127.0.0.1:${toString ports.immich}";
+					};
+				};
 			};
 			
 			modules.email = {

@@ -32,10 +32,10 @@
         "ua-parser": "ua-parser"
       },
       "locked": {
-        "lastModified": 1787624351,
-        "narHash": "sha256-IYYTgwR3oc6SFBOZM4+8VFxJN92PEAHOJsasNWTMidI=",
+        "lastModified": 1788051870,
+        "narHash": "sha256-1d4yYuLiqGQJnGMsQjbnAAE6NLTGXHdurtyfQL45J1E=",
         "ref": "release",
-        "rev": "1bdff889494dc803b80affb5fbc5672dd94879f4",
+        "rev": "47cccb5f1aab3c19c210b7b8c8df63a9ed498dc9",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@git.dav.dev/dav/authing.git"
