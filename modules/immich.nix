@@ -84,6 +84,13 @@ in {
 					# add_header Set-Cookie $authing_cookies always;
 					error_page 403 =302 $authing_redirection;
 				'';
+				# use regular auth requests with cookies enabled, so that share links work
+				locations."/share/" = {
+					proxyPort = ports.immich;
+					extraConfig = ''
+						include ${pkgs.authing.authRequest};
+					'';
+				};
 				locations."^~ /_app/immutable".files = "${pkgs.immich}/lib/node_modules/immich/build/www";
 				
 				authing = {
