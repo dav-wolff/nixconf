@@ -47,7 +47,7 @@ in {
 				intercept_password = "p";
 				intercept_separator = ":";
 				share_link = {
-					path_regex = "^/share/[a-zA-Z0-9]+$";
+					check_regex = "^/share/[a-zA-Z0-9]+$";
 					allow_regex = "^/share/";
 					redirect = "http://127.0.0.1:${toString ports.navidrome}";
 				};

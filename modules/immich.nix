@@ -95,7 +95,7 @@ in {
 				
 				authing = {
 					share_link = {
-						path_regex = "^(/share/|/s/)[^/?]+";
+						check_regex = "^(/share/|/s/)[^/?]+";
 						redirect = "http://127.0.0.1:${toString ports.immich}";
 					};
 				};

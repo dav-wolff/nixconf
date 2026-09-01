@@ -59,12 +59,12 @@ in {
 		modules.webServer.hosts.filebrowser = {
 			subdomain = "files";
 			proxyPort = ports.filebrowser-quantum;
-			# authing.share_link = {
-			# 	path_regex = "^/public/(share/[0-9a-zA-Z]+|api/resources/download?hash=[0-9a-zA-Z]+)$";
-			# 	allow_regex = "^/public/";
-			# 	redirect = "http://127.0.0.1:${toString ports.filebrowser-quantum}";
-			# 	method = "GET";
-			# };
+			authing.share_link = {
+				check_regex = "^/public/share/([0-9a-zA-Z\\-]+)$";
+				check_rewrite = "/public/api/share/info?hash=$1";
+				allow_regex = "^/public/";
+				redirect = "http://127.0.0.1:${toString ports.filebrowser-quantum}";
+			};
 		};
 		
 		users.users.${user} = {

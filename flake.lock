@@ -32,10 +32,10 @@
         "ua-parser": "ua-parser"
       },
       "locked": {
-        "lastModified": 1788051870,
-        "narHash": "sha256-1d4yYuLiqGQJnGMsQjbnAAE6NLTGXHdurtyfQL45J1E=",
+        "lastModified": 1788258530,
+        "narHash": "sha256-8SKIcwL8ybYqgBg080H89qKaRE1aKC+yYQQO6pKxGQQ=",
         "ref": "release",
-        "rev": "47cccb5f1aab3c19c210b7b8c8df63a9ed498dc9",
+        "rev": "d0c2dfba21b3f050dcf4da70a3dd50c4444df7f8",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@git.dav.dev/dav/authing.git"
@@ -126,11 +126,11 @@
     },
     "crane": {
       "locked": {
-        "lastModified": 1783203018,
-        "narHash": "sha256-G6R9IT/xwFuu+CYBWDUAok6AdC4ERC4ZfPPFtEpxnZE=",
+        "lastModified": 1787326676,
+        "narHash": "sha256-lWhBbBvC05/xwivKBBiM2YNizpmgqCgyOIzomvRuwxs=",
         "owner": "ipetkov",
         "repo": "crane",
-        "rev": "80db5bdc391be8a1794f6d8a2d56e3a84ebcede2",
+        "rev": "692f7e9ef2ece8125b466f66f2af532b3edaed0d",
         "type": "github"
       },
       "original": {
@@ -286,11 +286,11 @@
         "rust-analyzer-src": "rust-analyzer-src"
       },
       "locked": {
-        "lastModified": 1784103743,
-        "narHash": "sha256-VKuUth9izvRjZzy4XcVV3s+sG0bdE+ywPkE5o2ctlNE=",
+        "lastModified": 1788006742,
+        "narHash": "sha256-V65dNU5TPx5c/DBdJ2G8rgczvLxB5ROm/ie8CS6WV3w=",
         "owner": "nix-community",
         "repo": "fenix",
-        "rev": "8df3642541009d2a5f15520462a8dec719c5fddb",
+        "rev": "e0f7f5109090e4ebc9f3c969b961966cd7a61013",
         "type": "github"
       },
       "original": {
@@ -944,11 +944,11 @@
     "rust-analyzer-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1784053862,
-        "narHash": "sha256-6Si6qyNywJf2YWJ7KI5fdg4Hmv5NrSBHVOhyiCowtRw=",
+        "lastModified": 1787909076,
+        "narHash": "sha256-dGGOmzu3v7Sd9AZjvmPXqw2oXxepu7DDcQ0X+oW+a28=",
         "owner": "rust-lang",
         "repo": "rust-analyzer",
-        "rev": "3061c4d11509546ed2250f0dda6d66aa60b0a18d",
+        "rev": "af4111f0bf85d9d66f4161b007b0081860e0a21c",
         "type": "github"
       },
       "original": {
@@ -1237,11 +1237,11 @@
     "ua-parser": {
       "flake": false,
       "locked": {
-        "lastModified": 1779807172,
-        "narHash": "sha256-U6Kka8cWL+QrblJZS9GiOS4/1ndZhcReSZJuxJeT7nU=",
+        "lastModified": 1787573378,
+        "narHash": "sha256-CGJAsvf9xm61D+ovou2LYPZ94VqphUfnjt00Rna7GDY=",
         "owner": "ua-parser",
         "repo": "uap-core",
-        "rev": "f87f3a9aea3916399d70e5cb2c2aedea5008d881",
+        "rev": "73e7340c3ed8055051607b296bf46ead7aa5f19e",
         "type": "github"
       },
       "original": {
