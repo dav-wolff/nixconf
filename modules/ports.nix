@@ -17,6 +17,7 @@ let
 		mealie = 9080;
 		forgejo = 9090;
 		filebrowser = 10000;
+		filebrowser-quantum = 10001;
 		qbittorrent = 10010;
 		qui = 10011;
 		yamtrack = 10020;
