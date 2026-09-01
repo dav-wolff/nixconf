@@ -34,6 +34,15 @@ def l [
 		| grid -c -i
 }
 
+def show-cmd [
+	command: string
+]: nothing -> string {
+	which $command
+	| first
+	| get path
+	| bat $in
+}
+
 alias nd = nix develop -c nu
 alias ns = nix shell
 
