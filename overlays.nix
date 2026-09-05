@@ -110,7 +110,7 @@ in {
 		inputs.simplewall.overlays.default
 		inputs.backy.overlays.default
 		inputs.linky.overlays.default
-		inputs.authing.overlays.default
+		inputs.authing.overlays.authing-pinned
 		self.overlays.utils
 		self.overlays.extraPackages
 		self.overlays.configuredPackages

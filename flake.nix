@@ -44,7 +44,6 @@
 		authing = {
 			url = "git+ssh://git@git.dav.dev/dav/authing.git?shallow=1&ref=release";
 			# url = "git+file:///home/dav/repos/authing?shallow=1";
-			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		immich = {
 			url = "github:dav-wolff/immich/fork";
