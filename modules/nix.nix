@@ -11,6 +11,8 @@ in {
 	
 	config = {
 		nix = {
+			channel.enable = false;
+			
 			settings = {
 				experimental-features = [
 					"nix-command"
@@ -29,8 +31,7 @@ in {
 				
 				trusted-users = ["root" "dav"];
 				
-				# https://github.com/NixOS/nix/issues/9574
-				nix-path = "nixpkgs=flake:nixpkgs";
+				nix-path = ["nixpkgs=flake:nixpkgs"];
 			};
 			
 			registry = {
@@ -55,10 +56,6 @@ in {
 					};
 				};
 			};
-			
-			# Not working?
-			channel.enable = false;
-			nixPath = ["nixpkgs=flake:nixpkgs"];
 		};
 		
 		nixpkgs.flake.setNixPath = false;
