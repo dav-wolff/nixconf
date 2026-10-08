@@ -137,6 +137,13 @@ window-rule {
 	open-maximized true
 }
 
+window-rule {
+	match app-id="^steam$" title="^notificationtoasts_.*_desktop$"
+	open-focused false
+	open-floating true
+	default-floating-position x=40 y=40 relative-to="top-right"
+}
+
 // nix run pkgs#wev to find key name
 binds {
 	Mod+Shift+Slash { show-hotkey-overlay; }
