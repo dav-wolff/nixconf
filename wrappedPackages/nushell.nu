@@ -4,6 +4,7 @@ $env.config.history.isolation = true
 $env.config.show_banner = false
 
 $env.config.footer_mode = "auto"
+$env.config.edit_mode = "helix"
 
 $env.config.table.mode = "frameless"
 $env.config.table.index_mode = "never"
@@ -64,6 +65,8 @@ $env.PROMPT_COMMAND = {||
 	$"($prompt)\n"
 }
 $env.PROMPT_INDICATOR = "❯ "
+$env.PROMPT_INDICATOR_VI_INSERT = "❯ "
+$env.PROMPT_INDICATOR_VI_NORMAL = "⫼ "
 $env.TRANSIENT_PROMPT_COMMAND = ""
 
 source zoxide.nu
