@@ -15,37 +15,12 @@ $env.config.filesize.unit = "binary"
 
 $env.config.hooks.display_output = "table -o"
 
-def l [
-	--all (-a) # Show hidden files.
-	...pattern: glob # The glob pattern to use.
-]: nothing -> string {
-	let max_width = ((term size | get columns) - 1) / 2 - 4 | math floor
-	let pattern = if ($pattern | is-empty) { [ '.' ] } else { $pattern }
-	(ls -s --all=$all ...$pattern)
-		| sort-by type name -i
-		| get name
-		| each {|name|
-			if ($name | str length) > $max_width {
-				let shortened = str substring 0..=($max_width - 2)
-				$"($shortened)…"
-			} else {
-				$name
-			}
-		}
-		| grid -c -i
-}
-
-def show-cmd [
-	command: string
-]: nothing -> string {
-	which $command
-	| first
-	| get path
-	| bat $in
-}
-
 alias nd = nix develop -c nu
 alias ns = nix shell
+
+source log.nu
+source show-cmd.nu
+source svc.nu
 
 $env.PROMPT_COMMAND = {||
 	mut prompt = ""

@@ -3,6 +3,20 @@
 wrapperModules.nushell.apply (let
 	inherit (pkgs) lib;
 	
+	staticScripts = lib.pipe ./nushell [
+		lib.filesystem.listFilesRecursive
+		(map (file: rec {
+			name = lib.pipe file [
+				toString
+				(builtins.split "/")
+				lib.last
+			];
+			value = pkgs.writeText name (builtins.readFile file);
+		}))
+		builtins.listToAttrs
+		(scripts: removeAttrs scripts ["nushell.nu"])
+	];
+	
 	includeScripts = pkgs.runCommandLocal "nushell-scripts" {
 		buildInputs = with pkgs; [
 			zoxide
@@ -14,6 +28,8 @@ wrapperModules.nushell.apply (let
 		zoxide init nushell --cmd cd > $out/zoxide.nu
 		fzf --nushell > $out/fzf.nu
 		jj util completion nushell > $out/completions-jj.nu
+		
+		${lib.concatMapAttrsStringSep "\n" (name: value: "cp ${value} $out/${name}") staticScripts}
 	'';
 	
 	nushellPlugins = pkgs.runCommand "nushell-plugins" {} ''
@@ -25,7 +41,7 @@ wrapperModules.nushell.apply (let
 in {
 	inherit pkgs;
 	
-	"config.nu".content = builtins.readFile ./nushell.nu;
+	"config.nu".content = builtins.readFile ./nushell/nushell.nu;
 	
 	flags = {
 		"--plugin-config" = "${nushellPlugins}";
