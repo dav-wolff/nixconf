@@ -91,7 +91,7 @@
 		
 		overlays = import ./overlays.nix inputs;
 		
-		nixosModules.default = { lib, ... }: let
+		nixosModules.default = { config, lib, ... }: let
 			modules = lib.filter (lib.strings.hasSuffix ".nix") (lib.filesystem.listFilesRecursive ./modules);
 		in {
 			imports = [
@@ -101,7 +101,8 @@
 				inputs.authing.nixosModules.default
 				"${inputs.nixpkgs-yamtrack}/nixos/modules/services/web-apps/yamtrack.nix"
 			] ++ modules;
-			nixpkgs.overlays = [self.overlays.default];
+			# make sure to apply additional overlays after base overlays
+			nixpkgs.overlays = [self.overlays.default] ++ config.modules.nix.overlays;
 			modules.nix.pkgs = self;
 			system.stateVersion = "24.05";
 		};

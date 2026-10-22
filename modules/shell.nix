@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
 	programs.bash = {
@@ -7,6 +7,14 @@
 			exec nu
 		'';
 	};
+	
+	modules.nix.overlays = [(final: prev: {
+		configured = prev.configured // {
+			nushell = prev.configured.nushell.override {
+				systemd-services = config.systemd.services;
+			};
+		};
+	})];
 	
 	environment = {
 		systemPackages = with pkgs; [

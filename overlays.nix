@@ -58,10 +58,15 @@ in {
 				inherit lib wlib;
 			};
 		};
-		wrapper = path: extraArgs: (import path ({
-			inherit wrapperModules;
-			pkgs = final;
-		} // extraArgs)).wrapper;
+		wrapper = path: let
+			makeWrapper = args: (import path ({
+				inherit wrapperModules;
+				pkgs = final;
+			} // args)).wrapper;
+			makeOverridable = args: (makeWrapper args) // {
+				override = newArgs: makeOverridable (args // newArgs);
+			};
+		in makeOverridable;
 	in {
 		configured = assert !(prev ? configured); {
 			helix = wrapper ./wrappedPackages/helix.nix {};

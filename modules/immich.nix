@@ -145,7 +145,7 @@ in {
 				};
 			};
 			
-			systemd.services.immich-server = lib.mkForce {};
+			systemd.services.immich-server.enable = false;
 		})
 	];
 }

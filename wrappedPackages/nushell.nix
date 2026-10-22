@@ -1,7 +1,26 @@
-{ pkgs, wrapperModules, ... }:
+{
+	pkgs,
+	wrapperModules,
+	systemd-services ? {},
+	...
+}:
 
 wrapperModules.nushell.apply (let
 	inherit (pkgs) lib;
+	
+	scriptPlaceholders = {
+		services = lib.pipe systemd-services [
+			(lib.filterAttrs (name: value: value.enable))
+			(lib.concatMapAttrsStringSep "\n" (name: value:
+				''{ value: "${name}", description: "${value.description}" }''
+			))
+		];
+	};
+	
+	replacePlaceholders = let
+		from = map (name: "@${name}@") (builtins.attrNames scriptPlaceholders);
+		to = builtins.attrValues scriptPlaceholders;
+	in builtins.replaceStrings from to;
 	
 	staticScripts = lib.pipe ./nushell [
 		lib.filesystem.listFilesRecursive
@@ -11,7 +30,11 @@ wrapperModules.nushell.apply (let
 				(builtins.split "/")
 				lib.last
 			];
-			value = pkgs.writeText name (builtins.readFile file);
+			value = lib.pipe file [
+				builtins.readFile
+				replacePlaceholders
+				(pkgs.writeText name)
+			];
 		}))
 		builtins.listToAttrs
 		(scripts: removeAttrs scripts ["nushell.nu"])

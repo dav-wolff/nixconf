@@ -2,8 +2,12 @@ def svc [] {
 	"Usage:\nsvc log"
 }
 
+def services []: nothing -> list {
+	[@services@]
+}
+
 def "svc log" [
-	unit: string # The unit to show logs for
+	unit: string@services # The unit to show logs for
 	--user (-u) # Show user units instead of system units
 	--duration (-d): duration # Limit the log to everything that occured within a given duration
 	--follow (-f) # Continuously print new log entries

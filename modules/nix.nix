@@ -7,6 +7,16 @@ in {
 		pkgs = lib.mkOption {
 			type = lib.types.pathInStore;
 		};
+		overlays = lib.mkOption {
+			type = lib.types.listOf (lib.mkOptionType {
+				name = "nixpkgs-overlay";
+				description = "nixpkgs overlay";
+				check = lib.isFunction;
+				merge = lib.mergeOneOption;
+			});
+			default = [];
+			description = "Additional overlays applied after base overlays";
+		};
 	};
 	
 	config = {
