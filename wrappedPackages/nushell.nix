@@ -2,19 +2,22 @@
 	pkgs,
 	wrapperModules,
 	systemd-services ? {},
+	systemd-user-services ? {},
 	...
 }:
 
 wrapperModules.nushell.apply (let
 	inherit (pkgs) lib;
 	
-	scriptPlaceholders = {
-		services = lib.pipe systemd-services [
+	servicesToCompletions = services: suffix: lib.pipe services [
 			(lib.filterAttrs (name: value: value.enable))
 			(lib.concatMapAttrsStringSep "\n" (name: value:
-				''{ value: "${name}", description: "${value.description}" }''
+				''{ value: "${name}${suffix}", description: "${value.description}" }''
 			))
 		];
+	
+	scriptPlaceholders = {
+		services = "${servicesToCompletions systemd-services ""}\n${servicesToCompletions systemd-user-services "%"}";
 	};
 	
 	replacePlaceholders = let

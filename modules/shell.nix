@@ -12,6 +12,7 @@
 		configured = prev.configured // {
 			nushell = prev.configured.nushell.override {
 				systemd-services = config.systemd.services;
+				systemd-user-services = config.systemd.user.services;
 			};
 		};
 	})];
