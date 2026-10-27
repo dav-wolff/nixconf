@@ -3,7 +3,7 @@ environment {
 	NIXOS_OZONE_WL "1"
 }
 
-spawn-at-startup "psysonic"
+spawn-at-startup "feishin"
 spawn-at-startup "sh" "-c" "sleep 1 && niri msg action focus-workspace-down"
 
 prefer-no-csd
