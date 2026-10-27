@@ -69,6 +69,7 @@ in {
 				DefaultTheme = "Nord";
 				Inspect.Enabled = false;
 				Scanner.PurgeMissing = "always";
+				Plugins.Enabled = false;
 			};
 		};
 		
