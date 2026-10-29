@@ -54,6 +54,7 @@ in {
 				waybar.path = with pkgs; [
 					niri
 					mixxc
+					procps # pkill
 				];
 				mako.wantedBy = ["niri.service"];
 				
