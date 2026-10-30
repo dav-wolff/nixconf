@@ -725,11 +725,11 @@
     },
     "nixpkgs-nu-plugin": {
       "locked": {
-        "lastModified": 1791487337,
-        "narHash": "sha256-k+uPfLNt/HpybVzklNeKZajPTa140BYnszqIKnrqBKA=",
+        "lastModified": 1793347376,
+        "narHash": "sha256-tBTUamdycbKY8rk5mvGKvMWzrJrWckuUn3mjHoRbXe4=",
         "owner": "dav-wolff",
         "repo": "nixpkgs",
-        "rev": "f3ef1f51d7c108f43d126193b31dd037a202f57f",
+        "rev": "bd0ad44e60859df203deaf46f8c010a191140005",
         "type": "github"
       },
       "original": {
